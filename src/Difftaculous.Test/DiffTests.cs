@@ -10,15 +10,41 @@ namespace Difftaculous.Test
     {
 
         [Test]
-        public void SimpleObjectComparedWithItself()
+        public void SimpleObjectComparedWithItselfHasNoDifferences()
         {
-            string a = "{ \"Hello\": \"World\" }";
-            string b = a;
+            const string a = "{ \"Hello\": \"World\" }";
+            const string b = a;
 
             var result = Diff.Json(a, b);
 
             result.AreSame.ShouldBe(true);
         }
 
+
+
+        [Test]
+        public void ChangedValueResultsInOneDifference()
+        {
+            const string a = "{ \"Hello\": \"World\" }";
+            const string b = "{ \"Hello\": \"There\" }";
+
+            var result = Diff.Json(a, b);
+
+            result.AreSame.ShouldBe(false);
+            // TODO - verify the difference is in the field value
+        }
+
+
+
+        [Test]
+        public void SimpleArrayComparedWithItselfHasNoDifferences()
+        {
+            const string a = "[\"Red\", \"Green\", \"Blue\"]";
+            const string b = a;
+
+            var result = Diff.Json(a, b);
+
+            result.AreSame.ShouldBe(true);
+        }
     }
 }
