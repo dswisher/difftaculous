@@ -33,10 +33,7 @@ namespace Difftaculous.Test
 
             result.AreSame.ShouldBe(false);
 
-            var anno = result.Annotations.FirstOrDefault();
-
-            anno.ShouldNotBe(null);
-            anno.Path.ShouldBe(DiffPath.FromJsonPath("$.hello"));
+            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.hello")));
         }
 
 
@@ -64,10 +61,7 @@ namespace Difftaculous.Test
 
             result.AreSame.ShouldBe(false);
 
-            var anno = result.Annotations.FirstOrDefault();
-
-            anno.ShouldNotBe(null);
-            anno.Path.ShouldBe(DiffPath.FromJsonPath("$[1]"));
+            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$[1]")));
         }
 
 
@@ -82,12 +76,7 @@ namespace Difftaculous.Test
 
             result.AreSame.ShouldBe(false);
 
-            //var anno = result.Annotations.FirstOrDefault();
-
             result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.fixture.title")));
-
-            //anno.ShouldNotBe(null);
-            //anno.Path.ShouldBe(DiffPath.FromJsonPath("$.fixture.title"));
         }
     }
 }
