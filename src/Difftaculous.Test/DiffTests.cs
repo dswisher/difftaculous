@@ -82,10 +82,12 @@ namespace Difftaculous.Test
 
             result.AreSame.ShouldBe(false);
 
-            var anno = result.Annotations.FirstOrDefault();
+            //var anno = result.Annotations.FirstOrDefault();
 
-            anno.ShouldNotBe(null);
-            anno.Path.ShouldBe(DiffPath.FromJsonPath("$.fixture.title"));
+            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.fixture.title")));
+
+            //anno.ShouldNotBe(null);
+            //anno.Path.ShouldBe(DiffPath.FromJsonPath("$.fixture.title"));
         }
     }
 }
