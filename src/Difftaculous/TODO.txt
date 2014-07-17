@@ -1,0 +1,3 @@
+﻿
+- Change DiffTests to use small classes that are populated and then serialized to JSON.  That
+  would allow them to be serialized to XML and most of the test could be reused.

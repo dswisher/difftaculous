@@ -8,6 +8,7 @@ namespace Difftaculous
 {
     internal class DiffEngine
     {
+        // TODO - this should take a list of "concessions" - items that relax the strict diff, like "within 10%"
 
         public IDiffResult Diff(JToken tokenA, JToken tokenB)
         {
@@ -69,8 +70,27 @@ namespace Difftaculous
 
         private IDiffResult SubDiff(JArray arrayA, JArray arrayB)
         {
-            // TODO - array diff
-            return new DiffResult { AreSame = true };
+            IDiffResult result = new DiffResult { AreSame = true };
+
+            // TODO - allow various matching strategies - strict indexed (this one), keyed (join) or diff-algorithm
+
+            // This implements simple indexed array diff: compare item 1 to item 1, then item 2 to item 2, etc.
+            // Limited, simplistic, but easiest to implement.
+            if (arrayA.Count != arrayB.Count)
+            {
+                // TODO - annotate result
+                return new DiffResult { AreSame = false };
+            }
+
+            for (int i = 0; i < arrayA.Count; i++)
+            {
+                var itemA = arrayA[i];
+                var itemB = arrayB[i];
+
+                result = result.Merge(Diff(itemA, itemB));
+            }
+
+            return result;
         }
     }
 }
