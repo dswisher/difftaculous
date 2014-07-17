@@ -17,7 +17,7 @@ namespace Difftaculous
             // Should have either a JArray or a JObject...
             DiffEngine engine = new DiffEngine();
 
-            return engine.Diff(jsonA, jsonB);
+            return engine.Diff(jsonA, jsonB, DiffPath.Root);
         }
 
     }

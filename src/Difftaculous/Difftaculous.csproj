@@ -44,10 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Diff.cs" />
+    <Compile Include="DiffAnnotation.cs" />
     <Compile Include="DiffEngine.cs" />
     <Compile Include="IDiffResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results\DiffResult.cs" />
+    <Compile Include="DiffPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
