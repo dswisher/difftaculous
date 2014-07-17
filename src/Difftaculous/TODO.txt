@@ -1,3 +1,7 @@
 ﻿
+- Add a scope/context that gets passed down through the diffs, keeping track of the "path"
+
+- Redo the DiffResult to support annotations (descriptions of the differences)
+
 - Change DiffTests to use small classes that are populated and then serialized to JSON.  That
   would allow them to be serialized to XML and most of the test could be reused.
