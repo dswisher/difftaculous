@@ -50,7 +50,7 @@ namespace Difftaculous
                 // TODO - what if other prop does not exist?
                 var other = objB.Property(pair.Key).Value;
 
-                result = result.Merge(Diff(pair.Value, other, path));
+                result = result.Merge(Diff(pair.Value, other, path.Extend(pair.Key)));
             }
 
             return result;
@@ -95,7 +95,7 @@ namespace Difftaculous
                 var itemA = arrayA[i];
                 var itemB = arrayB[i];
 
-                result = result.Merge(Diff(itemA, itemB, path));
+                result = result.Merge(Diff(itemA, itemB, path.Extend(i)));
             }
 
             return result;

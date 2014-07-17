@@ -1,4 +1,5 @@
 ﻿
+using System.Linq;
 using NUnit.Framework;
 using Shouldly;
 
@@ -12,7 +13,7 @@ namespace Difftaculous.Test
         [Test]
         public void SimpleObjectComparedWithItselfHasNoDifferences()
         {
-            const string a = "{ \"Hello\": \"World\" }";
+            const string a = "{ \"hello\": \"World\" }";
             const string b = a;
 
             var result = Diff.Json(a, b);
@@ -25,13 +26,17 @@ namespace Difftaculous.Test
         [Test]
         public void AlteredValueResultsInOneDifference()
         {
-            const string a = "{ \"Hello\": \"World\" }";
-            const string b = "{ \"Hello\": \"There\" }";
+            const string a = "{ \"hello\": \"World\" }";
+            const string b = "{ \"hello\": \"There\" }";
 
             var result = Diff.Json(a, b);
 
             result.AreSame.ShouldBe(false);
-            // TODO - verify the differences were properly annotated
+
+            var anno = result.Annotations.FirstOrDefault();
+
+            anno.ShouldNotBe(null);
+            anno.Path.ShouldBe(DiffPath.FromJsonPath("$.hello"));
         }
 
 
@@ -58,7 +63,11 @@ namespace Difftaculous.Test
             var result = Diff.Json(a, b);
 
             result.AreSame.ShouldBe(false);
-            // TODO - verify the differences were properly annotated
+
+            var anno = result.Annotations.FirstOrDefault();
+
+            anno.ShouldNotBe(null);
+            anno.Path.ShouldBe(DiffPath.FromJsonPath("$[1]"));
         }
 
 
@@ -72,7 +81,11 @@ namespace Difftaculous.Test
             var result = Diff.Json(a, b);
 
             result.AreSame.ShouldBe(false);
-            // TODO - verify the differences were properly annotated
+
+            var anno = result.Annotations.FirstOrDefault();
+
+            anno.ShouldNotBe(null);
+            anno.Path.ShouldBe(DiffPath.FromJsonPath("$.fixture.title"));
         }
     }
 }
