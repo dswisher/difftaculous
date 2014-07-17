@@ -1,7 +1,6 @@
 ﻿
-using System;
-using Difftaculous.Results;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 namespace Difftaculous
@@ -12,16 +11,13 @@ namespace Difftaculous
         public static IDiffResult Json(string a, string b)
         {
             // TODO - generalize this to use some sort of Navigator thingy so we can handle XML, too!
-            var jsonA = JsonConvert.DeserializeObject(a);
-            var jsonB = JsonConvert.DeserializeObject(b);
+            var jsonA = (JToken)JsonConvert.DeserializeObject(a);
+            var jsonB = (JToken)JsonConvert.DeserializeObject(b);
 
             // Should have either a JArray or a JObject...
+            DiffEngine engine = new DiffEngine();
 
-            Console.WriteLine("jsonA.getType = {0}", jsonA.GetType());
-            Console.WriteLine("jsonB.getType = {0}", jsonB.GetType());
-
-            // TODO!
-            return new DiffResult() { AreSame = true };
+            return engine.Diff(jsonA, jsonB);
         }
 
     }

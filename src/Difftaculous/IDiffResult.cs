@@ -6,5 +6,7 @@ namespace Difftaculous
     {
         // TODO - should this just be a count of differences?
         bool AreSame { get; }
+
+        IDiffResult Merge(IDiffResult other);
     }
 }
