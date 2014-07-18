@@ -8,7 +8,7 @@ namespace Difftaculous
 {
     internal class DiffEngine
     {
-        // TODO - this should take a list of "concessions" - items that relax the strict diff, like "within 10%"
+        // TODO - this should take a list of "caveats" - items that relax the strict diff, like "within 10%"
 
         public IDiffResult Diff(JToken tokenA, JToken tokenB, IDiffPath path)
         {

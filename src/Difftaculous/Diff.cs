@@ -1,5 +1,7 @@
 ﻿
+using System.Collections.Generic;
 using Difftaculous.Adapters;
+using Difftaculous.Caveats;
 
 
 namespace Difftaculous
@@ -8,7 +10,7 @@ namespace Difftaculous
     {
 
         // TODO - this should take some sort of non-JSON-specific adapter interface
-        public static IDiffResult Compare(JsonAdapter a, JsonAdapter b)
+        public static IDiffResult Compare(JsonAdapter a, JsonAdapter b, IEnumerable<ICaveat> caveats = null)
         {
             DiffEngine engine = new DiffEngine();
 

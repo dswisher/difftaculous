@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CaveatDiffTests.cs" />
     <Compile Include="DiffTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
