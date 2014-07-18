@@ -1,5 +1,5 @@
 ﻿
-using System.Linq;
+using Difftaculous.Adapters;
 using NUnit.Framework;
 using Shouldly;
 
@@ -16,7 +16,7 @@ namespace Difftaculous.Test
             const string a = "{ \"hello\": \"World\" }";
             const string b = a;
 
-            var result = Diff.Json(a, b);
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
 
             result.AreSame.ShouldBe(true);
         }
@@ -29,7 +29,7 @@ namespace Difftaculous.Test
             const string a = "{ \"hello\": \"World\" }";
             const string b = "{ \"hello\": \"There\" }";
 
-            var result = Diff.Json(a, b);
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
 
             result.AreSame.ShouldBe(false);
 
@@ -44,7 +44,7 @@ namespace Difftaculous.Test
             const string a = "[\"Red\", \"Green\", \"Blue\"]";
             const string b = a;
 
-            var result = Diff.Json(a, b);
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
 
             result.AreSame.ShouldBe(true);
         }
@@ -57,7 +57,7 @@ namespace Difftaculous.Test
             const string a = "[\"Red\", \"Green\", \"Blue\"]";
             const string b = "[\"Red\", \"Black\", \"Blue\"]";
 
-            var result = Diff.Json(a, b);
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
 
             result.AreSame.ShouldBe(false);
 
@@ -72,11 +72,24 @@ namespace Difftaculous.Test
             const string a = "{ \"fixture\": { \"title\": \"test A\" } }";
             const string b = "{ \"fixture\": { \"title\": \"test B\" } }";
 
-            var result = Diff.Json(a, b);
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
 
             result.AreSame.ShouldBe(false);
 
             result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.fixture.title")));
+        }
+
+
+
+        [Test]
+        public void ReorderedPropertiesAreSame()
+        {
+            const string a = "{ \"prop1\": \"val1\", \"prop2\": \"val2\" }";
+            const string b = "{ \"prop2\": \"val2\", \"prop1\": \"val1\" }";
+
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
+
+            result.AreSame.ShouldBe(true);
         }
     }
 }

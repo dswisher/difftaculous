@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Difftaculous;
+using Difftaculous.Adapters;
+
 
 namespace jdiff
 {
@@ -35,12 +35,12 @@ namespace jdiff
 
             try
             {
-                string contentA = ReadFile(infoA);
-                string contentB = ReadFile(infoB);
+                var contentA = new JsonAdapter(ReadFile(infoA));
+                var contentB = new JsonAdapter(ReadFile(infoB));
 
-                var result = Diff.Json(contentA, contentB);
+                var result = Diff.Compare(contentA, contentB);
 
-                // TODO - emit better results!
+                // TODO - emit better results!  (Use an emitter!)
                 if (result.AreSame)
                 {
                     Console.WriteLine("No differences found.");

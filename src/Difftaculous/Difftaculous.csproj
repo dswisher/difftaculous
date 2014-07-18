@@ -43,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Diff.cs" />
-    <Compile Include="DiffAnnotation.cs" />
+    <Compile Include="Results\DiffAnnotation.cs" />
     <Compile Include="DiffEngine.cs" />
     <Compile Include="IDiffResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

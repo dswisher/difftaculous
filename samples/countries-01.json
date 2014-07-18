@@ -1,0 +1,69 @@
+{
+    "Countries": [
+        {
+            "CountryCode": "au",
+            "Name": "Australia"
+        },
+        {
+            "CountryCode": "be",
+            "Name": "Belgium"
+        },
+        {
+            "CountryCode": "ca",
+            "Name": "Canada"
+        },
+        {
+            "CountryCode": "cn",
+            "Name": "China"
+        },
+        {
+            "CountryCode": "de",
+            "Name": "Germany"
+        },
+        {
+            "CountryCode": "es",
+            "Name": "Spain"
+        },
+        {
+            "CountryCode": "fr",
+            "Name": "France"
+        },
+        {
+            "CountryCode": "hk",
+            "Name": "Hong Kong"
+        },
+        {
+            "CountryCode": "it",
+            "Name": "Italy"
+        },
+        {
+            "CountryCode": "jp",
+            "Name": "Japan"
+        },
+        {
+            "CountryCode": "mx",
+            "Name": "Mexico"
+        },
+        {
+            "CountryCode": "nl",
+            "Name": "Netherlands"
+        },
+        {
+            "CountryCode": "nz",
+            "Name": "New Zealand"
+        },
+        {
+            "CountryCode": "pt",
+            "Name": "Portugal"
+        },
+        {
+            "CountryCode": "uk",
+            "Name": "United Kingdom"
+        },
+        {
+            "CountryCode": "us",
+            "Name": "United States"
+        }
+    ]
+}
+
