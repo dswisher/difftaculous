@@ -1,5 +1,8 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Difftaculous.Caveats;
 using Difftaculous.Results;
 using Newtonsoft.Json.Linq;
 
@@ -8,7 +11,15 @@ namespace Difftaculous
 {
     internal class DiffEngine
     {
-        // TODO - this should take a list of "caveats" - items that relax the strict diff, like "within 10%"
+        private readonly IEnumerable<ICaveat> _caveats;
+
+
+        public DiffEngine(IEnumerable<ICaveat> caveats)
+        {
+            _caveats = caveats ?? Enumerable.Empty<ICaveat>();
+        }
+
+
 
         public IDiffResult Diff(JToken tokenA, JToken tokenB, IDiffPath path)
         {
@@ -66,7 +77,20 @@ namespace Difftaculous
             string a = valA.Value.ToString();
             string b = valB.Value.ToString();
 
+            // If things are equal, we're done...
             if (a == b)
+            {
+                return DiffResult.Same;
+            }
+
+            // Okay, they're not equal...see if there are any caveats that will let this
+            // discrepancy pass...
+            var applicableCaveats = _caveats.Where(x => x.Path.Matches(path));
+
+            // TODO - this should return something other than Same, because they are NOT
+            // the same.  But, returning something like "WithinTolerance" makes the DiffResult
+            // more complex...
+            if (applicableCaveats.Any(x => x.IsAcceptable(a, b)))
             {
                 return DiffResult.Same;
             }

@@ -6,6 +6,8 @@ namespace Difftaculous
     {
         DiffPath Extend(string name);
         DiffPath Extend(int index);
+
+        string AsJsonPath { get; }
     }
 
 
@@ -44,7 +46,6 @@ namespace Difftaculous
 
 
 
-        // TODO - Such a horrible hack!
         public string AsJsonPath { get; private set; }
 
 
@@ -70,6 +71,15 @@ namespace Difftaculous
         public override string ToString()
         {
             return AsJsonPath;
+        }
+
+
+        public bool Matches(IDiffPath path)
+        {
+            // TODO - this is way too simplistic!  Need to do wildcard matches and
+            // whatnot...matching is NOT the same as equality...
+
+            return Equals(path);
         }
     }
 }
