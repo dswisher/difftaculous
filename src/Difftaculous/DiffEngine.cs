@@ -102,6 +102,10 @@ namespace Difftaculous
 
         private IDiffResult SubDiff(JArray arrayA, JArray arrayB, IDiffPath path)
         {
+            // TODO - see if there are any hints indicating how to difference this array
+
+
+
             IDiffResult result = DiffResult.Same;
 
             // TODO - allow various matching strategies - strict indexed (this one), keyed (join) or diff-algorithm
@@ -123,6 +127,30 @@ namespace Difftaculous
             }
 
             return result;
+        }
+
+
+        private IDiffResult IndexedArrayDiff(JArray arrayA, JArray arrayB, IDiffPath path)
+        {
+            IDiffResult result = DiffResult.Same;
+
+            // This implements simple indexed array diff: compare item 1 to item 1, then item 2 to item 2, etc.
+            // Limited, simplistic, but easiest to implement.
+            if (arrayA.Count != arrayB.Count)
+            {
+                // TODO - annotate result
+                return new DiffResult(path, "array item counts differ");
+            }
+
+            for (int i = 0; i < arrayA.Count; i++)
+            {
+                var itemA = arrayA[i];
+                var itemB = arrayB[i];
+
+                result = result.Merge(Diff(itemA, itemB, path.Extend(i)));
+            }
+
+            return result;            
         }
     }
 }
