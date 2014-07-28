@@ -12,7 +12,7 @@ namespace Difftaculous.Hints
 
 
         // TODO - need a way to specify multiple keys
-        public ArrayDiffHint(DiffPath path, string keyName)
+        public ArrayDiffHint(IDiffPath path, string keyName)
         {
             KeyName = keyName;
             Path = path;
@@ -20,7 +20,7 @@ namespace Difftaculous.Hints
         }
 
 
-        public DiffPath Path { get; private set; }
+        public IDiffPath Path { get; private set; }
         public DiffStrategy Strategy { get; private set; }
         public string KeyName { get; set; }
     }

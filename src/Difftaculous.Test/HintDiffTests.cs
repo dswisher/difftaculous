@@ -30,7 +30,7 @@ namespace Difftaculous.Test
 
 
 
-        [Test, Ignore("Get this working!")]
+        [Test]
         public void KeyedArrayDoesNotNeedSameOrder()
         {
             const string a = "[{ \"name\": \"fred\", \"age\": 44 }, { \"name\": \"barney\", \"age\": 23}]";
@@ -40,10 +40,13 @@ namespace Difftaculous.Test
             // TODO - should the key be a Path as well?
             var hints = new[] { new ArrayDiffHint(DiffPath.FromJsonPath("$"), "name") };
 
-            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b), hints);
 
             result.AreSame.ShouldBe(true);
         }
 
+
+
+        // TODO - add test for keyed array that has a difference
     }
 }

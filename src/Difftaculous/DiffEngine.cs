@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Difftaculous.Caveats;
+using Difftaculous.Hints;
 using Difftaculous.Results;
+
 using Newtonsoft.Json.Linq;
 
 
@@ -11,11 +14,13 @@ namespace Difftaculous
 {
     internal class DiffEngine
     {
+        private readonly IEnumerable<IHint> _hints;
         private readonly IEnumerable<ICaveat> _caveats;
 
 
-        public DiffEngine(IEnumerable<ICaveat> caveats)
+        public DiffEngine(IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
         {
+            _hints = hints ?? Enumerable.Empty<IHint>();
             _caveats = caveats ?? Enumerable.Empty<ICaveat>();
         }
 
@@ -102,32 +107,40 @@ namespace Difftaculous
 
         private IDiffResult SubDiff(JArray arrayA, JArray arrayB, IDiffPath path)
         {
-            // TODO - see if there are any hints indicating how to difference this array
+            ArrayDiffHint.DiffStrategy strategy = ArrayDiffHint.DiffStrategy.Indexed;
+            string keyName = null;
 
+            var hint = _hints.FirstOrDefault(x => x.Path.Matches(path) && x.GetType() == typeof(ArrayDiffHint));
 
-
-            IDiffResult result = DiffResult.Same;
-
-            // TODO - allow various matching strategies - strict indexed (this one), keyed (join) or diff-algorithm
-
-            // This implements simple indexed array diff: compare item 1 to item 1, then item 2 to item 2, etc.
-            // Limited, simplistic, but easiest to implement.
-            if (arrayA.Count != arrayB.Count)
+            if (hint != null)
             {
-                // TODO - annotate result
-                return new DiffResult(path, "array item counts differ");
+                var arrayHint = (ArrayDiffHint) hint;
+                strategy = arrayHint.Strategy;
+                keyName = arrayHint.KeyName;
             }
 
-            for (int i = 0; i < arrayA.Count; i++)
+            switch (strategy)
             {
-                var itemA = arrayA[i];
-                var itemB = arrayB[i];
+                case ArrayDiffHint.DiffStrategy.Keyed:
+                    return KeyedArrayDiff(arrayA, arrayB, path, keyName);
 
-                result = result.Merge(Diff(itemA, itemB, path.Extend(i)));
+                case ArrayDiffHint.DiffStrategy.Indexed:
+                    return IndexedArrayDiff(arrayA, arrayB, path);
+
+                default:
+                    throw new NotImplementedException("Index diff strategy '" + strategy + "' is not yet implemented.");
             }
-
-            return result;
         }
+
+
+
+        private IDiffResult KeyedArrayDiff(JArray arrayA, JArray arrayB, IDiffPath path, string keyName)
+        {
+            // TODO - implement this!
+
+            return DiffResult.Same;
+        }
+
 
 
         private IDiffResult IndexedArrayDiff(JArray arrayA, JArray arrayB, IDiffPath path)

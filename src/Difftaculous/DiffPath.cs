@@ -4,8 +4,10 @@ namespace Difftaculous
 {
     public interface IDiffPath
     {
-        DiffPath Extend(string name);
-        DiffPath Extend(int index);
+        IDiffPath Extend(string name);
+        IDiffPath Extend(int index);
+
+        bool Matches(IDiffPath path);
 
         string AsJsonPath { get; }
     }
@@ -33,13 +35,13 @@ namespace Difftaculous
 
 
         // TODO - we need a MUCH better way of indicating what is being extended
-        public DiffPath Extend(string name)
+        public IDiffPath Extend(string name)
         {
             return FromJsonPath(AsJsonPath + "." + name);
         }
 
 
-        public DiffPath Extend(int index)
+        public IDiffPath Extend(int index)
         {
             return FromJsonPath(AsJsonPath + "[" + index + "]");
         }
