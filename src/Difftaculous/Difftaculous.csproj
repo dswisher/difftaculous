@@ -49,6 +49,7 @@
     <Compile Include="Diff.cs" />
     <Compile Include="Hints\ArrayDiffHint.cs" />
     <Compile Include="Hints\IHint.cs" />
+    <Compile Include="Misc\Extensions.cs" />
     <Compile Include="Results\DiffAnnotation.cs" />
     <Compile Include="DiffEngine.cs" />
     <Compile Include="IDiffResult.cs" />

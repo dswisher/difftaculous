@@ -5,6 +5,7 @@ using System.Linq;
 
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
+using Difftaculous.Misc;
 using Difftaculous.Results;
 
 using Newtonsoft.Json.Linq;
@@ -136,9 +137,37 @@ namespace Difftaculous
 
         private IDiffResult KeyedArrayDiff(JArray arrayA, JArray arrayB, IDiffPath path, string keyName)
         {
-            // TODO - implement this!
+            var dictA = arrayA.ToDictionary(x => (string)x.SelectToken(keyName));
+            var dictB = arrayB.ToDictionary(x => (string)x.SelectToken(keyName));
 
-            return DiffResult.Same;
+            var join = dictA.FullOuterJoin(dictB, x => x.Key, x => x.Key, (a, b, k) => new { Key = k, A = a, B = b });
+
+            IDiffResult result = DiffResult.Same;
+
+            foreach (var row in join)
+            {
+                if (row.A.Key == null)
+                {
+                    // TODO - need better annotation for this difference!
+                    //_logger.Info("    ...key {0} not found in {1} {2} list...", row.Key, _hostHolder.OldHost.Name, name);
+                    result = result.Merge(new DiffResult(path, "key not found in first list"));
+                }
+                else if (row.B.Key == null)
+                {
+                    // TODO - need better annotation for this difference!
+                    //_logger.Info("    ...key {0} not found in {1} {2} list...", row.Key, _hostHolder.NewHost.Name, name);
+                    result = result.Merge(new DiffResult(path, "key not found in second list"));
+                }
+                else
+                {
+                    var objA = (JObject) row.A.Value;
+                    var objB = (JObject) row.B.Value;
+
+                    result = result.Merge(SubDiff(objA, objB, path.ArrayExtend(row.Key)));
+                }
+            }
+
+            return result;
         }
 
 
@@ -160,7 +189,7 @@ namespace Difftaculous
                 var itemA = arrayA[i];
                 var itemB = arrayB[i];
 
-                result = result.Merge(Diff(itemA, itemB, path.Extend(i)));
+                result = result.Merge(Diff(itemA, itemB, path.ArrayExtend(i)));
             }
 
             return result;            

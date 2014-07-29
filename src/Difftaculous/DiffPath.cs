@@ -5,7 +5,9 @@ namespace Difftaculous
     public interface IDiffPath
     {
         IDiffPath Extend(string name);
-        IDiffPath Extend(int index);
+
+        IDiffPath ArrayExtend(string key);
+        IDiffPath ArrayExtend(int index);
 
         bool Matches(IDiffPath path);
 
@@ -41,11 +43,16 @@ namespace Difftaculous
         }
 
 
-        public IDiffPath Extend(int index)
+        public IDiffPath ArrayExtend(int index)
         {
             return FromJsonPath(AsJsonPath + "[" + index + "]");
         }
 
+
+        public IDiffPath ArrayExtend(string key)
+        {
+            return FromJsonPath(AsJsonPath + "['" + key + "']");
+        }
 
 
         public string AsJsonPath { get; private set; }
