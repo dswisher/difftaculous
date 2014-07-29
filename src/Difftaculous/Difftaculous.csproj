@@ -55,7 +55,7 @@
     <Compile Include="IDiffResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results\DiffResult.cs" />
-    <Compile Include="DiffPath.cs" />
+    <Compile Include="Paths\DiffPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

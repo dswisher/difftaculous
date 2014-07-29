@@ -6,6 +6,7 @@ using System.Linq;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
+using Difftaculous.Paths;
 using Difftaculous.Results;
 
 using Newtonsoft.Json.Linq;

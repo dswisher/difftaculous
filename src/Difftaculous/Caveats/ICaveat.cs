@@ -1,4 +1,6 @@
 ﻿
+using Difftaculous.Paths;
+
 namespace Difftaculous.Caveats
 {
     public interface ICaveat

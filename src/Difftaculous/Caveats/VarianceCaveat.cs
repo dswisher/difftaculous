@@ -1,5 +1,6 @@
 ﻿
 using System;
+using Difftaculous.Paths;
 
 
 namespace Difftaculous.Caveats

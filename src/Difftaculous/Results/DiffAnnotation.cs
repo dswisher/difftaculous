@@ -1,5 +1,7 @@
 ﻿
 
+using Difftaculous.Paths;
+
 namespace Difftaculous.Results
 {
     public class DiffAnnotation

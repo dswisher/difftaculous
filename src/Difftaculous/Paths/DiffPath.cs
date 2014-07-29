@@ -1,6 +1,6 @@
 ﻿
 
-namespace Difftaculous
+namespace Difftaculous.Paths
 {
     public interface IDiffPath
     {

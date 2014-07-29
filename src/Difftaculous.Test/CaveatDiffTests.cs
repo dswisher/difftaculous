@@ -1,6 +1,7 @@
 ﻿
 using Difftaculous.Adapters;
 using Difftaculous.Caveats;
+using Difftaculous.Paths;
 using NUnit.Framework;
 using Shouldly;
 

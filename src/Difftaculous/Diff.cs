@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Difftaculous.Adapters;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
+using Difftaculous.Paths;
 
 
 namespace Difftaculous
