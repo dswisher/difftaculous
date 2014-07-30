@@ -14,7 +14,8 @@
     <copyright>Copyright © 2014</copyright>
     <tags>json xml diff</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.0" />
+      <!-- See how far back we can go with json.net - 5.0.8 has been tested -->
+      <dependency id="Newtonsoft.Json" version="5.0.8" />
     </dependencies>
   </metadata>
   <files>
