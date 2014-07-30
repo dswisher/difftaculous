@@ -5,6 +5,7 @@ using Difftaculous.Adapters;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Paths;
+using Difftaculous.Results;
 
 
 namespace Difftaculous

@@ -52,7 +52,7 @@
     <Compile Include="Misc\Extensions.cs" />
     <Compile Include="Results\DiffAnnotation.cs" />
     <Compile Include="DiffEngine.cs" />
-    <Compile Include="IDiffResult.cs" />
+    <Compile Include="Results\IDiffResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results\DiffResult.cs" />
     <Compile Include="Paths\DiffPath.cs" />

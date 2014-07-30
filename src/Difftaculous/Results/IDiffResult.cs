@@ -1,9 +1,7 @@
 ﻿
 using System.Collections.Generic;
-using Difftaculous.Results;
 
-
-namespace Difftaculous
+namespace Difftaculous.Results
 {
     public interface IDiffResult
     {
