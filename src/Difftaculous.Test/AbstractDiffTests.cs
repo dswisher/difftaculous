@@ -1,8 +1,10 @@
 ﻿
 using System.IO;
 using System.Xml.Serialization;
+using Difftaculous.Paths;
 using Difftaculous.Results;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Shouldly;
 
@@ -34,11 +36,32 @@ namespace Difftaculous.Test
 
 
 
+        [Test]
+        public void AlteredValueResultsInOneDifference()
+        {
+            SimpleObject a = new SimpleObject { Name = "One" };
+            SimpleObject b = new SimpleObject { Name = "Two" };
+
+            var result = DoCompare(a, b);
+
+            result.AreSame.ShouldBe(false);
+            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.name")));
+            // TODO - add ShouldContain using XPath notation?
+        }
+
+
+
         #region Helpers
 
         protected string AsJson(object obj)
         {
-            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {Formatting = Formatting.Indented});
+            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+
+            return JsonConvert.SerializeObject(obj, settings);
         }
 
 

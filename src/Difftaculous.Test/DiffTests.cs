@@ -11,6 +11,8 @@ namespace Difftaculous.Test
     public class DiffTests
     {
 
+        // TODO - these tests should all be removed once everything has been moved over to AbstractDiffTests
+
         [Test]
         public void SimpleObjectComparedWithItselfHasNoDifferences()
         {
