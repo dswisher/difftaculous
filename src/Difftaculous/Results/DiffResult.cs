@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Difftaculous.Paths;
 
 
@@ -37,6 +38,18 @@ namespace Difftaculous.Results
         }
 
 
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
 
+            builder.AppendLine(string.Format("DiffResult, AreSame={0}", AreSame));
+
+            foreach (var anno in Annotations)
+            {
+                builder.AppendLine(string.Format("Anno, path={0}, msg={1}", anno.Path.AsJsonPath, anno.Message));
+            }
+
+            return builder.ToString();
+        }
     }
 }

@@ -1,16 +1,16 @@
 ﻿
-using Newtonsoft.Json;
+using System;
 using Newtonsoft.Json.Linq;
 
 
 namespace Difftaculous.Adapters
 {
-    public class JsonAdapter : IAdapter
+    public class XmlAdapter : IAdapter
     {
 
-        public JsonAdapter(string content)
+        public XmlAdapter(string content)
         {
-            Content = (JToken) JsonConvert.DeserializeObject(content);
+            throw new NotImplementedException("TBD");
         }
 
 

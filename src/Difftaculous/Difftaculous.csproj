@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\IAdapter.cs" />
     <Compile Include="Adapters\JsonAdapter.cs" />
+    <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="Caveats\ICaveat.cs" />
     <Compile Include="Caveats\VarianceCaveat.cs" />
     <Compile Include="Diff.cs" />
