@@ -1,7 +1,4 @@
 ﻿
-using System;
-using Newtonsoft.Json.Linq;
-
 
 namespace Difftaculous.Adapters
 {
@@ -10,12 +7,13 @@ namespace Difftaculous.Adapters
 
         public XmlAdapter(string content)
         {
-            throw new NotImplementedException("TBD");
+            // TODO!
+            Content = new ZToken();
         }
 
 
         // TODO - this needs to change to something non-JSON specific!
-        public JToken Content { get; private set; }
+        public IToken Content { get; private set; }
 
     }
 }

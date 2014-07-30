@@ -1,5 +1,6 @@
 ﻿
-using System;
+using System.IO;
+using System.Xml.Serialization;
 using Difftaculous.Results;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ namespace Difftaculous.Test
         protected abstract IDiffResult DoCompare(object a, object b);
 
 
-        protected class SimpleObject
+        public class SimpleObject
         {
             public string Name { get; set; }
         }
@@ -40,10 +41,16 @@ namespace Difftaculous.Test
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {Formatting = Formatting.Indented});
         }
 
+
         protected string AsXml(object obj)
         {
-            // TODO!
-            throw new NotImplementedException("TBD");
+            XmlSerializer cereal = new XmlSerializer(obj.GetType());
+            using (StringWriter writer = new StringWriter())
+            {
+                cereal.Serialize(writer, obj);
+
+                return writer.ToString();
+            }
         }
 
         #endregion

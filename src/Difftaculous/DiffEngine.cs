@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Difftaculous.Adapters;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
@@ -28,6 +28,17 @@ namespace Difftaculous
 
 
 
+
+        public IDiffResult Diff(IToken tokenA, IToken tokenB, IDiffPath path)
+        {
+            // TODO!
+            return DiffResult.Same;
+        }
+
+
+
+
+        // TODO - this (and the other JSON-based methods) are obsolete and should be removed (once IToken implemented is complete)
         public IDiffResult Diff(JToken tokenA, JToken tokenB, IDiffPath path)
         {
             var typeA = tokenA.GetType();

@@ -13,7 +13,7 @@ namespace Difftaculous.Test
     {
         protected override IDiffResult DoCompare(object a, object b)
         {
-            Assert.Ignore("TBD");
+            //Assert.Ignore("TBD");
 
             var xmlA = AsXml(a);
             var xmlB = AsXml(b);

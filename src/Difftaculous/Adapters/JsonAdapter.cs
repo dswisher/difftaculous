@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Difftaculous.Adapters
 {
-    public class JsonAdapter : IAdapter
+    public class JsonAdapter // : IAdapter
     {
 
         public JsonAdapter(string content)
