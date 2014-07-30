@@ -62,6 +62,7 @@
     <Compile Include="Paths\DiffPath.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Difftaculous.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
