@@ -8,7 +8,7 @@ namespace Difftaculous.Adapters
         public XmlAdapter(string content)
         {
             // TODO!
-            Content = new ZToken();
+            Content = new ZObject();
         }
 
 

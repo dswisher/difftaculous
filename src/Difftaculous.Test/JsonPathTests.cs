@@ -9,6 +9,7 @@ namespace Difftaculous.Test
     public class JsonPathTests
     {
         // TODO - is matching symmetric?  Does a.Matches(b) => b.Matches(a)?
+        //      NO!  Matching two paths should be removed; Matches should take an IToken!
 
         [Ignore("Get this working!")]
         [TestCase("$.countries[1].points")]

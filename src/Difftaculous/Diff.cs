@@ -49,7 +49,7 @@ namespace Difftaculous
             // TODO - accept hints and caveats!
             DiffEngine engine = new DiffEngine(null, null);
 
-            return engine.Diff(a.Content, b.Content, DiffPath.Root);
+            return engine.Diff(a.Content, b.Content);
         }
     }
 }

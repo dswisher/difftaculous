@@ -27,6 +27,19 @@ namespace Difftaculous.Test
 
 
         [Test]
+        public void NullValuesAreTolerated()
+        {
+            const string a = "{ \"hello\": null }";
+            const string b = a;
+
+            var result = Diff.Compare(new JsonAdapter(a), new JsonAdapter(b));
+
+            result.AreSame.ShouldBe(true);
+        }
+
+
+
+        [Test]
         public void AlteredValueResultsInOneDifference()
         {
             const string a = "{ \"hello\": \"World\" }";

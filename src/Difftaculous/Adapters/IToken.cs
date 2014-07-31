@@ -1,4 +1,6 @@
 ﻿
+using Difftaculous.Paths;
+
 namespace Difftaculous.Adapters
 {
     /// <summary>
@@ -6,5 +8,6 @@ namespace Difftaculous.Adapters
     /// </summary>
     public interface IToken
     {
+        DiffPath Path { get; }
     }
 }

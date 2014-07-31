@@ -26,7 +26,8 @@ namespace Difftaculous.Paths
         }
 
 
-        public static DiffPath Root { get { return _root; } }
+        // TODO - this may be obsolete once new IToken-based DiffEngine is done
+        internal static DiffPath Root { get { return _root; } }
 
 
         public static DiffPath FromJsonPath(string path)
@@ -83,6 +84,7 @@ namespace Difftaculous.Paths
         }
 
 
+        // TODO - this should take an IToken and not another path!
         public bool Matches(IDiffPath path)
         {
             // TODO - this is way too simplistic!  Need to do wildcard matches and

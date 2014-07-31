@@ -29,10 +29,44 @@ namespace Difftaculous
 
 
 
-        public IDiffResult Diff(IToken tokenA, IToken tokenB, IDiffPath path)
+        public IDiffResult Diff(IToken tokenA, IToken tokenB)
         {
+            var typeA = tokenA.GetType();
+            var typeB = tokenB.GetType();
+
+            if (typeA != typeB)
+            {
+                return new DiffResult(tokenA.Path, "types are not consistent");
+            }
+
+            if (typeA == typeof (ZObject))
+            {
+                return SubDiff((ZObject)tokenA, (ZObject)tokenB);
+            }
+
             // TODO!
-            return DiffResult.Same;
+
+            throw new NotImplementedException("Type " + typeA.Name + " is not yet handled.");
+        }
+
+
+
+        private IDiffResult SubDiff(ZObject objA, ZObject objB)
+        {
+            IDiffResult result = DiffResult.Same;
+
+            // TODO!
+
+            //// TODO - do full outer join between properties
+            //foreach (var pair in objA)
+            //{
+            //    // TODO - what if other prop does not exist?
+            //    var other = objB.Property(pair.Key).Value;
+
+            //    result = result.Merge(Diff(pair.Value, other, path.Extend(pair.Key)));
+            //}
+
+            return result;
         }
 
 
