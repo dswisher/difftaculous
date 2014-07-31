@@ -12,7 +12,7 @@ namespace Difftaculous.Test
     {
         protected override IDiffResult DoCompare(object a, object b)
         {
-            Assert.Ignore("TBD");
+            // Assert.Ignore("TBD");
 
             var jsonA = AsJson(a);
             var jsonB = AsJson(b);

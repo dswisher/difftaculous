@@ -44,11 +44,15 @@
   <ItemGroup>
     <Compile Include="Adapters\IAdapter.cs" />
     <Compile Include="Adapters\IObject.cs" />
+    <Compile Include="Adapters\IProperty.cs" />
     <Compile Include="Adapters\IToken.cs" />
+    <Compile Include="Adapters\IValue.cs" />
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\JsonAdapterEx.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="Adapters\ZObject.cs" />
+    <Compile Include="Adapters\ZProperty.cs" />
+    <Compile Include="Adapters\ZValue.cs" />
     <Compile Include="Caveats\ICaveat.cs" />
     <Compile Include="Caveats\VarianceCaveat.cs" />
     <Compile Include="Diff.cs" />

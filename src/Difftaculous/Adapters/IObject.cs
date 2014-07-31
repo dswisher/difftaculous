@@ -1,12 +1,11 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Difftaculous.Adapters
 {
     public interface IObject : IToken
     {
+        IEnumerable<IProperty> Properties { get; }
     }
 }

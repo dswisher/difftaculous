@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿
+using System;
 using Newtonsoft.Json.Linq;
+
 
 namespace Difftaculous.Adapters
 {
@@ -31,14 +28,36 @@ namespace Difftaculous.Adapters
                 return Adapt((JObject)jtoken);
             }
 
+            if (type == typeof(JValue))
+            {
+                return Adapt((JValue)jtoken);
+            }
+
             throw new NotImplementedException("Adapting type '" + type.Name + "' is not yet implemented.");
         }
 
 
         private IToken Adapt(JObject jobject)
         {
-            // TODO
-            return new ZObject();
+            ZObject zobject = new ZObject();
+
+            foreach (var jprop in jobject.Properties())
+            {
+                zobject.AddProperty(new ZProperty(jprop.Name, Adapt(jprop.Value)));
+            }
+
+            return zobject;
+        }
+
+
+
+        private IToken Adapt(JValue jvalue)
+        {
+            // TODO - pass along the type?!
+
+            ZValue zvalue = new ZValue(jvalue.Value);
+
+            return zvalue;
         }
     }
 }

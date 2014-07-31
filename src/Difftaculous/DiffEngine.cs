@@ -39,9 +39,14 @@ namespace Difftaculous
                 return new DiffResult(tokenA.Path, "types are not consistent");
             }
 
-            if (typeA == typeof (ZObject))
+            if (tokenA is IObject)
             {
-                return SubDiff((ZObject)tokenA, (ZObject)tokenB);
+                return SubDiff((IObject)tokenA, (IObject)tokenB);
+            }
+
+            if (tokenA is IValue)
+            {
+                return SubDiff((IValue)tokenA, (IValue)tokenB);
             }
 
             // TODO!
@@ -51,22 +56,64 @@ namespace Difftaculous
 
 
 
-        private IDiffResult SubDiff(ZObject objA, ZObject objB)
+        private IDiffResult SubDiff(IObject objA, IObject objB)
         {
             IDiffResult result = DiffResult.Same;
 
-            // TODO!
+            foreach (var pair in objA.Properties.FullOuterJoin(objB.Properties, x => x.Name, x => x.Name, (p1, p2, n) => new { PropA = p1, PropB = p2, Name = n }))
+            {
+                if ((pair.PropA == null) || (pair.PropB == null))
+                {
+                    // TODO - handle missing items!
+                    throw new NotImplementedException("Handle missing items!");
+                }
 
-            //// TODO - do full outer join between properties
-            //foreach (var pair in objA)
-            //{
-            //    // TODO - what if other prop does not exist?
-            //    var other = objB.Property(pair.Key).Value;
-
-            //    result = result.Merge(Diff(pair.Value, other, path.Extend(pair.Key)));
-            //}
+                result = result.Merge(Diff(pair.PropA.Value, pair.PropB.Value));
+            }
 
             return result;
+        }
+
+
+
+        private IDiffResult SubDiff(IValue valA, IValue valB)
+        {
+            // TODO - better value diff - numerics - 34.0 vs. 34.00 isn't really a difference, is it?
+
+            if ((valA.Value == null) || (valB.Value == null))
+            {
+                if ((valA.Value == null) && ((valB.Value == null)))
+                {
+                    return DiffResult.Same;
+                }
+
+                // TODO - what about null caveats?
+
+                return new DiffResult(valA.Path, string.Format("values differ: '{0}' vs. '{1}'", valA.Value, valB.Value));
+            }
+
+            string a = valA.Value.ToString();
+            string b = valB.Value.ToString();
+
+            // If things are equal, we're done...
+            if (a == b)
+            {
+                return DiffResult.Same;
+            }
+
+            // Okay, they're not equal...see if there are any caveats that will let this
+            // discrepancy pass...
+            var applicableCaveats = _caveats.Where(x => x.Path.Matches(valA.Path));
+
+            // TODO - this should return something other than Same, because they are NOT
+            // the same.  But, returning something like "WithinTolerance" makes the DiffResult
+            // more complex...
+            if (applicableCaveats.Any(x => x.IsAcceptable(a, b)))
+            {
+                return DiffResult.Same;
+            }
+
+            return new DiffResult(valA.Path, string.Format("values differ: '{0}' vs. '{1}'", a, b));
         }
 
 
@@ -136,31 +183,29 @@ namespace Difftaculous
 
                 return new DiffResult(path, string.Format("values differ: '{0}' vs. '{1}'", valA.Value, valB.Value));
             }
-            else
+
+            string a = valA.Value.ToString();
+            string b = valB.Value.ToString();
+
+            // If things are equal, we're done...
+            if (a == b)
             {
-                string a = valA.Value.ToString();
-                string b = valB.Value.ToString();
-
-                // If things are equal, we're done...
-                if (a == b)
-                {
-                    return DiffResult.Same;
-                }
-
-                // Okay, they're not equal...see if there are any caveats that will let this
-                // discrepancy pass...
-                var applicableCaveats = _caveats.Where(x => x.Path.Matches(path));
-
-                // TODO - this should return something other than Same, because they are NOT
-                // the same.  But, returning something like "WithinTolerance" makes the DiffResult
-                // more complex...
-                if (applicableCaveats.Any(x => x.IsAcceptable(a, b)))
-                {
-                    return DiffResult.Same;
-                }
-
-                return new DiffResult(path, string.Format("values differ: '{0}' vs. '{1}'", a, b));
+                return DiffResult.Same;
             }
+
+            // Okay, they're not equal...see if there are any caveats that will let this
+            // discrepancy pass...
+            var applicableCaveats = _caveats.Where(x => x.Path.Matches(path));
+
+            // TODO - this should return something other than Same, because they are NOT
+            // the same.  But, returning something like "WithinTolerance" makes the DiffResult
+            // more complex...
+            if (applicableCaveats.Any(x => x.IsAcceptable(a, b)))
+            {
+                return DiffResult.Same;
+            }
+
+            return new DiffResult(path, string.Format("values differ: '{0}' vs. '{1}'", a, b));
         }
 
 
