@@ -89,31 +89,44 @@ namespace Difftaculous
 
         private IDiffResult SubDiff(JValue valA, JValue valB, IDiffPath path)
         {
-            // TODO - better value diff
-            // TODO - if different, annotate result
+            // TODO - better value diff - numerics - 34.0 vs. 34.00 isn't really a difference, is it?
 
-            string a = valA.Value.ToString();
-            string b = valB.Value.ToString();
-
-            // If things are equal, we're done...
-            if (a == b)
+            if ((valA.Value == null) || (valB.Value == null))
             {
-                return DiffResult.Same;
+                if ((valA.Value == null) && ((valB.Value == null)))
+                {
+                    return DiffResult.Same;
+                }
+
+                // TODO - what about null caveats?
+
+                return new DiffResult(path, string.Format("values differ: '{0}' vs. '{1}'", valA.Value, valB.Value));
             }
-
-            // Okay, they're not equal...see if there are any caveats that will let this
-            // discrepancy pass...
-            var applicableCaveats = _caveats.Where(x => x.Path.Matches(path));
-
-            // TODO - this should return something other than Same, because they are NOT
-            // the same.  But, returning something like "WithinTolerance" makes the DiffResult
-            // more complex...
-            if (applicableCaveats.Any(x => x.IsAcceptable(a, b)))
+            else
             {
-                return DiffResult.Same;
-            }
+                string a = valA.Value.ToString();
+                string b = valB.Value.ToString();
 
-            return new DiffResult(path, string.Format("values differ: '{0}' vs. '{1}'", a, b));
+                // If things are equal, we're done...
+                if (a == b)
+                {
+                    return DiffResult.Same;
+                }
+
+                // Okay, they're not equal...see if there are any caveats that will let this
+                // discrepancy pass...
+                var applicableCaveats = _caveats.Where(x => x.Path.Matches(path));
+
+                // TODO - this should return something other than Same, because they are NOT
+                // the same.  But, returning something like "WithinTolerance" makes the DiffResult
+                // more complex...
+                if (applicableCaveats.Any(x => x.IsAcceptable(a, b)))
+                {
+                    return DiffResult.Same;
+                }
+
+                return new DiffResult(path, string.Format("values differ: '{0}' vs. '{1}'", a, b));
+            }
         }
 
 

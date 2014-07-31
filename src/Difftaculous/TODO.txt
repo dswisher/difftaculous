@@ -1,2 +1,4 @@
 ﻿
 - Diff is too generic - rename to something less likely to collide
+
+- Improve build process so versions are kept in sync

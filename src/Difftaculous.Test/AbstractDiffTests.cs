@@ -37,6 +37,19 @@ namespace Difftaculous.Test
 
 
         [Test]
+        public void NullValuesAreTolerated()
+        {
+            SimpleObject a = new SimpleObject { Name = null };
+            SimpleObject b = a;
+
+            var result = DoCompare(a, b);
+
+            result.AreSame.ShouldBe(true);
+        }
+
+
+
+        [Test]
         public void AlteredValueResultsInOneDifference()
         {
             SimpleObject a = new SimpleObject { Name = "One" };
