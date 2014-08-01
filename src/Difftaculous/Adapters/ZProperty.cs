@@ -2,7 +2,7 @@
 
 namespace Difftaculous.Adapters
 {
-    internal class ZProperty : IProperty
+    internal class ZProperty : ZToken, IProperty
     {
         public ZProperty(string name, IToken value)
         {

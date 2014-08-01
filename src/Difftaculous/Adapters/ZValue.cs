@@ -1,10 +1,8 @@
 ﻿
-using Difftaculous.Paths;
-
 
 namespace Difftaculous.Adapters
 {
-    internal class ZValue : IValue
+    internal class ZValue : ZToken, IValue
     {
         public ZValue(object value)
         {
@@ -13,12 +11,5 @@ namespace Difftaculous.Adapters
 
 
         public object Value { get; private set; }
-
-
-        public DiffPath Path
-        {
-            // TODO!  HAck to get unit test to pass!
-            get { return DiffPath.FromJsonPath("$.name"); }
-        }
     }
 }

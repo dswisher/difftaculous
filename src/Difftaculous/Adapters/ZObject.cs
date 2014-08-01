@@ -1,31 +1,46 @@
 ﻿
-using System;
 using System.Collections.Generic;
-using Difftaculous.Paths;
+
 
 namespace Difftaculous.Adapters
 {
-    internal class ZObject : IObject
+    internal class ZObject : ZToken, IObject
     {
-        private readonly List<IProperty> _properties = new List<IProperty>();
-
-
-        public DiffPath Path
-        {
-            // TODO - implement path - need to navigate up to parents
-            get { throw new NotImplementedException(); }
-        }
+        private readonly Dictionary<string, IProperty> _properties = new Dictionary<string, IProperty>();
 
 
         public IEnumerable<IProperty> Properties
         {
-            get { return _properties; }
+            get { return _properties.Values; }
+        }
+
+
+        public IProperty GetProperty(string name)
+        {
+            if (name == null)
+            {
+                return null;
+            }
+
+            IProperty property;
+            _properties.TryGetValue(name, out property);
+            return property;
+        }
+
+
+        public IToken this[string propertyName]
+        {
+            get
+            {
+                IProperty property = GetProperty(propertyName);
+                return (property != null) ? property.Value : null;
+            }
         }
 
 
         public void AddProperty(IProperty property)
         {
-            _properties.Add(property);
+            _properties.Add(property.Name, property);
         }
     }
 }

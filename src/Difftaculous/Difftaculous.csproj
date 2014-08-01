@@ -54,6 +54,7 @@
     <Compile Include="Adapters\ZArray.cs" />
     <Compile Include="Adapters\ZObject.cs" />
     <Compile Include="Adapters\ZProperty.cs" />
+    <Compile Include="Adapters\ZToken.cs" />
     <Compile Include="Adapters\ZValue.cs" />
     <Compile Include="Caveats\ICaveat.cs" />
     <Compile Include="Caveats\VarianceCaveat.cs" />
