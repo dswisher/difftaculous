@@ -33,6 +33,11 @@ namespace Difftaculous.Adapters
                 return Adapt((JValue)jtoken);
             }
 
+            if (type == typeof(JArray))
+            {
+                return Adapt((JArray)jtoken);
+            }
+
             throw new NotImplementedException("Adapting type '" + type.Name + "' is not yet implemented.");
         }
 
@@ -58,6 +63,20 @@ namespace Difftaculous.Adapters
             ZValue zvalue = new ZValue(jvalue.Value);
 
             return zvalue;
+        }
+
+
+
+        private IToken Adapt(JArray jarray)
+        {
+            ZArray zarray = new ZArray();
+
+            foreach (var item in jarray)
+            {
+                zarray.Add(Adapt(item));
+            }
+
+            return zarray;
         }
     }
 }

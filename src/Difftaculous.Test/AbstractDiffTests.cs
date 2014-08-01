@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.IO;
 using System.Xml.Serialization;
 using Difftaculous.Paths;
@@ -60,6 +61,21 @@ namespace Difftaculous.Test
             result.AreSame.ShouldBe(false);
             result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.name")));
             // TODO - add ShouldContain using XPath notation?
+        }
+
+
+
+        [Test]
+        public void SimpleArrayComparedWithItselfHasNoDifferences()
+        {
+            // const string a = "[\"Red\", \"Green\", \"Blue\"]";
+            string[] a = { "Red", "Green", "Blue" };
+            string[] b = new string[3];
+            Array.Copy(a, b, 3);
+
+            var result = DoCompare(a, b);
+
+            result.AreSame.ShouldBe(true);
         }
 
 

@@ -49,6 +49,11 @@ namespace Difftaculous
                 return SubDiff((IValue)tokenA, (IValue)tokenB);
             }
 
+            if (tokenA is IArray)
+            {
+                return SubDiff((IArray)tokenA, (IArray)tokenB);
+            }
+
             // TODO!
 
             throw new NotImplementedException("Type " + typeA.Name + " is not yet handled.");
@@ -115,6 +120,64 @@ namespace Difftaculous
 
             return new DiffResult(valA.Path, string.Format("values differ: '{0}' vs. '{1}'", a, b));
         }
+
+
+
+        private IDiffResult SubDiff(IArray arrayA, IArray arrayB)
+        {
+            ArrayDiffHint.DiffStrategy strategy = ArrayDiffHint.DiffStrategy.Indexed;
+            //string keyName = null;
+
+            var hint = _hints.FirstOrDefault(x => x.Path.Matches(arrayA) && x.GetType() == typeof(ArrayDiffHint));
+
+            if (hint != null)
+            {
+                var arrayHint = (ArrayDiffHint)hint;
+                strategy = arrayHint.Strategy;
+                //keyName = arrayHint.KeyName;
+            }
+
+            // TODO - should the adapter shoulder some of the burden of handling key'd arrays??
+
+            switch (strategy)
+            {
+                //case ArrayDiffHint.DiffStrategy.Keyed:
+                //    return KeyedArrayDiff(arrayA, arrayB, keyName);
+
+                case ArrayDiffHint.DiffStrategy.Indexed:
+                    return IndexedArrayDiff(arrayA, arrayB);
+
+                default:
+                    throw new NotImplementedException("Index diff strategy '" + strategy + "' is not yet implemented.");
+            }
+        }
+
+
+
+        private IDiffResult IndexedArrayDiff(IArray arrayA, IArray arrayB)
+        {
+            IDiffResult result = DiffResult.Same;
+
+            // This implements simple indexed array diff: compare item 1 to item 1, then item 2 to item 2, etc.
+            // Limited, simplistic, but easiest to implement.
+            if (arrayA.Count != arrayB.Count)
+            {
+                // TODO - annotate result
+                return new DiffResult(arrayA.Path, "array item counts differ");
+            }
+
+            for (int i = 0; i < arrayA.Count; i++)
+            {
+                var itemA = arrayA[i];
+                var itemB = arrayB[i];
+
+                result = result.Merge(Diff(itemA, itemB));
+            }
+
+            return result;
+        }
+
+
 
 
 

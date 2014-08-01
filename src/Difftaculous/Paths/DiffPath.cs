@@ -1,5 +1,8 @@
 ﻿
 
+using System;
+using Difftaculous.Adapters;
+
 namespace Difftaculous.Paths
 {
     public interface IDiffPath
@@ -9,7 +12,10 @@ namespace Difftaculous.Paths
         IDiffPath ArrayExtend(string key);
         IDiffPath ArrayExtend(int index);
 
+        // TODO - obsolete!
         bool Matches(IDiffPath path);
+
+        bool Matches(IToken token);
 
         string AsJsonPath { get; }
     }
@@ -91,6 +97,15 @@ namespace Difftaculous.Paths
             // whatnot...matching is NOT the same as equality...
 
             return Equals(path);
+        }
+
+
+
+        public bool Matches(IToken token)
+        {
+            // TODO - implement this!
+
+            throw new NotImplementedException();
         }
     }
 }
