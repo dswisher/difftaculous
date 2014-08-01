@@ -18,9 +18,17 @@ namespace Difftaculous.ZModel
         }
 
 
+        public int IndexOf(IToken item)
+        {
+            // TODO - do we need an equality comparer?
+            return _tokens.IndexOf(item);
+        }
+
+
         public void Add(IToken token)
         {
             _tokens.Add(token);
+            ((ZToken)token).Parent = this;
         }
     }
 }

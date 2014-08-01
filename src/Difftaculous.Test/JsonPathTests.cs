@@ -53,6 +53,18 @@ namespace Difftaculous.Test
 
 
         [Test]
+        public void ArrayPath()
+        {
+            ZArray a = new ZArray();
+            ZValue v = new ZValue(1);
+            a.Add(v);
+
+            v.Path.AsJsonPath.ShouldBe("$[0]");
+        }
+
+
+
+        [Test]
         public void NestedPropertyPath()
         {
             // Based on JPropertyPath() from Json.Net's LinqToJsonTest

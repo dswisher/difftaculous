@@ -6,5 +6,6 @@ namespace Difftaculous.ZModel
     {
         int Count { get; }
         IToken this[int index] { get; }
+        int IndexOf(IToken item);
     }
 }

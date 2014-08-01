@@ -57,16 +57,14 @@ namespace Difftaculous.ZModel
                                 sb.Append(((IProperty)current).Name);
                                 break;
 
-#if false
-                            case JTokenType.Array:
-                            case JTokenType.Constructor:
-                                int index = ((IList<JToken>)current).IndexOf(next);
+                            case TokenType.Array:
+                                IArray array = (IArray)current;
+                                int index = array.IndexOf(next);
 
                                 sb.Append("[");
                                 sb.Append(index);
                                 sb.Append("]");
                                 break;
-#endif
                         }
                     }
                 }

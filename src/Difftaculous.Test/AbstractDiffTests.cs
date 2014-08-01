@@ -89,7 +89,7 @@ namespace Difftaculous.Test
             result.AreSame.ShouldBe(false);
 
             // TODO - verify annotation!
-            // result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$[1]")));
+            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$[1]")));
         }
 
 
