@@ -9,6 +9,9 @@ namespace Difftaculous.ZModel
         private readonly Dictionary<string, IProperty> _properties = new Dictionary<string, IProperty>();
 
 
+        public override TokenType Type { get { return TokenType.Object; } }
+
+
         public IEnumerable<IProperty> Properties
         {
             get { return _properties.Values; }

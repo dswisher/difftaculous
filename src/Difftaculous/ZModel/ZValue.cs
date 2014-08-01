@@ -11,6 +11,7 @@ namespace Difftaculous.ZModel
             Value = value;
         }
 
+        public override TokenType Type { get { return TokenType.Value; } }
 
         public object Value { get; private set; }
     }

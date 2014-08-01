@@ -1,5 +1,6 @@
 ﻿
 using Difftaculous.Paths;
+using Difftaculous.ZModel;
 
 namespace Difftaculous.Adapters
 {
@@ -11,6 +12,8 @@ namespace Difftaculous.Adapters
         DiffPath Path { get; }
 
         IToken this[string key] { get; }
+
+        TokenType Type { get; }
 
         // NOTE: Json.Net defines this as a JContainer
         IToken Parent { get; }

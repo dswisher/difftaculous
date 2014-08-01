@@ -1,4 +1,8 @@
-﻿using System;
+﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Difftaculous.Adapters;
 using Difftaculous.Paths;
 
@@ -15,12 +19,73 @@ namespace Difftaculous.ZModel
         }
 
 
+        public abstract TokenType Type { get; }
+
 
         public DiffPath Path
         {
-            // TODO!  Hack to get unit test to pass!
-            get { return DiffPath.FromJsonPath("$.name"); }
+            get
+            {
+                // TODO - this should really be building up an expression directly so we don't have to parse the JsonPath at the end
+
+                // Based on Json.Net...see JToken.cs, line 181
+                var ancestors = Ancestors.Reverse().ToList();
+                ancestors.Add(this);
+
+                StringBuilder sb = new StringBuilder("$");
+
+                for (int i = 0; i < ancestors.Count; i++)
+                {
+                    IToken current = ancestors[i];
+                    IToken next = null;
+
+                    if (i + 1 < ancestors.Count)
+                    {
+                        next = ancestors[i + 1];
+                    }
+                    else if (ancestors[i].Type == TokenType.Property)
+                    {
+                        next = ancestors[i];
+                    }
+
+                    if (next != null)
+                    {
+                        switch (current.Type)
+                        {
+                            case TokenType.Property:
+                                sb.Append(".");
+                                sb.Append(((IProperty)current).Name);
+                                break;
+
+#if false
+                            case JTokenType.Array:
+                            case JTokenType.Constructor:
+                                int index = ((IList<JToken>)current).IndexOf(next);
+
+                                sb.Append("[");
+                                sb.Append(index);
+                                sb.Append("]");
+                                break;
+#endif
+                        }
+                    }
+                }
+
+                return DiffPath.FromJsonPath(sb.ToString());
+            }
         }
 
+
+
+        private IEnumerable<IToken> Ancestors
+        {
+            get
+            {
+                for (IToken parent = Parent; parent != null; parent = parent.Parent)
+                {
+                    yield return parent;
+                }
+            }
+        }
     }
 }

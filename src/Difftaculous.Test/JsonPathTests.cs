@@ -30,8 +30,30 @@ namespace Difftaculous.Test
 
 
 
-        [Test, Ignore("Get this working!")]
+        [Test]
+        public void TopLevelObject()
+        {
+            ZObject o = new ZObject();
+
+            o.Path.AsJsonPath.ShouldBe("$");
+        }
+
+
+
+        [Test]
         public void PropertyPath()
+        {
+            ZObject o = new ZObject();
+            ZProperty p = new ZProperty("name", new ZValue("Fred"));
+            o.AddProperty(p);
+
+            p.Path.AsJsonPath.ShouldBe("$.name");            
+        }
+
+
+
+        [Test]
+        public void NestedPropertyPath()
         {
             // Based on JPropertyPath() from Json.Net's LinqToJsonTest
 

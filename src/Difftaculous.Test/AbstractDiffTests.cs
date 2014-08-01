@@ -60,7 +60,6 @@ namespace Difftaculous.Test
 
             result.AreSame.ShouldBe(false);
             result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.name")));
-            // TODO - add ShouldContain using XPath notation?
         }
 
 
@@ -113,9 +112,7 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-
-            // TODO - verify annotation!
-            //result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.thing.name")));
+            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.thing.name")));
         }
 
 

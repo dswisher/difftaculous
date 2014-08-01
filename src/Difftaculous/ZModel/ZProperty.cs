@@ -14,6 +14,7 @@ namespace Difftaculous.ZModel
             ((ZToken)Value).Parent = this;
         }
 
+        public override TokenType Type { get { return TokenType.Property; } }
 
         public string Name { get; private set; }
         public IToken Value { get; private set; }

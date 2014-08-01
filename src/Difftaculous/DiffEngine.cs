@@ -31,6 +31,8 @@ namespace Difftaculous
 
         public IDiffResult Diff(IToken tokenA, IToken tokenB)
         {
+            // TODO - switch this to use IToken.Type
+
             var typeA = tokenA.GetType();
             var typeB = tokenB.GetType();
 

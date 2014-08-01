@@ -55,6 +55,7 @@
     <Compile Include="ZModel\ZObject.cs" />
     <Compile Include="ZModel\ZProperty.cs" />
     <Compile Include="ZModel\ZToken.cs" />
+    <Compile Include="ZModel\TokenType.cs" />
     <Compile Include="ZModel\ZValue.cs" />
     <Compile Include="Caveats\ICaveat.cs" />
     <Compile Include="Caveats\VarianceCaveat.cs" />

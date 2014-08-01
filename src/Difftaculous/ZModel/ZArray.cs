@@ -8,6 +8,7 @@ namespace Difftaculous.ZModel
     {
         private readonly List<IToken> _tokens = new List<IToken>();
 
+        public override TokenType Type { get { return TokenType.Array; } }
 
         public int Count { get { return _tokens.Count; } }
 
