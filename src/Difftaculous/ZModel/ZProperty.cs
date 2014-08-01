@@ -1,6 +1,8 @@
 ﻿
 
-namespace Difftaculous.Adapters
+using Difftaculous.Adapters;
+
+namespace Difftaculous.ZModel
 {
     internal class ZProperty : ZToken, IProperty
     {
@@ -8,6 +10,8 @@ namespace Difftaculous.Adapters
         {
             Name = name;
             Value = value;
+
+            ((ZToken)Value).Parent = this;
         }
 
 

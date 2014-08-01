@@ -1,6 +1,8 @@
 ﻿
 
-namespace Difftaculous.Adapters
+using Difftaculous.Adapters;
+
+namespace Difftaculous.ZModel
 {
     internal class ZValue : ZToken, IValue
     {

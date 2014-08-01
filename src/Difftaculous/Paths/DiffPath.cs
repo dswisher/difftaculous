@@ -44,8 +44,7 @@ namespace Difftaculous.Paths
 
         public static DiffPath FromToken(IToken token)
         {
-            // TODO!  Hack to get unit test to pass!
-            return FromJsonPath("$.name");
+            return token.Path;
         }
 
 

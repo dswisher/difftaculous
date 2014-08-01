@@ -1,8 +1,8 @@
 ﻿
 using System.Collections.Generic;
+using Difftaculous.Adapters;
 
-
-namespace Difftaculous.Adapters
+namespace Difftaculous.ZModel
 {
     internal class ZObject : ZToken, IObject
     {
@@ -28,7 +28,7 @@ namespace Difftaculous.Adapters
         }
 
 
-        public IToken this[string propertyName]
+        public override IToken this[string propertyName]
         {
             get
             {
@@ -41,6 +41,7 @@ namespace Difftaculous.Adapters
         public void AddProperty(IProperty property)
         {
             _properties.Add(property.Name, property);
+            ((ZToken)property).Parent = this;
         }
     }
 }

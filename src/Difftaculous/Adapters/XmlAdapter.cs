@@ -1,5 +1,7 @@
 ﻿
 
+using Difftaculous.ZModel;
+
 namespace Difftaculous.Adapters
 {
     public class XmlAdapter : IAdapter

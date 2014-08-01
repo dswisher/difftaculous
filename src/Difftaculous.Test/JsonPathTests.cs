@@ -1,6 +1,8 @@
 ﻿
 using Difftaculous.Paths;
+using Difftaculous.ZModel;
 using NUnit.Framework;
+using Shouldly;
 
 
 namespace Difftaculous.Test
@@ -24,6 +26,42 @@ namespace Difftaculous.Test
             // path.Matches(template).ShouldBe(true);
 
             Assert.That(template.Matches(path), string.Format("{0} matches {1}", template.AsJsonPath, path.AsJsonPath));
+        }
+
+
+
+        [Test, Ignore("Get this working!")]
+        public void PropertyPath()
+        {
+            // Based on JPropertyPath() from Json.Net's LinqToJsonTest
+
+            ZObject o = new ZObject();
+            ZObject c = new ZObject();
+            o.AddProperty(new ZProperty("person", c));
+            c.AddProperty(new ZProperty("$id", new ZValue(1)));
+
+            var prop = o["person"]["$id"].Parent;
+
+            // NOTE: Json.Net has this as person.$id, but I think we want all paths to be rooted
+            prop.Path.AsJsonPath.ShouldBe("$.person.$id");
+
+
+            // TODO - make ZObject an IDictionary (of properties) so we can use a collection initializer
+#if false
+            JObject o = new JObject
+            {
+                {
+                    "person",
+                    new JObject
+                    {
+                        { "$id", 1 }
+                    }
+                }
+            };
+
+            JContainer idProperty = o["person"]["$id"].Parent;
+            Assert.AreEqual("person.$id", idProperty.Path);
+#endif
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿
 using System.Collections.Generic;
+using Difftaculous.Adapters;
 
-
-namespace Difftaculous.Adapters
+namespace Difftaculous.ZModel
 {
     internal class ZArray : ZToken, IArray
     {
