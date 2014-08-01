@@ -1,4 +1,5 @@
 ﻿
+using Difftaculous.ZModel;
 
 namespace Difftaculous.Adapters
 {

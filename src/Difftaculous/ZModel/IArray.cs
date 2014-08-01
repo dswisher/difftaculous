@@ -1,6 +1,6 @@
 ﻿
 
-namespace Difftaculous.Adapters
+namespace Difftaculous.ZModel
 {
     public interface IArray : IToken
     {

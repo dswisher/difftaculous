@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Difftaculous.Adapters;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
 using Difftaculous.Paths;
 using Difftaculous.Results;
-
+using Difftaculous.ZModel;
 using Newtonsoft.Json.Linq;
 
 

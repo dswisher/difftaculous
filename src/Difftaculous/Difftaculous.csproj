@@ -43,11 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\IAdapter.cs" />
-    <Compile Include="Adapters\IArray.cs" />
-    <Compile Include="Adapters\IObject.cs" />
-    <Compile Include="Adapters\IProperty.cs" />
-    <Compile Include="Adapters\IToken.cs" />
-    <Compile Include="Adapters\IValue.cs" />
+    <Compile Include="ZModel\IArray.cs" />
+    <Compile Include="ZModel\IObject.cs" />
+    <Compile Include="ZModel\IProperty.cs" />
+    <Compile Include="ZModel\IToken.cs" />
+    <Compile Include="ZModel\IValue.cs" />
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\JsonAdapterEx.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />

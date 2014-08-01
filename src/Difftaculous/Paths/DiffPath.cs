@@ -1,6 +1,6 @@
 ﻿
 using System;
-using Difftaculous.Adapters;
+using Difftaculous.ZModel;
 
 
 namespace Difftaculous.Paths

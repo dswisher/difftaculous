@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace Difftaculous.Adapters
+namespace Difftaculous.ZModel
 {
     public interface IObject : IToken
     {

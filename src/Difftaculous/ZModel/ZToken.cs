@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Difftaculous.Adapters;
 using Difftaculous.Paths;
+
 
 namespace Difftaculous.ZModel
 {

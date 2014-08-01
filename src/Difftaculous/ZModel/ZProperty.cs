@@ -1,7 +1,5 @@
 ﻿
 
-using Difftaculous.Adapters;
-
 namespace Difftaculous.ZModel
 {
     internal class ZProperty : ZToken, IProperty

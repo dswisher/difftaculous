@@ -1,8 +1,7 @@
 ﻿
 using Difftaculous.Paths;
-using Difftaculous.ZModel;
 
-namespace Difftaculous.Adapters
+namespace Difftaculous.ZModel
 {
     /// <summary>
     /// A token can be an object, value or array
