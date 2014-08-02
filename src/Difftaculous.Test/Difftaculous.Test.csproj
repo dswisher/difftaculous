@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="AbstractDiffTests.cs" />
     <Compile Include="CaveatDiffTests.cs" />
-    <Compile Include="DiffTests.cs" />
     <Compile Include="HintDiffTests.cs" />
     <Compile Include="JsonDiffTests.cs" />
     <Compile Include="JsonPathTests.cs" />
