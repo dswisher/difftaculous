@@ -1,7 +1,9 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using Difftaculous.Caveats;
 using Difftaculous.Paths;
 using Difftaculous.Results;
 using Newtonsoft.Json;
@@ -15,7 +17,7 @@ namespace Difftaculous.Test
     [TestFixture]
     public abstract class AbstractDiffTests
     {
-        protected abstract IDiffResult DoCompare(object a, object b);
+        protected abstract IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats = null);
 
 
         public class SimpleObject
@@ -142,6 +144,45 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(true);
+        }
+
+
+
+
+        internal class ScoreClass
+        {
+            public int Score { get; set; }
+        }
+
+
+
+        [Test]
+        public void HintedPropertyIsAllowedToVary()
+        {
+            var a = new ScoreClass { Score = 100 };
+            var b = new ScoreClass { Score = 99 };
+
+            // TODO - should have a nice, fluent interface to build caveats
+            var caveats = new[] { new VarianceCaveat(DiffPath.FromJsonPath("$.score"), 2) };
+
+            var result = DoCompare(a, b, caveats);
+
+            result.AreSame.ShouldBe(true);
+        }
+
+
+
+        [Test]
+        public void PropertyOutsideVarianceIsNotSame()
+        {
+            const string a = "{ \"score\": 100 }";
+            const string b = "{ \"score\": 110 }";
+
+            var caveats = new[] { new VarianceCaveat(DiffPath.FromJsonPath("$.score"), 2) };
+
+            var result = DoCompare(a, b, caveats);
+
+            result.AreSame.ShouldBe(false);
         }
 
 

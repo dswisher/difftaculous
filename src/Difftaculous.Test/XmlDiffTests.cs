@@ -1,7 +1,8 @@
 ﻿
 using System;
-
+using System.Collections.Generic;
 using Difftaculous.Adapters;
+using Difftaculous.Caveats;
 using Difftaculous.Results;
 
 using NUnit.Framework;
@@ -11,7 +12,7 @@ namespace Difftaculous.Test
 {
     public class XmlDiffTests : AbstractDiffTests
     {
-        protected override IDiffResult DoCompare(object a, object b)
+        protected override IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats = null)
         {
             Assert.Ignore("TBD");
 
