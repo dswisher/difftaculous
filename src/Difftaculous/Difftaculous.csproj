@@ -48,7 +48,6 @@
     <Compile Include="ZModel\IProperty.cs" />
     <Compile Include="ZModel\IToken.cs" />
     <Compile Include="ZModel\IValue.cs" />
-    <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\JsonAdapterEx.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="ZModel\ZArray.cs" />
