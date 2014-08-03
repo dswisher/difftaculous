@@ -109,7 +109,7 @@ namespace Difftaculous
 
             // Okay, they're not equal...see if there are any caveats that will let this
             // discrepancy pass...
-            var applicableCaveats = _caveats.Where(x => x.Path.Matches(valA.Path));
+            var applicableCaveats = _caveats.Where(x => x.Path.Matches(valA));
 
             // TODO - this should return something other than Same, because they are NOT
             // the same.  But, returning something like "WithinTolerance" makes the DiffResult
@@ -127,7 +127,7 @@ namespace Difftaculous
         private IDiffResult SubDiff(IArray arrayA, IArray arrayB)
         {
             ArrayDiffHint.DiffStrategy strategy = ArrayDiffHint.DiffStrategy.Indexed;
-            //string keyName = null;
+            string keyName = null;
 
             var hint = _hints.FirstOrDefault(x => x.Path.Matches(arrayA) && x.GetType() == typeof(ArrayDiffHint));
 
@@ -135,21 +135,19 @@ namespace Difftaculous
             {
                 var arrayHint = (ArrayDiffHint)hint;
                 strategy = arrayHint.Strategy;
-                //keyName = arrayHint.KeyName;
+                keyName = arrayHint.KeyName;
             }
-
-            // TODO - should the adapter shoulder some of the burden of handling key'd arrays??
 
             switch (strategy)
             {
-                //case ArrayDiffHint.DiffStrategy.Keyed:
-                //    return KeyedArrayDiff(arrayA, arrayB, keyName);
+                case ArrayDiffHint.DiffStrategy.Keyed:
+                    return KeyedArrayDiff(arrayA, arrayB, keyName);
 
                 case ArrayDiffHint.DiffStrategy.Indexed:
                     return IndexedArrayDiff(arrayA, arrayB);
 
                 default:
-                    throw new NotImplementedException("Index diff strategy '" + strategy + "' is not yet implemented.");
+                    throw new NotImplementedException("Array diff strategy '" + strategy + "' is not yet implemented.");
             }
         }
 
@@ -173,6 +171,44 @@ namespace Difftaculous
                 var itemB = arrayB[i];
 
                 result = result.Merge(Diff(itemA, itemB));
+            }
+
+            return result;
+        }
+
+
+
+
+        private IDiffResult KeyedArrayDiff(IArray arrayA, IArray arrayB, string keyName)
+        {
+            var dictA = arrayA.ToDictionary(x => (string)(((IValue)x[keyName]).Value));
+            var dictB = arrayB.ToDictionary(x => (string)(((IValue)x[keyName]).Value));
+
+            var join = dictA.FullOuterJoin(dictB, x => x.Key, x => x.Key, (a, b, k) => new { Key = k, A = a, B = b });
+
+            IDiffResult result = DiffResult.Same;
+
+            foreach (var row in join)
+            {
+                if (row.A.Key == null)
+                {
+                    // TODO - need better annotation for this difference!
+                    //_logger.Info("    ...key {0} not found in {1} {2} list...", row.Key, _hostHolder.OldHost.Name, name);
+                    result = result.Merge(new DiffResult(arrayA.Path, "key not found in first list"));
+                }
+                else if (row.B.Key == null)
+                {
+                    // TODO - need better annotation for this difference!
+                    //_logger.Info("    ...key {0} not found in {1} {2} list...", row.Key, _hostHolder.NewHost.Name, name);
+                    result = result.Merge(new DiffResult(arrayA.Path, "key not found in second list"));
+                }
+                else
+                {
+                    var objA = row.A.Value;
+                    var objB = row.B.Value;
+
+                    result = result.Merge(Diff(objA, objB));
+                }
             }
 
             return result;

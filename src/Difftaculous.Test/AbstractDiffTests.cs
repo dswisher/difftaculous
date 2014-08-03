@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using Difftaculous.Caveats;
+using Difftaculous.Hints;
 using Difftaculous.Paths;
 using Difftaculous.Results;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace Difftaculous.Test
     [TestFixture]
     public abstract class AbstractDiffTests
     {
-        protected abstract IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats = null);
+        protected abstract IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints);
 
 
         public class SimpleObject
@@ -187,6 +188,61 @@ namespace Difftaculous.Test
 
 
 
+        public class Person
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+        }
+
+
+
+        [Test]
+        public void IndexedArrayNeedsSameOrder()
+        {
+            var a = new[] { new Person { Name = "Fred", Age = 44 }, new Person { Name = "Barney", Age = 23 } };
+            var b = new[] { new Person { Name = "Barney", Age = 23 }, new Person { Name = "Fred", Age = 44 } };
+
+            var result = DoCompare(a, b);
+
+            result.AreSame.ShouldBe(false);
+        }
+
+
+
+        [Test]
+        public void KeyedArrayDoesNotNeedSameOrder()
+        {
+            var a = new[] { new Person { Name = "Fred", Age = 44 }, new Person { Name = "Barney", Age = 23 } };
+            var b = new[] { new Person { Name = "Barney", Age = 23 }, new Person { Name = "Fred", Age = 44 } };
+
+            // TODO - is $ the right JsonPath for this??
+            // TODO - should the key be a Path as well?
+            var hints = new[] { new ArrayDiffHint(DiffPath.FromJsonPath("$"), "name") };
+
+            var result = DoCompare(a, b, hints);
+
+            result.AreSame.ShouldBe(true);
+        }
+
+
+
+        [Test]
+        public void KeyedArrayStillNeedsToMatch()
+        {
+            var a = new[] { new Person { Name = "Fred", Age = 44 }, new Person { Name = "Barney", Age = 23 } };
+            var b = new[] { new Person { Name = "Barney", Age = 33 }, new Person { Name = "Fred", Age = 44 } };
+
+            var hints = new[] { new ArrayDiffHint(DiffPath.FromJsonPath("$"), "name") };
+
+            var result = DoCompare(a, b, hints);
+
+            result.AreSame.ShouldBe(false);
+            // TODO - need both paths in this annotation
+            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$[1].age")));
+        }
+
+
+
         #region Helpers
 
         protected string AsJson(object obj)
@@ -210,6 +266,26 @@ namespace Difftaculous.Test
 
                 return writer.ToString();
             }
+        }
+
+
+
+        private IDiffResult DoCompare(object a, object b)
+        {
+            return DoCompare(a, b, null, null);
+        }
+
+
+
+        private IDiffResult DoCompare(object a, object b, IEnumerable<IHint> hints)
+        {
+            return DoCompare(a, b, null, hints);
+        }
+
+
+        private IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats)
+        {
+            return DoCompare(a, b, caveats, null);
         }
 
         #endregion

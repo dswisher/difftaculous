@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using System.Collections.Generic;
 
 
@@ -29,6 +30,16 @@ namespace Difftaculous.ZModel
         {
             _tokens.Add(token);
             ((ZToken)token).Parent = this;
+        }
+
+        public IEnumerator<IToken> GetEnumerator()
+        {
+            return _tokens.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿
-using System;
 using Difftaculous.ZModel;
 
 
@@ -109,9 +108,9 @@ namespace Difftaculous.Paths
 
         public bool Matches(IToken token)
         {
-            // TODO - implement this!
+            // TODO - implement this the right way!
 
-            throw new NotImplementedException();
+            return AsJsonPath.Equals(token.Path.AsJsonPath);
         }
     }
 }
