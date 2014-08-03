@@ -6,10 +6,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Difftaculous.Adapters
 {
-    // TODO - once this is functional, remove JsonAdapter and rename this to JsonAdapter
-    public class JsonAdapterEx : IAdapter
+    public class JsonAdapter : IAdapter
     {
-        public JsonAdapterEx(string content)
+        public JsonAdapter(string content)
         {
             var top = JToken.Parse(content);
 

@@ -20,7 +20,7 @@ namespace Difftaculous.Test
             Console.WriteLine();
             Console.WriteLine("JSON, B:\n{0}", jsonB);
 
-            var result = Diff.Compare(new JsonAdapterEx(jsonA), new JsonAdapterEx(jsonB), caveats, hints);
+            var result = Diff.Compare(new JsonAdapter(jsonA), new JsonAdapter(jsonB), caveats, hints);
 
             Console.WriteLine();
             Console.WriteLine("Result:\n{0}", result);

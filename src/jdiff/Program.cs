@@ -35,8 +35,8 @@ namespace jdiff
 
             try
             {
-                var contentA = new JsonAdapterEx(ReadFile(infoA));
-                var contentB = new JsonAdapterEx(ReadFile(infoB));
+                var contentA = new JsonAdapter(ReadFile(infoA));
+                var contentB = new JsonAdapter(ReadFile(infoB));
 
                 var result = Diff.Compare(contentA, contentB);
 
