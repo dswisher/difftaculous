@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Shouldly;
 
 
-namespace Difftaculous.Test
+namespace Difftaculous.Test.Paths
 {
     [TestFixture]
     public class JsonPathTests

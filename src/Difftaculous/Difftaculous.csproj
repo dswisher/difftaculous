@@ -43,6 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\IAdapter.cs" />
+    <Compile Include="Paths\FieldTerm.cs" />
+    <Compile Include="Paths\JsonPathException.cs" />
+    <Compile Include="Paths\JsonPathParser.cs" />
+    <Compile Include="Paths\PathExpression.cs" />
+    <Compile Include="Paths\PathTerm.cs" />
     <Compile Include="ZModel\IArray.cs" />
     <Compile Include="ZModel\IObject.cs" />
     <Compile Include="ZModel\IProperty.cs" />
