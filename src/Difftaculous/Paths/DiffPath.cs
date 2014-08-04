@@ -16,16 +16,10 @@ namespace Difftaculous.Paths
 
     public class DiffPath : IDiffPath
     {
-        private static readonly DiffPath _root = FromJsonPath("$");
-
-
         private DiffPath()
         {
         }
 
-
-        // TODO - this may be obsolete once new IToken-based DiffEngine is done
-        internal static DiffPath Root { get { return _root; } }
 
 
         public static DiffPath FromJsonPath(string path)
