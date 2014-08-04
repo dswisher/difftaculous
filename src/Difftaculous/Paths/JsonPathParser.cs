@@ -83,23 +83,29 @@ namespace Difftaculous.Paths
                 {
                     case '[':
                     case '(':
-                        // TODO
-
-#if false
                         if (_currentIndex > currentPartStartIndex)
                         {
                             string member = _expression.Substring(currentPartStartIndex, _currentIndex - currentPartStartIndex);
-                            PathFilter filter = (scan) ? (PathFilter)new ScanFilter() { Name = member } : new FieldFilter() { Name = member };
-                            filters.Add(filter);
+                            if (scan)
+                            {
+                                // TODO!
+                                Console.WriteLine("ScanFilter");
+                            }
+                            else
+                            {
+                                // TODO!
+                                Console.WriteLine("FieldFilter");
+                            }
+                            //PathFilter filter = (scan) ? (PathFilter)new ScanFilter() { Name = member } : new FieldFilter() { Name = member };
+                            //filters.Add(filter);
                             scan = false;
                         }
 
-                        filters.Add(ParseIndexer(currentChar));
+                        //filters.Add(ParseIndexer(currentChar));
                         _currentIndex++;
                         currentPartStartIndex = _currentIndex;
                         followingIndexer = true;
                         followingDot = false;
-#endif
                         break;
 
                     case ']':

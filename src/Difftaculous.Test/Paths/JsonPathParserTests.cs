@@ -31,5 +31,16 @@ namespace Difftaculous.Test.Paths
             parser.Expression.Terms.Count.ShouldBe(1);
             ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah");
         }
+
+
+
+        [Test, Ignore("Get this working!")]
+        public void SingleQuotedProperty()
+        {
+            JsonPathParser parser = new JsonPathParser("['Blah']");
+
+            parser.Expression.Terms.Count.ShouldBe(1);
+            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah");
+        }
     }
 }
