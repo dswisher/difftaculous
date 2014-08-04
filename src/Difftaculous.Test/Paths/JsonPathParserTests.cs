@@ -15,10 +15,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void SingleProperty()
         {
-            JsonPathParser parser = new JsonPathParser("Blah");
+            var filters = JsonPathParser.Parse("Blah");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah");
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah");
         }
 
 
@@ -26,10 +26,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void SingleQuotedProperty()
         {
-            JsonPathParser parser = new JsonPathParser("['Blah']");
+            var filters = JsonPathParser.Parse("['Blah']");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah");
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah");
         }
 
 
@@ -37,10 +37,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void SingleQuotedPropertyWithWhitespace()
         {
-            JsonPathParser parser = new JsonPathParser("[  'Blah'  ]");
+            var filters = JsonPathParser.Parse("[  'Blah'  ]");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah");
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah");
         }
 
 
@@ -48,10 +48,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void SingleQuotedPropertyWithDots()
         {
-            JsonPathParser parser = new JsonPathParser("['Blah.Ha']");
+            var filters = JsonPathParser.Parse("['Blah.Ha']");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah.Ha");
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah.Ha");
         }
 
 
@@ -59,10 +59,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void SingleQuotedPropertyWithBrackets()
         {
-            JsonPathParser parser = new JsonPathParser("['[*]']");
+            var filters = JsonPathParser.Parse("['[*]']");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("[*]");
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("[*]");
         }
 
 
@@ -70,10 +70,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void SinglePropertyWithRoot()
         {
-            JsonPathParser parser = new JsonPathParser("$.Blah");
+            var filters = JsonPathParser.Parse("$.Blah");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah");
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah");
         }
 
 
@@ -81,10 +81,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void SinglePropertyWithRootWithStartAndEndWhitespace()
         {
-            JsonPathParser parser = new JsonPathParser(" $.Blah ");
+            var filters = JsonPathParser.Parse(" $.Blah ");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe("Blah");
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah");
         }
 
 
@@ -94,7 +94,7 @@ namespace Difftaculous.Test.Paths
         {
             ExceptionAssert.Throws<JsonPathException>(
                 @"Unexpected character while parsing path:  ",
-                () => { new JsonPathParser("$ .Blah"); });
+                () => JsonPathParser.Parse("$ .Blah"));
         }
 
 
@@ -104,7 +104,7 @@ namespace Difftaculous.Test.Paths
         {
             ExceptionAssert.Throws<JsonPathException>(
                 @"Unexpected end while parsing path.",
-                () => { new JsonPathParser("$.Blah."); });
+                () => JsonPathParser.Parse("$.Blah."));
         }
 
 
@@ -114,7 +114,7 @@ namespace Difftaculous.Test.Paths
         {
             ExceptionAssert.Throws<JsonPathException>(
                 @"Unexpected character while parsing path:  ",
-                () => { new JsonPathParser("$. Blah"); });
+                () => JsonPathParser.Parse("$. Blah"));
         }
 
 
@@ -122,10 +122,10 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void WildcardPropertyWithRoot()
         {
-            JsonPathParser parser = new JsonPathParser("$.*");
+            var filters = JsonPathParser.Parse("$.*");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
-            ((FieldTerm)parser.Expression.Terms[0]).Name.ShouldBe(null);
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe(null);
         }
 
 
@@ -133,9 +133,9 @@ namespace Difftaculous.Test.Paths
         [Test, Ignore("Get this working!")]
         public void WildcardArrayWithRoot()
         {
-            JsonPathParser parser = new JsonPathParser("$.[*]");
+            var filters = JsonPathParser.Parse("$.[*]");
 
-            parser.Expression.Terms.Count.ShouldBe(1);
+            filters.Count.ShouldBe(1);
             // ((ArrayIndexTerm)parser.Expression.Terms[0]).Index.ShouldBe(null);
             //Assert.AreEqual(null, ((ArrayIndexFilter)path.Filters[0]).Index);
         }

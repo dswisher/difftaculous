@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Difftaculous.ZModel;
 
 
@@ -16,10 +17,15 @@ namespace Difftaculous.Paths
 
     public class DiffPath : IDiffPath
     {
+
         private DiffPath()
         {
+            Filters = new List<PathFilter>();
         }
 
+
+        internal List<PathFilter> Filters { get; private set; }
+        
 
 
         public static DiffPath FromJsonPath(string path)

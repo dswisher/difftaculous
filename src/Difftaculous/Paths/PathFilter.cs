@@ -1,7 +1,7 @@
 ﻿
 namespace Difftaculous.Paths
 {
-    internal abstract class PathTerm
+    internal abstract class PathFilter
     {
     }
 }

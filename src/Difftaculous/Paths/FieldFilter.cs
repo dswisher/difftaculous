@@ -2,7 +2,7 @@
 
 namespace Difftaculous.Paths
 {
-    internal class ScanTerm : PathTerm
+    internal class FieldFilter : PathFilter
     {
         public string Name { get; set; }
     }

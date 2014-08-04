@@ -6,8 +6,8 @@ namespace Difftaculous.Paths
 {
     internal class PathExpression
     {
-        private readonly List<PathTerm> _terms = new List<PathTerm>();
+        private readonly List<PathFilter> _terms = new List<PathFilter>();
 
-        public IList<PathTerm> Terms { get { return _terms; } }
+        public IList<PathFilter> Terms { get { return _terms; } }
     }
 }

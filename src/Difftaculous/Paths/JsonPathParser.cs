@@ -9,19 +9,29 @@ namespace Difftaculous.Paths
     internal class JsonPathParser
     {
         private readonly string _expression;
-        private readonly PathExpression _pathExpression = new PathExpression();
         private int _currentIndex;
 
 
-        public JsonPathParser(string expression)
+
+        public static List<PathFilter> Parse(string jsonPath)
+        {
+            var parser = new JsonPathParser(jsonPath);
+
+            return parser.Filters;
+        }
+
+
+
+        private JsonPathParser(string expression)
         {
             _expression = expression;
+            Filters = new List<PathFilter>();
 
             ParseMain();
         }
 
 
-        public PathExpression Expression { get { return _pathExpression; } }
+        public List<PathFilter> Filters { get; private set; }
 
 
         private void ParseMain()
@@ -85,12 +95,12 @@ namespace Difftaculous.Paths
                         if (_currentIndex > currentPartStartIndex)
                         {
                             string member = _expression.Substring(currentPartStartIndex, _currentIndex - currentPartStartIndex);
-                            PathTerm term = scan ? (PathTerm)new ScanTerm { Name = member } : new FieldTerm { Name = member };
-                            _pathExpression.Terms.Add(term);
+                            PathFilter filter = scan ? (PathFilter)new ScanFilter { Name = member } : new FieldFilter { Name = member };
+                            Filters.Add(filter);
                             scan = false;
                         }
 
-                        _pathExpression.Terms.Add(ParseIndexer(currentChar));
+                        Filters.Add(ParseIndexer(currentChar));
                         _currentIndex++;
                         currentPartStartIndex = _currentIndex;
                         followingIndexer = true;
@@ -115,8 +125,8 @@ namespace Difftaculous.Paths
                             {
                                 member = null;
                             }
-                            PathTerm term = scan ? (PathTerm)new ScanTerm { Name = member } : new FieldTerm { Name = member };
-                            _pathExpression.Terms.Add(term);
+                            PathFilter filter = scan ? (PathFilter)new ScanFilter { Name = member } : new FieldFilter { Name = member };
+                            Filters.Add(filter);
                             scan = false;
                         }
                         if (_currentIndex + 1 < _expression.Length && _expression[_currentIndex + 1] == '.')
@@ -158,8 +168,8 @@ namespace Difftaculous.Paths
                 {
                     member = null;
                 }
-                PathTerm term = scan ? (PathTerm)new ScanTerm { Name = member } : new FieldTerm { Name = member };
-                _pathExpression.Terms.Add(term);
+                PathFilter filter = scan ? (PathFilter)new ScanFilter { Name = member } : new FieldFilter { Name = member };
+                Filters.Add(filter);
             }
             else
             {
@@ -188,7 +198,7 @@ namespace Difftaculous.Paths
 
 
 
-        private PathTerm ParseIndexer(char indexerOpenChar)
+        private PathFilter ParseIndexer(char indexerOpenChar)
         {
             _currentIndex++;
 
@@ -214,7 +224,7 @@ namespace Difftaculous.Paths
 
 
 
-        private PathTerm ParseArrayIndexer(char indexerCloseChar)
+        private PathFilter ParseArrayIndexer(char indexerCloseChar)
         {
             int start = _currentIndex;
             int? end = null;
@@ -355,7 +365,7 @@ namespace Difftaculous.Paths
 
 
 
-        private PathTerm ParseQuery(char indexerCloseChar)
+        private PathFilter ParseQuery(char indexerCloseChar)
         {
 #if false
             _currentIndex++;
@@ -386,7 +396,7 @@ namespace Difftaculous.Paths
 
 
 
-        private PathTerm ParseQuotedField(char indexerCloseChar)
+        private PathFilter ParseQuotedField(char indexerCloseChar)
         {
             List<string> fields = null;
 
@@ -409,7 +419,7 @@ namespace Difftaculous.Paths
                     }
                     else
                     {
-                        return new FieldTerm { Name = field };
+                        return new FieldFilter { Name = field };
                     }
                 }
 
