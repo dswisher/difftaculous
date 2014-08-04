@@ -48,6 +48,7 @@
     <Compile Include="Paths\JsonPathParser.cs" />
     <Compile Include="Paths\PathExpression.cs" />
     <Compile Include="Paths\PathTerm.cs" />
+    <Compile Include="Paths\ScanTerm.cs" />
     <Compile Include="ZModel\IArray.cs" />
     <Compile Include="ZModel\IObject.cs" />
     <Compile Include="ZModel\IProperty.cs" />
