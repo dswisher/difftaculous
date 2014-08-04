@@ -51,6 +51,7 @@
     <Compile Include="AbstractDiffTests.cs" />
     <Compile Include="Helpers\ExceptionAssert.cs" />
     <Compile Include="JsonDiffTests.cs" />
+    <Compile Include="Paths\DiffPathExecuteTests.cs" />
     <Compile Include="Paths\JsonPathParserTests.cs" />
     <Compile Include="Paths\JsonPathTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

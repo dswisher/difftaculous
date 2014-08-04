@@ -6,14 +6,7 @@ namespace Difftaculous.Paths
 {
     public interface IDiffPath
     {
-        IDiffPath Extend(string name);
-
-        IDiffPath ArrayExtend(string key);
-        IDiffPath ArrayExtend(int index);
-
-        // TODO - obsolete!
-        bool Matches(IDiffPath path);
-
+        // TODO - obsolete
         bool Matches(IToken token);
 
         string AsJsonPath { get; }
@@ -48,25 +41,6 @@ namespace Difftaculous.Paths
 
 
 
-        // TODO - we need a MUCH better way of indicating what is being extended
-        public IDiffPath Extend(string name)
-        {
-            return FromJsonPath(AsJsonPath + "." + name);
-        }
-
-
-        public IDiffPath ArrayExtend(int index)
-        {
-            return FromJsonPath(AsJsonPath + "[" + index + "]");
-        }
-
-
-        public IDiffPath ArrayExtend(string key)
-        {
-            return FromJsonPath(AsJsonPath + "['" + key + "']");
-        }
-
-
         public string AsJsonPath { get; private set; }
 
 
@@ -95,17 +69,8 @@ namespace Difftaculous.Paths
         }
 
 
-        // TODO - this should take an IToken and not another path!
-        public bool Matches(IDiffPath path)
-        {
-            // TODO - this is way too simplistic!  Need to do wildcard matches and
-            // whatnot...matching is NOT the same as equality...
 
-            return Equals(path);
-        }
-
-
-
+        // TODO - Get rid of matches - should use SelectTokens instead!
         public bool Matches(IToken token)
         {
             // TODO - implement this the right way!
