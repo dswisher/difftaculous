@@ -12,6 +12,17 @@ namespace Difftaculous.ZModel
         public override TokenType Type { get { return TokenType.Object; } }
 
 
+        public ZObject()
+        {
+        }
+
+
+        public ZObject(ZProperty property)
+        {
+            AddProperty(property);
+        }
+
+
         public IEnumerable<IProperty> Properties
         {
             get { return _properties.Values; }

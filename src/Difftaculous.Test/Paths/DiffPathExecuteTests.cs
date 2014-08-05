@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Difftaculous.Paths;
+using Difftaculous.ZModel;
 using NUnit.Framework;
+using Shouldly;
+
 
 namespace Difftaculous.Test.Paths
 {
@@ -81,17 +81,20 @@ namespace Difftaculous.Test.Paths
             JToken t = o.SelectToken(" ");
             Assert.AreEqual(o, t);
         }
+#endif
+
 
         [Test]
         public void EvaluateDollarString()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(new ZProperty("Blah", 1));
 
-            JToken t = o.SelectToken("$");
-            Assert.AreEqual(o, t);
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("$"));
+            t.ShouldBeSameAs(o);
         }
 
+
+#if false
         [Test]
         public void EvaluateDollarTypeString()
         {
@@ -101,19 +104,22 @@ namespace Difftaculous.Test.Paths
             JToken t = o.SelectToken("$values[1]");
             Assert.AreEqual(2, (int)t);
         }
+#endif
+
 
         [Test]
         public void EvaluateSingleProperty()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(new ZProperty("Blah", 1));
 
-            JToken t = o.SelectToken("Blah");
-            Assert.IsNotNull(t);
-            Assert.AreEqual(JTokenType.Integer, t.Type);
-            Assert.AreEqual(1, (int)t);
+            var t = o.SelectToken(DiffPath.FromJsonPath("Blah"));
+            t.ShouldNotBe(null);
+            t.Type.ShouldBe(TokenType.Value);       // Integer?
+            // TODO - check value
+            //Assert.AreEqual(1, (int)t);
         }
 
+#if false
         [Test]
         public void EvaluateWildcardProperty()
         {

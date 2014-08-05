@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\IAdapter.cs" />
+    <Compile Include="Paths\ArrayIndexFilter.cs" />
     <Compile Include="Paths\FieldFilter.cs" />
     <Compile Include="Paths\JsonPathException.cs" />
     <Compile Include="Paths\JsonPathParser.cs" />

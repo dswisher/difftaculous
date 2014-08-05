@@ -13,6 +13,7 @@ namespace Difftaculous.ZModel
 
         public int Count { get { return _tokens.Count; } }
 
+
         public IToken this[int index]
         {
             get { return _tokens[index]; }

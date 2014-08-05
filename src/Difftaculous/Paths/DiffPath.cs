@@ -25,12 +25,16 @@ namespace Difftaculous.Paths
 
 
         internal List<PathFilter> Filters { get; private set; }
-        
+
 
 
         public static DiffPath FromJsonPath(string path)
         {
-            return new DiffPath { AsJsonPath = path };
+            return new DiffPath
+            {
+                AsJsonPath = path,
+                Filters = JsonPathParser.Parse(path)
+            };
         }
 
 
@@ -73,9 +77,25 @@ namespace Difftaculous.Paths
         // TODO - Get rid of matches - should use SelectTokens instead!
         public bool Matches(IToken token)
         {
-            // TODO - implement this the right way!
-
             return AsJsonPath.Equals(token.Path.AsJsonPath);
+        }
+
+
+
+        internal IEnumerable<ZToken> Evaluate(ZToken t)
+        {
+            return Evaluate(Filters, t);
+        }
+
+        internal static IEnumerable<ZToken> Evaluate(List<PathFilter> filters, ZToken t)
+        {
+            IEnumerable<ZToken> current = new[] { t };
+            foreach (PathFilter filter in filters)
+            {
+                current = filter.ExecuteFilter(current);
+            }
+
+            return current;
         }
     }
 }

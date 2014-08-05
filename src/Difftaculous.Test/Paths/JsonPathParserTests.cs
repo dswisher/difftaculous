@@ -130,14 +130,13 @@ namespace Difftaculous.Test.Paths
 
 
 
-        [Test, Ignore("Get this working!")]
+        [Test]
         public void WildcardArrayWithRoot()
         {
             var filters = JsonPathParser.Parse("$.[*]");
 
             filters.Count.ShouldBe(1);
-            // ((ArrayIndexTerm)parser.Expression.Terms[0]).Index.ShouldBe(null);
-            //Assert.AreEqual(null, ((ArrayIndexFilter)path.Filters[0]).Index);
+            ((ArrayIndexFilter)filters[0]).Index.ShouldBe(null);
         }
 
 

@@ -22,6 +22,25 @@ namespace Difftaculous.ZModel
         public abstract TokenType Type { get; }
 
 
+
+        public ZToken SelectToken(DiffPath path)
+        {
+            ZToken token = null;
+            foreach (ZToken t in path.Evaluate(this))
+            {
+                if (token != null)
+                {
+                    throw new JsonPathException("Path returned multiple tokens");
+                }
+
+                token = t;
+            }
+
+            return token;
+        }
+
+
+
         public DiffPath Path
         {
             get
