@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Difftaculous.Paths.Expressions;
+using Difftaculous.ZModel;
 
 
 namespace Difftaculous.Paths
@@ -63,7 +65,7 @@ namespace Difftaculous.Paths
                 }
             }
 
-            if (!ParsePath(currentPartStartIndex, false))
+            if (!ParsePath(Filters, currentPartStartIndex, false))
             {
                 int lastCharacterIndex = _currentIndex;
 
@@ -78,7 +80,7 @@ namespace Difftaculous.Paths
 
 
 
-        private bool ParsePath(int currentPartStartIndex, bool query)
+        private bool ParsePath(List<PathFilter> filters, int currentPartStartIndex, bool query)
         {
             bool scan = false;
             bool followingIndexer = false;
@@ -97,11 +99,11 @@ namespace Difftaculous.Paths
                         {
                             string member = _expression.Substring(currentPartStartIndex, _currentIndex - currentPartStartIndex);
                             PathFilter filter = scan ? (PathFilter)new ScanFilter { Name = member } : new FieldFilter { Name = member };
-                            Filters.Add(filter);
+                            filters.Add(filter);
                             scan = false;
                         }
 
-                        Filters.Add(ParseIndexer(currentChar));
+                        filters.Add(ParseIndexer(currentChar));
                         _currentIndex++;
                         currentPartStartIndex = _currentIndex;
                         followingIndexer = true;
@@ -127,7 +129,7 @@ namespace Difftaculous.Paths
                                 member = null;
                             }
                             PathFilter filter = scan ? (PathFilter)new ScanFilter { Name = member } : new FieldFilter { Name = member };
-                            Filters.Add(filter);
+                            filters.Add(filter);
                             scan = false;
                         }
                         if (_currentIndex + 1 < _expression.Length && _expression[_currentIndex + 1] == '.')
@@ -170,7 +172,7 @@ namespace Difftaculous.Paths
                     member = null;
                 }
                 PathFilter filter = scan ? (PathFilter)new ScanFilter { Name = member } : new FieldFilter { Name = member };
-                Filters.Add(filter);
+                filters.Add(filter);
             }
             else
             {
@@ -376,12 +378,13 @@ namespace Difftaculous.Paths
 
         private PathFilter ParseQuery(char indexerCloseChar)
         {
-#if false
             _currentIndex++;
             EnsureLength("Path ended with open indexer.");
 
             if (_expression[_currentIndex] != '(')
-                throw new JsonException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+            {
+                throw new JsonPathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+            }
 
             _currentIndex++;
 
@@ -392,15 +395,225 @@ namespace Difftaculous.Paths
             EatWhitespace();
 
             if (_expression[_currentIndex] != indexerCloseChar)
-                throw new JsonException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+            {
+                throw new JsonPathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+            }
 
             return new QueryFilter
             {
                 Expression = expression
             };
-#endif
+        }
 
-            throw new NotImplementedException();
+
+
+        private QueryExpression ParseExpression()
+        {
+            QueryExpression rootExpression = null;
+            CompositeExpression parentExpression = null;
+
+            while (_currentIndex < _expression.Length)
+            {
+                EatWhitespace();
+
+                if (_expression[_currentIndex] != '@')
+                    throw new JsonPathException("Unexpected character while parsing path query: " + _expression[_currentIndex]);
+
+                _currentIndex++;
+
+                List<PathFilter> expressionPath = new List<PathFilter>();
+
+                if (ParsePath(expressionPath, _currentIndex, true))
+                {
+                    throw new JsonPathException("Path ended with open query.");
+                }
+
+                EatWhitespace();
+                EnsureLength("Path ended with open query.");
+
+                QueryOperator op;
+                object value = null;
+
+                if (_expression[_currentIndex] == ')'
+                    || _expression[_currentIndex] == '|'
+                    || _expression[_currentIndex] == '&')
+                {
+                    op = QueryOperator.Exists;
+                }
+                else
+                {
+                    op = ParseOperator();
+
+                    EatWhitespace();
+                    EnsureLength("Path ended with open query.");
+
+                    value = ParseValue();
+
+                    EatWhitespace();
+                    EnsureLength("Path ended with open query.");
+                }
+
+                BooleanQueryExpression booleanExpression = new BooleanQueryExpression
+                {
+                    Path = expressionPath,
+                    Operator = op,
+                    Value = (op != QueryOperator.Exists) ? new ZValue(value) : null
+                };
+
+                if (_expression[_currentIndex] == ')')
+                {
+                    if (parentExpression != null)
+                    {
+                        parentExpression.Expressions.Add(booleanExpression);
+                        return rootExpression;
+                    }
+
+                    return booleanExpression;
+                }
+
+                if (_expression[_currentIndex] == '&' && Match("&&"))
+                {
+#if false
+                    if (parentExpression == null || parentExpression.Operator != QueryOperator.And)
+                    {
+                        CompositeExpression andExpression = new CompositeExpression { Operator = QueryOperator.And };
+
+                        if (parentExpression != null)
+                            parentExpression.Expressions.Add(andExpression);
+
+                        parentExpression = andExpression;
+
+                        if (rootExpression == null)
+                            rootExpression = parentExpression;
+                    }
+
+                    parentExpression.Expressions.Add(booleanExpression);
+#endif
+                    throw new NotImplementedException();
+                }
+
+                if (_expression[_currentIndex] == '|' && Match("||"))
+                {
+#if false
+                    if (parentExpression == null || parentExpression.Operator != QueryOperator.Or)
+                    {
+                        CompositeExpression orExpression = new CompositeExpression { Operator = QueryOperator.Or };
+
+                        if (parentExpression != null)
+                            parentExpression.Expressions.Add(orExpression);
+
+                        parentExpression = orExpression;
+
+                        if (rootExpression == null)
+                            rootExpression = parentExpression;
+                    }
+
+                    parentExpression.Expressions.Add(booleanExpression);
+#endif
+                    throw new NotImplementedException();
+                }
+            }
+
+            throw new JsonPathException("Path ended with open query.");
+        }
+
+
+        private object ParseValue()
+        {
+            char currentChar = _expression[_currentIndex];
+            if (currentChar == '\'')
+            {
+                return ReadQuotedString();
+            }
+            else if (char.IsDigit(currentChar) || currentChar == '-')
+            {
+#if false
+                StringBuilder sb = new StringBuilder();
+                sb.Append(currentChar);
+
+                _currentIndex++;
+                while (_currentIndex < _expression.Length)
+                {
+                    currentChar = _expression[_currentIndex];
+                    if (currentChar == ' ' || currentChar == ')')
+                    {
+                        string numberText = sb.ToString();
+
+                        if (numberText.IndexOfAny(new char[] { '.', 'E', 'e' }) != -1)
+                        {
+                            double d;
+                            if (double.TryParse(numberText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out d))
+                                return d;
+                            else
+                                throw new JsonException("Could not read query value.");
+                        }
+                        else
+                        {
+                            long l;
+                            if (long.TryParse(numberText, NumberStyles.Integer, CultureInfo.InvariantCulture, out l))
+                                return l;
+                            else
+                                throw new JsonException("Could not read query value.");
+                        }
+                    }
+                    else
+                    {
+                        sb.Append(currentChar);
+                        _currentIndex++;
+                    }
+                }
+#endif
+                throw new NotImplementedException();
+            }
+            else if (currentChar == 't')
+            {
+                if (Match("true"))
+                {
+                    return true;
+                }
+            }
+            else if (currentChar == 'f')
+            {
+                if (Match("false"))
+                {
+                    return false;
+                }
+            }
+            else if (currentChar == 'n')
+            {
+                if (Match("null"))
+                {
+                    return null;
+                }
+            }
+
+            throw new JsonPathException("Could not read query value.");
+        }
+
+
+        private QueryOperator ParseOperator()
+        {
+            if (_currentIndex + 1 >= _expression.Length)
+            {
+                throw new JsonPathException("Path ended with open query.");
+            }
+
+            if (Match("=="))
+                return QueryOperator.Equals;
+            if (Match("!=") || Match("<>"))
+                return QueryOperator.NotEquals;
+            if (Match("<="))
+                return QueryOperator.LessThanOrEquals;
+            if (Match("<"))
+                return QueryOperator.LessThan;
+            if (Match(">="))
+                return QueryOperator.GreaterThanOrEquals;
+            if (Match(">"))
+                return QueryOperator.GreaterThan;
+
+            {
+                throw new JsonPathException("Could not read query operator.");
+            }
         }
 
 
@@ -497,6 +710,22 @@ namespace Difftaculous.Paths
             {
                 throw new JsonPathException(message);
             }
+        }
+
+
+        private bool Match(string s)
+        {
+            int currentPosition = _currentIndex;
+            foreach (char c in s)
+            {
+                if (currentPosition < _expression.Length && _expression[currentPosition] == c)
+                    currentPosition++;
+                else
+                    return false;
+            }
+
+            _currentIndex = currentPosition;
+            return true;
         }
     }
 }

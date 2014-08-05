@@ -46,11 +46,15 @@
     <Compile Include="Paths\ArrayIndexFilter.cs" />
     <Compile Include="Paths\ArrayMultipleIndexFilter.cs" />
     <Compile Include="Paths\ArraySliceFilter.cs" />
+    <Compile Include="Paths\Expressions\BooleanQueryExpression.cs" />
+    <Compile Include="Paths\Expressions\CompositeExpression.cs" />
     <Compile Include="Paths\FieldFilter.cs" />
     <Compile Include="Paths\FieldMultipleFilter.cs" />
     <Compile Include="Paths\JsonPathException.cs" />
     <Compile Include="Paths\JsonPathParser.cs" />
     <Compile Include="Paths\PathFilter.cs" />
+    <Compile Include="Paths\Expressions\QueryExpression.cs" />
+    <Compile Include="Paths\QueryFilter.cs" />
     <Compile Include="Paths\ScanFilter.cs" />
     <Compile Include="ZModel\IArray.cs" />
     <Compile Include="ZModel\IObject.cs" />

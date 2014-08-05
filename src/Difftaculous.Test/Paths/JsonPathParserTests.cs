@@ -1,5 +1,6 @@
 ﻿
 using Difftaculous.Paths;
+using Difftaculous.Paths.Expressions;
 using Difftaculous.Test.Helpers;
 using NUnit.Framework;
 using Shouldly;
@@ -239,30 +240,40 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual("Blah", ((FieldFilter)path.Filters[0]).Name);
             Assert.AreEqual(0, ((ArrayIndexFilter)path.Filters[1]).Index);
         }
+#endif
+
 
         [Test]
         public void SinglePropertyAndExistsQuery()
         {
-            JPath path = new JPath("Blah[ ?( @..name ) ]");
-            Assert.AreEqual(2, path.Filters.Count);
-            Assert.AreEqual("Blah", ((FieldFilter)path.Filters[0]).Name);
-            BooleanQueryExpression expressions = (BooleanQueryExpression)((QueryFilter)path.Filters[1]).Expression;
-            Assert.AreEqual(QueryOperator.Exists, expressions.Operator);
-            Assert.AreEqual(1, expressions.Path.Count);
-            Assert.AreEqual("name", ((ScanFilter)expressions.Path[0]).Name);
+            var filters = JsonPathParser.Parse("Blah[ ?( @..name ) ]");
+
+            filters.Count.ShouldBe(2);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah");
+            BooleanQueryExpression expression = (BooleanQueryExpression)((QueryFilter)filters[1]).Expression;
+            expression.Operator.ShouldBe(QueryOperator.Exists);
+            expression.Path.Count.ShouldBe(1);
+            ((ScanFilter)expression.Path[0]).Name.ShouldBe("name");
         }
+
 
         [Test]
         public void SinglePropertyAndFilterWithWhitespace()
         {
-            JPath path = new JPath("Blah[ ?( @.name=='hi' ) ]");
-            Assert.AreEqual(2, path.Filters.Count);
-            Assert.AreEqual("Blah", ((FieldFilter)path.Filters[0]).Name);
-            BooleanQueryExpression expressions = (BooleanQueryExpression)((QueryFilter)path.Filters[1]).Expression;
-            Assert.AreEqual(QueryOperator.Equals, expressions.Operator);
-            Assert.AreEqual("hi", (string)expressions.Value);
+            var filters = JsonPathParser.Parse("Blah[ ?( @.name=='hi' ) ]");
+
+            filters.Count.ShouldBe(2);
+            ((FieldFilter)filters[0]).Name.ShouldBe("Blah");
+            BooleanQueryExpression expression = (BooleanQueryExpression)((QueryFilter)filters[1]).Expression;
+            expression.Operator.ShouldBe(QueryOperator.Equals);
+
+            // TODO - check value!
+            //((string)expression.Value).ShouldBe("hi");
+            //Assert.AreEqual("hi", (string)expressions.Value);
         }
 
+
+#if false
         [Test]
         public void SinglePropertyAndFilterWithEscapeQuote()
         {
