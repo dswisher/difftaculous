@@ -44,7 +44,10 @@
   <ItemGroup>
     <Compile Include="Adapters\IAdapter.cs" />
     <Compile Include="Paths\ArrayIndexFilter.cs" />
+    <Compile Include="Paths\ArrayMultipleIndexFilter.cs" />
+    <Compile Include="Paths\ArraySliceFilter.cs" />
     <Compile Include="Paths\FieldFilter.cs" />
+    <Compile Include="Paths\FieldMultipleFilter.cs" />
     <Compile Include="Paths\JsonPathException.cs" />
     <Compile Include="Paths\JsonPathParser.cs" />
     <Compile Include="Paths\PathFilter.cs" />

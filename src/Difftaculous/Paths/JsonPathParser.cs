@@ -252,21 +252,19 @@ namespace Difftaculous.Paths
 
                     if (indexes != null)
                     {
-#if false
                         if (length == 0)
-                            throw new JsonException("Array index expected.");
+                        {
+                            throw new JsonPathException("Array index expected.");
+                        }
 
                         string indexer = _expression.Substring(start, length);
                         int index = Convert.ToInt32(indexer, CultureInfo.InvariantCulture);
 
                         indexes.Add(index);
                         return new ArrayMultipleIndexFilter { Indexes = indexes };
-#endif
-                        throw new NotImplementedException("TBD #1a");
                     }
                     else if (colonCount > 0)
                     {
-#if false
                         if (length > 0)
                         {
                             string indexer = _expression.Substring(start, length);
@@ -279,8 +277,6 @@ namespace Difftaculous.Paths
                         }
 
                         return new ArraySliceFilter { Start = startIndex, End = endIndex, Step = step };
-#endif
-                        throw new NotImplementedException("TBD #1b");
                     }
                     else
                     {
@@ -297,14 +293,17 @@ namespace Difftaculous.Paths
                 }
                 else if (currentCharacter == ',')
                 {
-#if false
                     int length = (end ?? _currentIndex) - start;
 
                     if (length == 0)
-                        throw new JsonException("Array index expected.");
+                    {
+                        throw new JsonPathException("Array index expected.");
+                    }
 
                     if (indexes == null)
+                    {
                         indexes = new List<int>();
+                    }
 
                     string indexer = _expression.Substring(start, length);
                     indexes.Add(Convert.ToInt32(indexer, CultureInfo.InvariantCulture));
@@ -315,8 +314,6 @@ namespace Difftaculous.Paths
 
                     start = _currentIndex;
                     end = null;
-#endif
-                    throw new NotImplementedException("TBD #2");
                 }
                 else if (currentCharacter == '*')
                 {
@@ -333,7 +330,6 @@ namespace Difftaculous.Paths
                 }
                 else if (currentCharacter == ':')
                 {
-#if false
                     int length = (end ?? _currentIndex) - start;
 
                     if (length > 0)
@@ -357,8 +353,6 @@ namespace Difftaculous.Paths
 
                     start = _currentIndex;
                     end = null;
-#endif
-                    throw new NotImplementedException("TBD #4");
                 }
                 else if (!char.IsDigit(currentCharacter) && currentCharacter != '-')
                 {
@@ -429,16 +423,13 @@ namespace Difftaculous.Paths
                     if (fields != null)
                     {
                         fields.Add(field);
-                        // return new FieldMultipleFilter { Names = fields };
-                        throw new NotImplementedException();
+                        return new FieldMultipleFilter { Names = fields };
                     }
                     else
                     {
                         return new FieldFilter { Name = field };
                     }
                 }
-
-#if false
                 else if (_expression[_currentIndex] == ',')
                 {
                     _currentIndex++;
@@ -451,11 +442,8 @@ namespace Difftaculous.Paths
                 }
                 else
                 {
-                    throw new JsonException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+                    throw new JsonPathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
                 }
-#endif
-
-                throw new NotImplementedException();
             }
 
             throw new JsonPathException("Path ended with open indexer.");

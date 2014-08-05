@@ -4,8 +4,6 @@ using Difftaculous.Test.Helpers;
 using NUnit.Framework;
 using Shouldly;
 
-// ReSharper disable ObjectCreationAsStatement
-
 
 namespace Difftaculous.Test.Paths
 {
@@ -141,56 +139,72 @@ namespace Difftaculous.Test.Paths
 
 
 
-#if false
         [Test]
         public void RootArrayNoDot()
         {
-            JPath path = new JPath("$[1]");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual(1, ((ArrayIndexFilter)path.Filters[0]).Index);
+            var filters = JsonPathParser.Parse("$[1]");
+
+            filters.Count.ShouldBe(1);
+            ((ArrayIndexFilter)filters[0]).Index.ShouldBe(1);
         }
+
+
 
         [Test]
         public void WildcardArray()
         {
-            JPath path = new JPath("[*]");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual(null, ((ArrayIndexFilter)path.Filters[0]).Index);
+            var filters = JsonPathParser.Parse("[*]");
+
+            filters.Count.ShouldBe(1);
+            ((ArrayIndexFilter)filters[0]).Index.ShouldBe(null);
         }
+
+
 
         [Test]
         public void WildcardArrayWithProperty()
         {
-            JPath path = new JPath("[ * ].derp");
-            Assert.AreEqual(2, path.Filters.Count);
-            Assert.AreEqual(null, ((ArrayIndexFilter)path.Filters[0]).Index);
-            Assert.AreEqual("derp", ((FieldFilter)path.Filters[1]).Name);
+            var filters = JsonPathParser.Parse("[ * ].derp");
+
+            filters.Count.ShouldBe(2);
+            ((ArrayIndexFilter)filters[0]).Index.ShouldBe(null);
+            ((FieldFilter)filters[1]).Name.ShouldBe("derp");
         }
+
+
 
         [Test]
         public void QuotedWildcardPropertyWithRoot()
         {
-            JPath path = new JPath("$.['*']");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual("*", ((FieldFilter)path.Filters[0]).Name);
+            var filters = JsonPathParser.Parse("$.['*']");
+
+            filters.Count.ShouldBe(1);
+            ((FieldFilter)filters[0]).Name.ShouldBe("*");
         }
+
 
         [Test]
         public void SingleScanWithRoot()
         {
-            JPath path = new JPath("$..Blah");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual("Blah", ((ScanFilter)path.Filters[0]).Name);
+            var filters = JsonPathParser.Parse("$..Blah");
+
+            filters.Count.ShouldBe(1);
+            ((ScanFilter)filters[0]).Name.ShouldBe("Blah");
         }
+
 
         [Test]
         public void WildcardScanWithRoot()
         {
-            JPath path = new JPath("$..*");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual(null, ((ScanFilter)path.Filters[0]).Name);
+            var filters = JsonPathParser.Parse("$..*");
+
+            filters.Count.ShouldBe(1);
+            ((ScanFilter)filters[0]).Name.ShouldBe(null);
         }
 
+
+
+#if false
         [Test]
         public void WildcardScanWithRootWithWhitespace()
         {
@@ -531,36 +545,49 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual(1, path.Filters.Count);
             Assert.AreEqual(10, ((ArrayIndexFilter)path.Filters[0]).Index);
         }
+#endif
+
 
         [Test]
         public void MultipleIndexes()
         {
-            JPath path = new JPath("[111119990,3]");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual(2, ((ArrayMultipleIndexFilter)path.Filters[0]).Indexes.Count);
-            Assert.AreEqual(111119990, ((ArrayMultipleIndexFilter)path.Filters[0]).Indexes[0]);
-            Assert.AreEqual(3, ((ArrayMultipleIndexFilter)path.Filters[0]).Indexes[1]);
+            var filters = JsonPathParser.Parse("[111119990,3]");
+
+            filters.Count.ShouldBe(1);
+            ((ArrayMultipleIndexFilter) filters[0]).Indexes.Count.ShouldBe(2);
+            ((ArrayMultipleIndexFilter)filters[0]).Indexes[0].ShouldBe(111119990);
+            ((ArrayMultipleIndexFilter)filters[0]).Indexes[1].ShouldBe(3);
         }
+
 
         [Test]
         public void MultipleIndexesWithWhitespace()
         {
-            JPath path = new JPath("[   111119990  ,   3   ]");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual(2, ((ArrayMultipleIndexFilter)path.Filters[0]).Indexes.Count);
-            Assert.AreEqual(111119990, ((ArrayMultipleIndexFilter)path.Filters[0]).Indexes[0]);
-            Assert.AreEqual(3, ((ArrayMultipleIndexFilter)path.Filters[0]).Indexes[1]);
+            var filters = JsonPathParser.Parse("[   111119990  ,   3   ]");
+
+            filters.Count.ShouldBe(1);
+            ((ArrayMultipleIndexFilter)filters[0]).Indexes.Count.ShouldBe(2);
+            ((ArrayMultipleIndexFilter)filters[0]).Indexes[0].ShouldBe(111119990);
+            ((ArrayMultipleIndexFilter)filters[0]).Indexes[1].ShouldBe(3);
         }
+
 
         [Test]
         public void MultipleQuotedIndexes()
         {
-            JPath path = new JPath("['111119990','3']");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual(2, ((FieldMultipleFilter)path.Filters[0]).Names.Count);
-            Assert.AreEqual("111119990", ((FieldMultipleFilter)path.Filters[0]).Names[0]);
-            Assert.AreEqual("3", ((FieldMultipleFilter)path.Filters[0]).Names[1]);
+            var filters = JsonPathParser.Parse("['111119990','3']");
+
+            filters.Count.ShouldBe(1);
+            ((FieldMultipleFilter)filters[0]).Names.Count.ShouldBe(2);
+            ((FieldMultipleFilter)filters[0]).Names[0].ShouldBe("111119990");
+            ((FieldMultipleFilter)filters[0]).Names[1].ShouldBe("3");
         }
+
+
+#if false
+
+
+
 
         [Test]
         public void MultipleQuotedIndexesWithWhitespace()
@@ -571,17 +598,22 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual("111119990", ((FieldMultipleFilter)path.Filters[0]).Names[0]);
             Assert.AreEqual("3", ((FieldMultipleFilter)path.Filters[0]).Names[1]);
         }
+#endif
+
 
         [Test]
         public void SlicingIndexAll()
         {
-            JPath path = new JPath("[111119990:3:2]");
-            Assert.AreEqual(1, path.Filters.Count);
-            Assert.AreEqual(111119990, ((ArraySliceFilter)path.Filters[0]).Start);
-            Assert.AreEqual(3, ((ArraySliceFilter)path.Filters[0]).End);
-            Assert.AreEqual(2, ((ArraySliceFilter)path.Filters[0]).Step);
+            var filters = JsonPathParser.Parse("[111119990:3:2]");
+
+            filters.Count.ShouldBe(1);
+            ((ArraySliceFilter)filters[0]).Start.ShouldBe(111119990);
+            ((ArraySliceFilter)filters[0]).End.ShouldBe(3);
+            ((ArraySliceFilter)filters[0]).Step.ShouldBe(2);
         }
 
+
+#if false
         [Test]
         public void SlicingIndex()
         {
