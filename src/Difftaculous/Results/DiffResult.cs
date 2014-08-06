@@ -21,7 +21,7 @@ namespace Difftaculous.Results
 
 
         // TODO - need to replace message with a structure of some sort
-        public DiffResult(IDiffPath path, string message)
+        public DiffResult(DiffPath path, string message)
         {
             var annotation = new DiffAnnotation(path, message);
 

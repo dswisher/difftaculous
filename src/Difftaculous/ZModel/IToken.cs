@@ -1,5 +1,9 @@
 ﻿
+using System.Collections.Generic;
+using Difftaculous.Caveats;
+using Difftaculous.Hints;
 using Difftaculous.Paths;
+
 
 namespace Difftaculous.ZModel
 {
@@ -16,5 +20,8 @@ namespace Difftaculous.ZModel
 
         // NOTE: Json.Net defines this as a JContainer
         IToken Parent { get; }
+
+        IEnumerable<ICaveat> Caveats { get; }
+        IEnumerable<IHint> Hints { get; }
     }
 }

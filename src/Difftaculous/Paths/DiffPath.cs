@@ -5,17 +5,7 @@ using Difftaculous.ZModel;
 
 namespace Difftaculous.Paths
 {
-    public interface IDiffPath
-    {
-        // TODO - obsolete
-        bool Matches(IToken token);
-
-        string AsJsonPath { get; }
-    }
-
-
-
-    public class DiffPath : IDiffPath
+    public class DiffPath
     {
 
         private DiffPath()
@@ -70,14 +60,6 @@ namespace Difftaculous.Paths
         public override string ToString()
         {
             return AsJsonPath;
-        }
-
-
-
-        // TODO - Get rid of matches - should use SelectTokens instead!
-        public bool Matches(IToken token)
-        {
-            return AsJsonPath.Equals(token.Path.AsJsonPath);
         }
 
 

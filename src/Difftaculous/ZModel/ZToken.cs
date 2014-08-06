@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Difftaculous.Caveats;
+using Difftaculous.Hints;
 using Difftaculous.Paths;
 
 
@@ -11,8 +13,13 @@ namespace Difftaculous.ZModel
 {
     internal abstract class ZToken : IToken
     {
-        public IToken Parent { get; set; }
+        private readonly List<IHint> _hints = new List<IHint>();
+        private readonly List<ICaveat> _caveats = new List<ICaveat>();
 
+
+        public IToken Parent { get; set; }
+        public IEnumerable<IHint> Hints { get { return _hints; } }
+        public IEnumerable<ICaveat> Caveats { get { return _caveats; } }
 
         private static readonly TokenType[] NumberTypes = { TokenType.Value }; // new[] { TokenType.Integer, TokenType.Float, TokenType.String, TokenType.Comment, TokenType.Raw, TokenType.Boolean };
 
@@ -21,6 +28,18 @@ namespace Difftaculous.ZModel
         public virtual IToken this[string key]
         {
             get { throw new InvalidOperationException(string.Format("Cannot access child value on {0}.", GetType())); }
+        }
+
+
+        public void AddHint(IHint hint)
+        {
+            _hints.Add(hint);
+        }
+
+
+        public void AddCaveat(ICaveat caveat)
+        {
+            _caveats.Add(caveat);
         }
 
 

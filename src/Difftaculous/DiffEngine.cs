@@ -5,7 +5,6 @@ using System.Linq;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
-using Difftaculous.Paths;
 using Difftaculous.Results;
 using Difftaculous.ZModel;
 
@@ -35,29 +34,27 @@ namespace Difftaculous
             // Push the hints and caveats onto the models
             foreach (var hint in _hints)
             {
-                foreach (var token in a.SelectTokens((DiffPath)hint.Path))
+                foreach (var token in a.SelectTokens(hint.Path))
                 {
-                    // TODO
+                    token.AddHint(hint);
                 }
 
-                foreach (var token in b.SelectTokens((DiffPath)hint.Path))
+                foreach (var token in b.SelectTokens(hint.Path))
                 {
-                    // TODO
+                    token.AddHint(hint);
                 }
             }
-
-            // TODO - why does IHint have an IDiffPath, but ICaveat has a DiffPath??
 
             foreach (var caveat in _caveats)
             {
                 foreach (var token in a.SelectTokens(caveat.Path))
                 {
-                    // TODO
+                    token.AddCaveat(caveat);
                 }
 
                 foreach (var token in b.SelectTokens(caveat.Path))
                 {
-                    // TODO
+                    token.AddCaveat(caveat);
                 }
             }
             
@@ -146,14 +143,11 @@ namespace Difftaculous
                 return DiffResult.Same;
             }
 
-            // Okay, they're not equal...see if there are any caveats that will let this
-            // discrepancy pass...
-            var applicableCaveats = _caveats.Where(x => x.Path.Matches(valA));
-
             // TODO - this should return something other than Same, because they are NOT
             // the same.  But, returning something like "WithinTolerance" makes the DiffResult
             // more complex...
-            if (applicableCaveats.Any(x => x.IsAcceptable(a, b)))
+            // TODO - the caveats should be the same on A and B...verify?
+            if (valA.Caveats.Any(x => x.IsAcceptable(a, b)))
             {
                 return DiffResult.Same;
             }
@@ -168,7 +162,8 @@ namespace Difftaculous
             ArrayDiffHint.DiffStrategy strategy = ArrayDiffHint.DiffStrategy.Indexed;
             string keyName = null;
 
-            var hint = _hints.FirstOrDefault(x => x.Path.Matches(arrayA) && x.GetType() == typeof(ArrayDiffHint));
+            // TODO - the hints should be the same on A and B...verify?
+            var hint = arrayA.Hints.FirstOrDefault(x => x.GetType() == typeof(ArrayDiffHint));
 
             if (hint != null)
             {

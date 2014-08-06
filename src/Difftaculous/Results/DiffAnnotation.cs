@@ -1,18 +1,17 @@
 ﻿
-
 using Difftaculous.Paths;
 
 namespace Difftaculous.Results
 {
     public class DiffAnnotation
     {
-        public DiffAnnotation(IDiffPath path, string message)
+        public DiffAnnotation(DiffPath path, string message)
         {
             Path = path;
             Message = message;
         }
 
-        public IDiffPath Path { get; private set; }
+        public DiffPath Path { get; private set; }
         public string Message { get; private set; }
     }
 }
