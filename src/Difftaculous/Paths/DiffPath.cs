@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Linq;
 using Difftaculous.ZModel;
 
 
@@ -36,6 +37,11 @@ namespace Difftaculous.Paths
 
 
         public string AsJsonPath { get; private set; }
+
+        public string AsJsonPathEx
+        {
+            get { return string.Join(".", Filters.Select(x => x.AsJsonPath)); }
+        }
 
 
         public override bool Equals(object obj)

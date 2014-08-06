@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using Difftaculous.ZModel;
 
@@ -34,6 +35,13 @@ namespace Difftaculous.Paths
                     }
                 }
             }
+        }
+
+
+
+        public override string AsJsonPath
+        {
+            get { return string.IsNullOrEmpty(Name) ? string.Empty : Name; }
         }
     }
 }

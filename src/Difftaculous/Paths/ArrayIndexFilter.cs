@@ -43,7 +43,16 @@ namespace Difftaculous.Paths
                     throw new NotImplementedException();
                 }
             }
+        }
 
+
+
+        public override string AsJsonPath
+        {
+            get
+            {
+                return Index.HasValue ? string.Format("[{0}]", Index.Value) : "[*]";
+            }
         }
     }
 }

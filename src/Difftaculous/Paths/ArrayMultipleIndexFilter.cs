@@ -27,5 +27,12 @@ namespace Difftaculous.Paths
 #endif
             throw new NotImplementedException();
         }
+
+
+
+        public override string AsJsonPath
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

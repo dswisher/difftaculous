@@ -80,5 +80,11 @@ namespace Difftaculous.Paths
             return (index > stopIndex);
         }
 #endif
+
+
+        public override string AsJsonPath
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace Difftaculous.Paths
     internal abstract class PathFilter
     {
         public abstract IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current);
+        public abstract string AsJsonPath { get; }
 
         protected static ZToken GetTokenIndex(ZToken t, int index)
         {
