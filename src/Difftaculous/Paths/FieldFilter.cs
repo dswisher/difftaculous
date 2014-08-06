@@ -1,5 +1,4 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using Difftaculous.ZModel;
 
@@ -28,11 +27,10 @@ namespace Difftaculous.Paths
                     }
                     else
                     {
-                        //foreach (KeyValuePair<string, JToken> p in o)
-                        //{
-                        //    yield return p.Value;
-                        //}
-                        throw new NotImplementedException();
+                        foreach (var p in o.Properties)
+                        {
+                            yield return (ZToken)p.Value;
+                        }
                     }
                 }
             }

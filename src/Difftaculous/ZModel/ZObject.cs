@@ -17,9 +17,12 @@ namespace Difftaculous.ZModel
         }
 
 
-        public ZObject(ZProperty property)
+        public ZObject(params ZProperty[] properties)
         {
-            AddProperty(property);
+            foreach (var p in properties)
+            {
+                AddProperty(p);
+            }
         }
 
 

@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+using System.Linq;
 using Difftaculous.Paths;
 using Difftaculous.ZModel;
 using NUnit.Framework;
@@ -94,17 +96,15 @@ namespace Difftaculous.Test.Paths
         }
 
 
-#if false
         [Test]
         public void EvaluateDollarTypeString()
         {
-            JObject o = new JObject(
-                new JProperty("$values", new JArray(1, 2, 3)));
+            ZObject o = new ZObject(new ZProperty("$values", new ZArray(1, 2, 3)));
 
-            JToken t = o.SelectToken("$values[1]");
-            Assert.AreEqual(2, (int)t);
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("$values[1]"));
+            ((int)t).ShouldBe(2);
         }
-#endif
+
 
 
         [Test]
@@ -114,26 +114,25 @@ namespace Difftaculous.Test.Paths
 
             var t = o.SelectToken(DiffPath.FromJsonPath("Blah"));
             t.ShouldNotBe(null);
-            t.Type.ShouldBe(TokenType.Value);       // Integer?
-            // TODO - check value
-            //Assert.AreEqual(1, (int)t);
+            t.Type.ShouldBe(TokenType.Value);       // TODO - Integer?
+            ((int)t).ShouldBe(1);
         }
 
-#if false
+
         [Test]
         public void EvaluateWildcardProperty()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1),
-                new JProperty("Blah2", 2));
+            ZObject o = new ZObject(new ZProperty("Blah", 1), new ZProperty("Blah2", 2));
 
-            IList<JToken> t = o.SelectTokens("$.*").ToList();
-            Assert.IsNotNull(t);
-            Assert.AreEqual(2, t.Count);
-            Assert.AreEqual(1, (int)t[0]);
-            Assert.AreEqual(2, (int)t[1]);
+            IList<ZToken> t = o.SelectTokens(DiffPath.FromJsonPath("$.*")).ToList();
+            t.ShouldNotBe(null);
+            t.Count.ShouldBe(2);
+            ((int)t[0]).ShouldBe(1);
+            ((int)t[1]).ShouldBe(2);
         }
 
+
+#if false
         [Test]
         public void QuoteName()
         {

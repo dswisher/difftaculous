@@ -473,7 +473,6 @@ namespace Difftaculous.Paths
 
                 if (_expression[_currentIndex] == '&' && Match("&&"))
                 {
-#if false
                     if (parentExpression == null || parentExpression.Operator != QueryOperator.And)
                     {
                         CompositeExpression andExpression = new CompositeExpression { Operator = QueryOperator.And };
@@ -488,8 +487,6 @@ namespace Difftaculous.Paths
                     }
 
                     parentExpression.Expressions.Add(booleanExpression);
-#endif
-                    throw new NotImplementedException();
                 }
 
                 if (_expression[_currentIndex] == '|' && Match("||"))

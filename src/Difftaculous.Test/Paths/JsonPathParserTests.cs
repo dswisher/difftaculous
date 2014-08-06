@@ -416,20 +416,26 @@ namespace Difftaculous.Test.Paths
             BooleanQueryExpression expressions = (BooleanQueryExpression)((QueryFilter)path.Filters[0]).Expression;
             Assert.AreEqual(12.1d, (double)expressions.Value);
         }
+#endif
+
 
         [Test]
         public void FilterExistWithAnd()
         {
-            JPath path = new JPath("[?(@.name&&@.title)]");
-            CompositeExpression expressions = (CompositeExpression)((QueryFilter)path.Filters[0]).Expression;
-            Assert.AreEqual(QueryOperator.And, expressions.Operator);
-            Assert.AreEqual(2, expressions.Expressions.Count);
-            Assert.AreEqual("name", ((FieldFilter)((BooleanQueryExpression)expressions.Expressions[0]).Path[0]).Name);
-            Assert.AreEqual(QueryOperator.Exists, expressions.Expressions[0].Operator);
-            Assert.AreEqual("title", ((FieldFilter)((BooleanQueryExpression)expressions.Expressions[1]).Path[0]).Name);
-            Assert.AreEqual(QueryOperator.Exists, expressions.Expressions[1].Operator);
+            var filters = JsonPathParser.Parse("[?(@.name&&@.title)]");
+
+            CompositeExpression expression = (CompositeExpression)((QueryFilter)filters[0]).Expression;
+            expression.Operator.ShouldBe(QueryOperator.And);
+            expression.Expressions.Count.ShouldBe(2);
+
+            ((FieldFilter)((BooleanQueryExpression)expression.Expressions[0]).Path[0]).Name.ShouldBe("name");
+            expression.Expressions[0].Operator.ShouldBe(QueryOperator.Exists);
+            ((FieldFilter)((BooleanQueryExpression)expression.Expressions[1]).Path[0]).Name.ShouldBe("title");
+            expression.Expressions[1].Operator.ShouldBe(QueryOperator.Exists);
         }
 
+
+#if false
         [Test]
         public void FilterExistWithAndOr()
         {

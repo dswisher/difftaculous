@@ -8,6 +8,9 @@ namespace Difftaculous.ZModel
         Array,
 
         // TODO - should we swap this out for the actual type (String, Integer, Float, etc)?
-        Value
+        Value,
+
+        Null,
+        Undefined
     }
 }

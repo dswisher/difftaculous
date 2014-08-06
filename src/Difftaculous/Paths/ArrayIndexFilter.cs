@@ -13,18 +13,20 @@ namespace Difftaculous.Paths
 
         public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
         {
-#if false
-            foreach (JToken t in current)
+            foreach (ZToken t in current)
             {
                 if (Index != null)
                 {
-                    JToken v = GetTokenIndex(t, errorWhenNoMatch, Index.Value);
+                    ZToken v = GetTokenIndex(t, Index.Value);
 
                     if (v != null)
+                    {
                         yield return v;
+                    }
                 }
                 else
                 {
+#if false
                     if (t is JArray || t is JConstructor)
                     {
                         foreach (JToken v in t)
@@ -37,11 +39,11 @@ namespace Difftaculous.Paths
                         if (errorWhenNoMatch)
                             throw new JsonException("Index * not valid on {0}.".FormatWith(CultureInfo.InvariantCulture, t.GetType().Name));
                     }
+#endif
+                    throw new NotImplementedException();
                 }
             }
-#endif
 
-            throw new NotImplementedException();
         }
     }
 }

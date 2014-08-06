@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Difftaculous.Paths;
@@ -11,6 +12,10 @@ namespace Difftaculous.ZModel
     internal abstract class ZToken : IToken
     {
         public IToken Parent { get; set; }
+
+
+        private static readonly TokenType[] NumberTypes = { TokenType.Value }; // new[] { TokenType.Integer, TokenType.Float, TokenType.String, TokenType.Comment, TokenType.Raw, TokenType.Boolean };
+
 
         // NOTE: Json.Net defines this as taking an object as the key - for arrays, perhaps?
         public virtual IToken this[string key]
@@ -37,6 +42,13 @@ namespace Difftaculous.ZModel
             }
 
             return token;
+        }
+
+
+
+        public IEnumerable<ZToken> SelectTokens(DiffPath path)
+        {
+            return path.Evaluate(this);
         }
 
 
@@ -104,5 +116,59 @@ namespace Difftaculous.ZModel
                 }
             }
         }
+
+
+
+        public static explicit operator int(ZToken value)
+        {
+            ZValue v = EnsureValue(value);
+
+            if (v == null || !ValidateToken(v, NumberTypes, false))
+            {
+                throw new ArgumentException(string.Format("Can not convert {0} to Int32.", GetType(value)));
+            }
+
+            return Convert.ToInt32(v.Value, CultureInfo.InvariantCulture);
+        }
+
+
+        private static string GetType(ZToken token)
+        {
+            // TODO - put this in!
+            // ValidationUtils.ArgumentNotNull(token, "token");
+
+            if (token is ZProperty)
+            {
+                token = (ZToken)((ZProperty)token).Value;
+            }
+
+            return token.Type.ToString();
+        }
+
+
+        private static bool ValidateToken(ZToken o, TokenType[] validTypes, bool nullable)
+        {
+            return (Array.IndexOf(validTypes, o.Type) != -1) || (nullable && (o.Type == TokenType.Null || o.Type == TokenType.Undefined));
+        }
+
+
+
+        private static ZValue EnsureValue(ZToken value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            if (value is ZProperty)
+            {
+                value = (ZToken)((ZProperty)value).Value;
+            }
+
+            ZValue v = value as ZValue;
+
+            return v;
+        }
+
     }
 }

@@ -9,6 +9,22 @@ namespace Difftaculous.ZModel
     {
         private readonly List<IToken> _tokens = new List<IToken>();
 
+
+        public ZArray()
+        {
+        }
+
+
+        public ZArray(params object[] content)
+        {
+            foreach (var item in content)
+            {
+                Add(new ZValue(item));
+            }
+        }
+
+
+
         public override TokenType Type { get { return TokenType.Array; } }
 
         public int Count { get { return _tokens.Count; } }
