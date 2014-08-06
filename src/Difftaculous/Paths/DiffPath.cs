@@ -1,6 +1,6 @@
 ﻿
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using Difftaculous.ZModel;
 
 
@@ -23,7 +23,6 @@ namespace Difftaculous.Paths
         {
             return new DiffPath
             {
-                AsJsonPath = path,
                 Filters = JsonPathParser.Parse(path)
             };
         }
@@ -36,14 +35,21 @@ namespace Difftaculous.Paths
 
 
 
-        public string AsJsonPath { get; private set; }
-
         public string AsJsonPathEx
         {
-            get { return string.Join(".", Filters.Select(x => x.AsJsonPath)); }
+            get
+            {
+                StringBuilder builder = new StringBuilder();
+                foreach (var filter in Filters)
+                {
+                    filter.AddJsonPath(builder);
+                }
+                return builder.ToString();
+            }
         }
 
 
+        // TODO - remove this?  Where is it used?
         public override bool Equals(object obj)
         {
             DiffPath other = obj as DiffPath;
@@ -53,19 +59,19 @@ namespace Difftaculous.Paths
                 return false;
             }
 
-            return AsJsonPath == other.AsJsonPath;
+            return AsJsonPathEx == other.AsJsonPathEx;
         }
 
 
         public override int GetHashCode()
         {
-            return AsJsonPath.GetHashCode();
+            return AsJsonPathEx.GetHashCode();
         }
 
 
         public override string ToString()
         {
-            return AsJsonPath;
+            return AsJsonPathEx;
         }
 
 

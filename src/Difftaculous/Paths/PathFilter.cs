@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Text;
 using Difftaculous.ZModel;
 
 
@@ -8,7 +9,7 @@ namespace Difftaculous.Paths
     internal abstract class PathFilter
     {
         public abstract IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current);
-        public abstract string AsJsonPath { get; }
+        public abstract void AddJsonPath(StringBuilder sb);
 
         protected static ZToken GetTokenIndex(ZToken t, int index)
         {

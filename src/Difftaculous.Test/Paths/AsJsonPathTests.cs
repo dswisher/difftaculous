@@ -13,7 +13,7 @@ namespace Difftaculous.Test.Paths
         [TestCase("[1]")]
         [TestCase("[1].fred")]
         [TestCase("[*]")]
-        //[TestCase("fred[1]")]
+        [TestCase("fred[1]")]
         public void FromJsonAndBack(string jsonPath)
         {
             var path = DiffPath.FromJsonPath(jsonPath);

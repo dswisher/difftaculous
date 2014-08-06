@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Difftaculous.ZModel;
 
 namespace Difftaculous.Paths
@@ -47,12 +48,9 @@ namespace Difftaculous.Paths
 
 
 
-        public override string AsJsonPath
+        public override void AddJsonPath(StringBuilder sb)
         {
-            get
-            {
-                return Index.HasValue ? string.Format("[{0}]", Index.Value) : "[*]";
-            }
+            sb.Append(Index.HasValue ? string.Format("[{0}]", Index.Value) : "[*]");
         }
     }
 }

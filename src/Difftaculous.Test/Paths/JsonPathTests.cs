@@ -15,7 +15,7 @@ namespace Difftaculous.Test.Paths
         {
             ZObject o = new ZObject();
 
-            o.Path.AsJsonPath.ShouldBe("$");
+            o.Path.AsJsonPathEx.ShouldBe("");
         }
 
 
@@ -27,7 +27,7 @@ namespace Difftaculous.Test.Paths
             ZProperty p = new ZProperty("name", new ZValue("Fred"));
             o.AddProperty(p);
 
-            p.Path.AsJsonPath.ShouldBe("$.name");            
+            p.Path.AsJsonPathEx.ShouldBe("name");            
         }
 
 
@@ -39,7 +39,7 @@ namespace Difftaculous.Test.Paths
             ZValue v = new ZValue(1);
             a.Add(v);
 
-            v.Path.AsJsonPath.ShouldBe("$[0]");
+            v.Path.AsJsonPathEx.ShouldBe("[0]");
         }
 
 
@@ -57,7 +57,7 @@ namespace Difftaculous.Test.Paths
             var prop = o["person"]["$id"].Parent;
 
             // NOTE: Json.Net has this as person.$id, but I think we want all paths to be rooted
-            prop.Path.AsJsonPath.ShouldBe("$.person.$id");
+            prop.Path.AsJsonPathEx.ShouldBe("person.$id");
 
 
             // TODO - make ZObject an IDictionary (of properties) so we can use a collection initializer
