@@ -5,6 +5,7 @@ using System.Linq;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
+using Difftaculous.Paths;
 using Difftaculous.Results;
 using Difftaculous.ZModel;
 
@@ -24,9 +25,49 @@ namespace Difftaculous
         }
 
 
+        // TODO - should this just be the public interface?  Why have the Diff class?
+        // TODO - have this take the hints and caveats, rather than passing them in the constructor?
+        public IDiffResult DoDiff(IToken tokenA, IToken tokenB)
+        {
+            var a = (ZToken)tokenA;
+            var b = (ZToken)tokenB;
+
+            // Push the hints and caveats onto the models
+            foreach (var hint in _hints)
+            {
+                foreach (var token in a.SelectTokens((DiffPath)hint.Path))
+                {
+                    // TODO
+                }
+
+                foreach (var token in b.SelectTokens((DiffPath)hint.Path))
+                {
+                    // TODO
+                }
+            }
+
+            // TODO - why does IHint have an IDiffPath, but ICaveat has a DiffPath??
+
+            foreach (var caveat in _caveats)
+            {
+                foreach (var token in a.SelectTokens(caveat.Path))
+                {
+                    // TODO
+                }
+
+                foreach (var token in b.SelectTokens(caveat.Path))
+                {
+                    // TODO
+                }
+            }
+            
+            // Do the actual diff
+            return Diff(tokenA, tokenB);
+        }
 
 
-        public IDiffResult Diff(IToken tokenA, IToken tokenB)
+
+        private IDiffResult Diff(IToken tokenA, IToken tokenB)
         {
             // TODO - switch this to use IToken.Type
 

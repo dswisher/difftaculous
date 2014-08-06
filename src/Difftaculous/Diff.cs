@@ -36,7 +36,7 @@ namespace Difftaculous
         {
             DiffEngine engine = new DiffEngine(caveats, hints);
 
-            return engine.Diff(a.Content, b.Content);
+            return engine.DoDiff(a.Content, b.Content);
         }
     }
 }
