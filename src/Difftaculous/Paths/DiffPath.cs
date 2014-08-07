@@ -35,7 +35,7 @@ namespace Difftaculous.Paths
 
 
 
-        public string AsJsonPathEx
+        public string AsJsonPath
         {
             get
             {
@@ -59,19 +59,19 @@ namespace Difftaculous.Paths
                 return false;
             }
 
-            return AsJsonPathEx == other.AsJsonPathEx;
+            return AsJsonPath == other.AsJsonPath;
         }
 
 
         public override int GetHashCode()
         {
-            return AsJsonPathEx.GetHashCode();
+            return AsJsonPath.GetHashCode();
         }
 
 
         public override string ToString()
         {
-            return AsJsonPathEx;
+            return AsJsonPath;
         }
 
 

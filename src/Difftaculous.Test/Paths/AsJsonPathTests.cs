@@ -14,10 +14,23 @@ namespace Difftaculous.Test.Paths
         [TestCase("[1].fred")]
         [TestCase("[*]")]
         [TestCase("fred[1]")]
+        [TestCase("[*]")]
+        [TestCase("*")]
+        [TestCase("*.*")]
         public void FromJsonAndBack(string jsonPath)
         {
             var path = DiffPath.FromJsonPath(jsonPath);
-            path.AsJsonPathEx.ShouldBe(jsonPath);            
+            path.AsJsonPath.ShouldBe(jsonPath);            
+        }
+
+
+
+        [TestCase("$.['*']", "['*']")]
+        [TestCase("$.*", "*")]
+        public void FromJsonAndBackWithTwist(string inPath, string outPath)
+        {
+            var path = DiffPath.FromJsonPath(inPath);
+            path.AsJsonPath.ShouldBe(outPath);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Difftaculous.Results
 
             foreach (var anno in Annotations)
             {
-                builder.AppendLine(string.Format("Anno, path={0}, msg={1}", anno.Path.AsJsonPathEx, anno.Message));
+                builder.AppendLine(string.Format("Anno, path={0}, msg={1}", anno.Path.AsJsonPath, anno.Message));
             }
 
             return builder.ToString();

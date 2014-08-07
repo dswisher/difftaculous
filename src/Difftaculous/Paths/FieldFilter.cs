@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Difftaculous.ZModel;
 
@@ -41,14 +42,25 @@ namespace Difftaculous.Paths
 
         public override void AddJsonPath(StringBuilder sb)
         {
+            if (sb.Length > 0)
+            {
+                sb.Append(".");
+            }
+
             if (!string.IsNullOrEmpty(Name))
             {
-                if (sb.Length > 0)
+                if (Name.Any(c => !char.IsLetterOrDigit(c) && (c != '$')))
                 {
-                    sb.Append(".");
+                    sb.AppendFormat("['{0}']", Name);
                 }
-
-                sb.Append(Name);
+                else
+                {
+                    sb.Append(Name);
+                }
+            }
+            else
+            {
+                sb.Append("*");
             }
         }
     }
