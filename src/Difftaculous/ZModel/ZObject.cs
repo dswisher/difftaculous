@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Difftaculous.ZModel
 {
-    internal class ZObject : ZToken, IObject
+    internal class ZObject : ZToken
     {
-        private readonly Dictionary<string, IProperty> _properties = new Dictionary<string, IProperty>();
+        private readonly Dictionary<string, ZProperty> _properties = new Dictionary<string, ZProperty>();
 
 
         public override TokenType Type { get { return TokenType.Object; } }
@@ -26,39 +26,39 @@ namespace Difftaculous.ZModel
         }
 
 
-        public IEnumerable<IProperty> Properties
+        public IEnumerable<ZProperty> Properties
         {
             get { return _properties.Values; }
         }
 
 
-        public IProperty GetProperty(string name)
+        public ZProperty GetProperty(string name)
         {
             if (name == null)
             {
                 return null;
             }
 
-            IProperty property;
+            ZProperty property;
             _properties.TryGetValue(name, out property);
             return property;
         }
 
 
-        public override IToken this[string propertyName]
+        public override ZToken this[string propertyName]
         {
             get
             {
-                IProperty property = GetProperty(propertyName);
+                ZProperty property = GetProperty(propertyName);
                 return (property != null) ? property.Value : null;
             }
         }
 
 
-        public void AddProperty(IProperty property)
+        public void AddProperty(ZProperty property)
         {
             _properties.Add(property.Name, property);
-            ((ZToken)property).Parent = this;
+            property.Parent = this;
         }
     }
 }

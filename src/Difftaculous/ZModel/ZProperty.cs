@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Difftaculous.ZModel
 {
-    internal class ZProperty : ZToken, IProperty
+    internal class ZProperty : ZToken
     {
         public ZProperty(string name, object content)
         {
@@ -22,13 +22,13 @@ namespace Difftaculous.ZModel
             //    ? new ZArray(content)
             //    : CreateFromContent(content);
 
-            ((ZToken)Value).Parent = this;
+            Value.Parent = this;
         }
 
         public override TokenType Type { get { return TokenType.Property; } }
 
         public string Name { get; private set; }
-        public IToken Value { get; private set; }
+        public ZToken Value { get; private set; }
 
 
 

@@ -16,7 +16,7 @@ namespace Difftaculous.Paths.Expressions
         }
 
 
-        public override bool IsMatch(IToken t)
+        public override bool IsMatch(ZToken t)
         {
 #if false
             switch (Operator)

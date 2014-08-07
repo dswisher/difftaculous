@@ -2,7 +2,7 @@
 
 namespace Difftaculous.ZModel
 {
-    internal class ZValue : ZToken, IValue
+    internal class ZValue : ZToken
     {
         public ZValue(object value)
         {

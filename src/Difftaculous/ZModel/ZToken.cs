@@ -11,13 +11,13 @@ using Difftaculous.Paths;
 
 namespace Difftaculous.ZModel
 {
-    internal abstract class ZToken : IToken
+    internal abstract class ZToken
     {
         private readonly List<IHint> _hints = new List<IHint>();
         private readonly List<ICaveat> _caveats = new List<ICaveat>();
 
 
-        public IToken Parent { get; set; }
+        public ZToken Parent { get; set; }
         public IEnumerable<IHint> Hints { get { return _hints; } }
         public IEnumerable<ICaveat> Caveats { get { return _caveats; } }
 
@@ -25,7 +25,7 @@ namespace Difftaculous.ZModel
 
 
         // NOTE: Json.Net defines this as taking an object as the key - for arrays, perhaps?
-        public virtual IToken this[string key]
+        public virtual ZToken this[string key]
         {
             get { throw new InvalidOperationException(string.Format("Cannot access child value on {0}.", GetType())); }
         }
@@ -86,8 +86,8 @@ namespace Difftaculous.ZModel
 
                 for (int i = 0; i < ancestors.Count; i++)
                 {
-                    IToken current = ancestors[i];
-                    IToken next = null;
+                    ZToken current = ancestors[i];
+                    ZToken next = null;
 
                     if (i + 1 < ancestors.Count)
                     {
@@ -104,11 +104,11 @@ namespace Difftaculous.ZModel
                         {
                             case TokenType.Property:
                                 sb.Append(".");
-                                sb.Append(((IProperty)current).Name);
+                                sb.Append(((ZProperty)current).Name);
                                 break;
 
                             case TokenType.Array:
-                                IArray array = (IArray)current;
+                                ZArray array = (ZArray)current;
                                 int index = array.IndexOf(next);
 
                                 sb.Append("[");
@@ -125,11 +125,11 @@ namespace Difftaculous.ZModel
 
 
 
-        private IEnumerable<IToken> Ancestors
+        private IEnumerable<ZToken> Ancestors
         {
             get
             {
-                for (IToken parent = Parent; parent != null; parent = parent.Parent)
+                for (ZToken parent = Parent; parent != null; parent = parent.Parent)
                 {
                     yield return parent;
                 }
@@ -158,7 +158,7 @@ namespace Difftaculous.ZModel
 
             if (token is ZProperty)
             {
-                token = (ZToken)((ZProperty)token).Value;
+                token = ((ZProperty)token).Value;
             }
 
             return token.Type.ToString();
@@ -181,7 +181,7 @@ namespace Difftaculous.ZModel
 
             if (value is ZProperty)
             {
-                value = (ZToken)((ZProperty)value).Value;
+                value = ((ZProperty)value).Value;
             }
 
             ZValue v = value as ZValue;

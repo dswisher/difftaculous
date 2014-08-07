@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Difftaculous.ZModel
 {
-    internal class ZArray : ZToken, IArray
+    internal class ZArray : ZToken, IEnumerable<ZToken>
     {
-        private readonly List<IToken> _tokens = new List<IToken>();
+        private readonly List<ZToken> _tokens = new List<ZToken>();
 
 
         public ZArray()
@@ -30,26 +30,26 @@ namespace Difftaculous.ZModel
         public int Count { get { return _tokens.Count; } }
 
 
-        public IToken this[int index]
+        public ZToken this[int index]
         {
             get { return _tokens[index]; }
         }
 
 
-        public int IndexOf(IToken item)
+        public int IndexOf(ZToken item)
         {
             // TODO - do we need an equality comparer?
             return _tokens.IndexOf(item);
         }
 
 
-        public void Add(IToken token)
+        public void Add(ZToken token)
         {
             _tokens.Add(token);
-            ((ZToken)token).Parent = this;
+            token.Parent = this;
         }
 
-        public IEnumerator<IToken> GetEnumerator()
+        public IEnumerator<ZToken> GetEnumerator()
         {
             return _tokens.GetEnumerator();
         }

@@ -57,11 +57,6 @@
     <Compile Include="Paths\Expressions\QueryExpression.cs" />
     <Compile Include="Paths\QueryFilter.cs" />
     <Compile Include="Paths\ScanFilter.cs" />
-    <Compile Include="ZModel\IArray.cs" />
-    <Compile Include="ZModel\IObject.cs" />
-    <Compile Include="ZModel\IProperty.cs" />
-    <Compile Include="ZModel\IToken.cs" />
-    <Compile Include="ZModel\IValue.cs" />
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="ZModel\ZArray.cs" />

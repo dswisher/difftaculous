@@ -19,7 +19,7 @@ namespace Difftaculous.Adapters
         public IAdaptedContent Content { get; private set; }
 
 
-        private IToken Adapt(JToken jtoken)
+        private ZToken Adapt(JToken jtoken)
         {
             var type = jtoken.GetType();
 
@@ -42,7 +42,7 @@ namespace Difftaculous.Adapters
         }
 
 
-        private IToken Adapt(JObject jobject)
+        private ZToken Adapt(JObject jobject)
         {
             ZObject zobject = new ZObject();
 
@@ -56,7 +56,7 @@ namespace Difftaculous.Adapters
 
 
 
-        private IToken Adapt(JValue jvalue)
+        private ZToken Adapt(JValue jvalue)
         {
             // TODO - pass along the type?!
 
@@ -67,7 +67,7 @@ namespace Difftaculous.Adapters
 
 
 
-        private IToken Adapt(JArray jarray)
+        private ZToken Adapt(JArray jarray)
         {
             ZArray zarray = new ZArray();
 

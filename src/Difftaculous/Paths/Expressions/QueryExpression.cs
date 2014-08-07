@@ -23,6 +23,6 @@ namespace Difftaculous.Paths.Expressions
     {
         public QueryOperator Operator { get; set; }
 
-        public abstract bool IsMatch(IToken t);
+        public abstract bool IsMatch(ZToken t);
     }
 }

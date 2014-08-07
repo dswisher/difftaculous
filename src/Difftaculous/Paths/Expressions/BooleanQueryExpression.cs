@@ -9,9 +9,9 @@ namespace Difftaculous.Paths.Expressions
     internal class BooleanQueryExpression : QueryExpression
     {
         public List<PathFilter> Path { get; set; }
-        public IValue Value { get; set; }
+        public ZValue Value { get; set; }
 
-        public override bool IsMatch(IToken t)
+        public override bool IsMatch(ZToken t)
         {
 #if false
             IEnumerable<JToken> pathResult = JPath.Evaluate(Path, t, false);

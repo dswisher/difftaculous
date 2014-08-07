@@ -28,7 +28,7 @@ namespace Difftaculous.Paths
         }
 
 
-        public static DiffPath FromToken(IToken token)
+        internal static DiffPath FromToken(ZToken token)
         {
             return token.Path;
         }

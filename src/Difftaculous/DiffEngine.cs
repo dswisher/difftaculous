@@ -14,26 +14,27 @@ namespace Difftaculous
 {
     public class DiffEngine
     {
-        private readonly IEnumerable<IHint> _hints;
-        private readonly IEnumerable<ICaveat> _caveats;
-
-
         private DiffEngine()
         {
         }
 
 
-        [Obsolete]
-        internal DiffEngine(IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
-        {
-            _hints = hints ?? Enumerable.Empty<IHint>();
-            _caveats = caveats ?? Enumerable.Empty<ICaveat>();
-        }
-
 
         public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB)
         {
             return Compare(adapterA, adapterB, null, null);
+        }
+
+
+        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<ICaveat> caveats)
+        {
+            return Compare(adapterA, adapterB, caveats, null);
+        }
+
+
+        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<IHint> hints)
+        {
+            return Compare(adapterA, adapterB, null, hints);
         }
 
 
@@ -80,47 +81,7 @@ namespace Difftaculous
 
 
 
-        // TODO - should this just be the public interface?  Why have the Diff class?
-        // TODO - have this take the hints and caveats, rather than passing them in the constructor?
-        public IDiffResult DoDiff(IToken tokenA, IToken tokenB)
-        {
-            var a = (ZToken)tokenA;
-            var b = (ZToken)tokenB;
-
-            // Push the hints and caveats onto the models
-            foreach (var hint in _hints)
-            {
-                foreach (var token in a.SelectTokens(hint.Path))
-                {
-                    token.AddHint(hint);
-                }
-
-                foreach (var token in b.SelectTokens(hint.Path))
-                {
-                    token.AddHint(hint);
-                }
-            }
-
-            foreach (var caveat in _caveats)
-            {
-                foreach (var token in a.SelectTokens(caveat.Path))
-                {
-                    token.AddCaveat(caveat);
-                }
-
-                foreach (var token in b.SelectTokens(caveat.Path))
-                {
-                    token.AddCaveat(caveat);
-                }
-            }
-            
-            // Do the actual diff
-            return Diff(tokenA, tokenB);
-        }
-
-
-
-        private IDiffResult Diff(IToken tokenA, IToken tokenB)
+        private IDiffResult Diff(ZToken tokenA, ZToken tokenB)
         {
             // TODO - switch this to use IToken.Type
 
@@ -132,19 +93,19 @@ namespace Difftaculous
                 return new DiffResult(tokenA.Path, "types are not consistent");
             }
 
-            if (tokenA is IObject)
+            if (tokenA is ZObject)
             {
-                return SubDiff((IObject)tokenA, (IObject)tokenB);
+                return SubDiff((ZObject)tokenA, (ZObject)tokenB);
             }
 
-            if (tokenA is IValue)
+            if (tokenA is ZValue)
             {
-                return SubDiff((IValue)tokenA, (IValue)tokenB);
+                return SubDiff((ZValue)tokenA, (ZValue)tokenB);
             }
 
-            if (tokenA is IArray)
+            if (tokenA is ZArray)
             {
-                return SubDiff((IArray)tokenA, (IArray)tokenB);
+                return SubDiff((ZArray)tokenA, (ZArray)tokenB);
             }
 
             // TODO!
@@ -154,7 +115,7 @@ namespace Difftaculous
 
 
 
-        private IDiffResult SubDiff(IObject objA, IObject objB)
+        private IDiffResult SubDiff(ZObject objA, ZObject objB)
         {
             IDiffResult result = DiffResult.Same;
 
@@ -174,7 +135,7 @@ namespace Difftaculous
 
 
 
-        private IDiffResult SubDiff(IValue valA, IValue valB)
+        private IDiffResult SubDiff(ZValue valA, ZValue valB)
         {
             // TODO - better value diff - numerics - 34.0 vs. 34.00 isn't really a difference, is it?
 
@@ -213,7 +174,7 @@ namespace Difftaculous
 
 
 
-        private IDiffResult SubDiff(IArray arrayA, IArray arrayB)
+        private IDiffResult SubDiff(ZArray arrayA, ZArray arrayB)
         {
             ArrayDiffHint.DiffStrategy strategy = ArrayDiffHint.DiffStrategy.Indexed;
             string keyName = null;
@@ -243,7 +204,7 @@ namespace Difftaculous
 
 
 
-        private IDiffResult IndexedArrayDiff(IArray arrayA, IArray arrayB)
+        private IDiffResult IndexedArrayDiff(ZArray arrayA, ZArray arrayB)
         {
             IDiffResult result = DiffResult.Same;
 
@@ -269,10 +230,10 @@ namespace Difftaculous
 
 
 
-        private IDiffResult KeyedArrayDiff(IArray arrayA, IArray arrayB, string keyName)
+        private IDiffResult KeyedArrayDiff(ZArray arrayA, ZArray arrayB, string keyName)
         {
-            var dictA = arrayA.ToDictionary(x => (string)(((IValue)x[keyName]).Value));
-            var dictB = arrayB.ToDictionary(x => (string)(((IValue)x[keyName]).Value));
+            var dictA = arrayA.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
+            var dictB = arrayB.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
 
             var join = dictA.FullOuterJoin(dictB, x => x.Key, x => x.Key, (a, b, k) => new { Key = k, A = a, B = b });
 
