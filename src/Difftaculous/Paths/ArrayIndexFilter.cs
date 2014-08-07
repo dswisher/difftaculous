@@ -1,9 +1,8 @@
 ﻿
-
-using System;
 using System.Collections.Generic;
 using System.Text;
 using Difftaculous.ZModel;
+
 
 namespace Difftaculous.Paths
 {
@@ -27,21 +26,13 @@ namespace Difftaculous.Paths
                 }
                 else
                 {
-#if false
-                    if (t is JArray || t is JConstructor)
+                    if (t is ZArray)
                     {
-                        foreach (JToken v in t)
+                        foreach (ZToken v in (ZArray)t)
                         {
                             yield return v;
                         }
                     }
-                    else
-                    {
-                        if (errorWhenNoMatch)
-                            throw new JsonException("Index * not valid on {0}.".FormatWith(CultureInfo.InvariantCulture, t.GetType().Name));
-                    }
-#endif
-                    throw new NotImplementedException();
                 }
             }
         }

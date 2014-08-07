@@ -398,21 +398,25 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual(3, (int)t[3]);
             Assert.AreEqual(1, (int)t[4]);
         }
+#endif
+
 
         [Test]
         public void EvaluateWildcardArray()
         {
-            JArray a = new JArray(1, 2, 3, 4);
+            ZArray a = new ZArray(1, 2, 3, 4);
 
-            List<JToken> t = a.SelectTokens("[*]").ToList();
-            Assert.IsNotNull(t);
-            Assert.AreEqual(4, t.Count);
-            Assert.AreEqual(1, (int)t[0]);
-            Assert.AreEqual(2, (int)t[1]);
-            Assert.AreEqual(3, (int)t[2]);
-            Assert.AreEqual(4, (int)t[3]);
+            List<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[*]")).ToList();
+            t.ShouldNotBe(null);
+            t.Count.ShouldBe(4);
+            ((int)t[0]).ShouldBe(1);
+            ((int)t[1]).ShouldBe(2);
+            ((int)t[2]).ShouldBe(3);
+            ((int)t[3]).ShouldBe(4);
         }
 
+
+#if false
         [Test]
         public void EvaluateArrayMultipleIndexes()
         {
