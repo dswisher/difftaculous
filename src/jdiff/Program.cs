@@ -35,10 +35,10 @@ namespace jdiff
 
             try
             {
-                var contentA = new JsonAdapter(ReadFile(infoA));
-                var contentB = new JsonAdapter(ReadFile(infoB));
+                var adapterA = new JsonAdapter(ReadFile(infoA));
+                var adapterB = new JsonAdapter(ReadFile(infoB));
 
-                var result = Diff.Compare(contentA, contentB);
+                var result = DiffEngine.Compare(adapterA, adapterB);
 
                 // TODO - emit better results!  (Use an emitter!)
                 if (result.AreSame)

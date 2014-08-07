@@ -10,12 +10,10 @@ namespace Difftaculous.Adapters
         public XmlAdapter(string content)
         {
             // TODO!
-            Content = new ZObject();
+            Content = new AdaptedContent(new ZObject());
         }
 
 
-        // TODO - this needs to change to something non-JSON specific!
-        public IToken Content { get; private set; }
-
+        public IAdaptedContent Content { get; private set; }
     }
 }

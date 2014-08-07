@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Difftaculous.Adapters;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
@@ -11,17 +12,72 @@ using Difftaculous.ZModel;
 
 namespace Difftaculous
 {
-    internal class DiffEngine
+    public class DiffEngine
     {
         private readonly IEnumerable<IHint> _hints;
         private readonly IEnumerable<ICaveat> _caveats;
 
 
-        public DiffEngine(IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
+        private DiffEngine()
+        {
+        }
+
+
+        [Obsolete]
+        internal DiffEngine(IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
         {
             _hints = hints ?? Enumerable.Empty<IHint>();
             _caveats = caveats ?? Enumerable.Empty<ICaveat>();
         }
+
+
+        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB)
+        {
+            return Compare(adapterA, adapterB, null, null);
+        }
+
+
+        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
+        {
+            var a = (ZToken)adapterA.Content.Content;
+            var b = (ZToken)adapterB.Content.Content;
+
+            // Push the hints and caveats onto the models
+            if (hints != null)
+            {
+                foreach (var hint in hints)
+                {
+                    foreach (var token in a.SelectTokens(hint.Path))
+                    {
+                        token.AddHint(hint);
+                    }
+
+                    foreach (var token in b.SelectTokens(hint.Path))
+                    {
+                        token.AddHint(hint);
+                    }
+                }
+            }
+
+            if (caveats != null)
+            {
+                foreach (var caveat in caveats)
+                {
+                    foreach (var token in a.SelectTokens(caveat.Path))
+                    {
+                        token.AddCaveat(caveat);
+                    }
+
+                    foreach (var token in b.SelectTokens(caveat.Path))
+                    {
+                        token.AddCaveat(caveat);
+                    }
+                }
+            }
+
+            return new DiffEngine().Diff(a, b);
+        }
+
 
 
         // TODO - should this just be the public interface?  Why have the Diff class?

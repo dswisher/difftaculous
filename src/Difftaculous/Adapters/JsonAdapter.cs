@@ -12,11 +12,11 @@ namespace Difftaculous.Adapters
         {
             var top = JToken.Parse(content);
 
-            Content = Adapt(top);
+            Content = new AdaptedContent(Adapt(top));
         }
 
 
-        public IToken Content { get; private set; }
+        public IAdaptedContent Content { get; private set; }
 
 
         private IToken Adapt(JToken jtoken)

@@ -24,7 +24,7 @@ namespace Difftaculous.Test
             Console.WriteLine();
             Console.WriteLine("XML, B:\n{0}", xmlB);
 
-            var result = Diff.Compare(new XmlAdapter(xmlA), new XmlAdapter(xmlB), caveats, hints);
+            var result = DiffEngine.Compare(new XmlAdapter(xmlA), new XmlAdapter(xmlB), caveats, hints);
 
             Console.WriteLine();
             Console.WriteLine("Result:\n{0}", result);

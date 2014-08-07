@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\IAdaptedContent.cs" />
     <Compile Include="Adapters\IAdapter.cs" />
     <Compile Include="Paths\ArrayIndexFilter.cs" />
     <Compile Include="Paths\ArrayMultipleIndexFilter.cs" />
@@ -71,7 +72,6 @@
     <Compile Include="ZModel\ZValue.cs" />
     <Compile Include="Caveats\ICaveat.cs" />
     <Compile Include="Caveats\VarianceCaveat.cs" />
-    <Compile Include="Diff.cs" />
     <Compile Include="Hints\ArrayDiffHint.cs" />
     <Compile Include="Hints\IHint.cs" />
     <Compile Include="Misc\Extensions.cs" />
