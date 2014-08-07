@@ -150,7 +150,7 @@ namespace Difftaculous.Test
 
 
 
-        internal class ScoreClass
+        public class ScoreClass
         {
             public int Score { get; set; }
         }
@@ -176,8 +176,8 @@ namespace Difftaculous.Test
         [Test]
         public void PropertyOutsideVarianceIsNotSame()
         {
-            const string a = "{ \"score\": 100 }";
-            const string b = "{ \"score\": 110 }";
+            var a = new ScoreClass { Score = 100 };
+            var b = new ScoreClass { Score = 110 };
 
             var caveats = new[] { new VarianceCaveat(DiffPath.FromJsonPath("$.score"), 2) };
 
