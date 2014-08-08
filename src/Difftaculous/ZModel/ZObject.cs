@@ -44,16 +44,16 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JObject"/> class from another <see cref="JObject"/> object.
+        /// Initializes a new instance of the <see cref="ZObject"/> class from another <see cref="ZObject"/> object.
         /// </summary>
-        /// <param name="other">A <see cref="JObject"/> object to copy from.</param>
-        public JObject(JObject other)
+        /// <param name="other">A <see cref="ZObject"/> object to copy from.</param>
+        public ZObject(ZObject other)
             : base(other)
         {
         }
-#endif
+
 
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace Difftaculous.ZModel
 
 
 #if false
-        internal override bool DeepEquals(JToken node)
+        internal override bool DeepEquals(ZToken node)
         {
-            JObject t = node as JObject;
+            ZObject t = node as ZObject;
             if (t == null)
                 return false;
 
@@ -92,7 +92,7 @@ namespace Difftaculous.ZModel
 
         internal override void InsertItem(int index, ZToken item, bool skipParentCheck)
         {
-            // don't add comments to JObject, no name to reference comment by
+            // don't add comments to ZObject, no name to reference comment by
             if (item != null && item.Type == TokenType.Comment)
                 return;
 
@@ -150,9 +150,9 @@ namespace Difftaculous.ZModel
 #endif
         }
 
-        internal override JToken CloneToken()
+        internal override ZToken CloneToken()
         {
-            return new JObject(this);
+            return new ZObject(this);
         }
 #endif
 
@@ -197,20 +197,18 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
+
         /// <summary>
-        /// Gets an <see cref="JEnumerable{JToken}"/> of this object's property values.
+        /// Gets an <see cref="ZEnumerable{ZToken}"/> of this object's property values.
         /// </summary>
-        /// <returns>An <see cref="JEnumerable{JToken}"/> of this object's property values.</returns>
-        public JEnumerable<JToken> PropertyValues()
+        /// <returns>An <see cref="ZEnumerable{ZToken}"/> of this object's property values.</returns>
+        public ZEnumerable<ZToken> PropertyValues()
         {
-            return new JEnumerable<JToken>(Properties().Select(p => p.Value));
+            return new ZEnumerable<ZToken>(Properties().Select(p => p.Value));
         }
-#endif
 
 
 
-#if true
         /// <summary>
         /// Gets the <see cref="ZToken"/> with the specified key.
         /// </summary>
@@ -225,7 +223,7 @@ namespace Difftaculous.ZModel
                 if (propertyName == null)
                 {
                     throw new NotImplementedException();
-                    //throw new ArgumentException("Accessed JObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                    //throw new ArgumentException("Accessed ZObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
                 }
 
                 return this[propertyName];
@@ -238,13 +236,12 @@ namespace Difftaculous.ZModel
                 if (propertyName == null)
                 {
                     throw new NotImplementedException();
-                    // throw new ArgumentException("Set JObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                    // throw new ArgumentException("Set ZObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
                 }
 
                 this[propertyName] = value;
             }
         }
-#endif
 
 
 
@@ -285,18 +282,18 @@ namespace Difftaculous.ZModel
 
 #if false
         /// <summary>
-        /// Loads an <see cref="JObject"/> from a <see cref="JsonReader"/>. 
+        /// Loads an <see cref="ZObject"/> from a <see cref="JsonReader"/>. 
         /// </summary>
-        /// <param name="reader">A <see cref="JsonReader"/> that will be read for the content of the <see cref="JObject"/>.</param>
-        /// <returns>A <see cref="JObject"/> that contains the JSON that was read from the specified <see cref="JsonReader"/>.</returns>
-        public new static JObject Load(JsonReader reader)
+        /// <param name="reader">A <see cref="JsonReader"/> that will be read for the content of the <see cref="ZObject"/>.</param>
+        /// <returns>A <see cref="ZObject"/> that contains the JSON that was read from the specified <see cref="JsonReader"/>.</returns>
+        public new static ZObject Load(JsonReader reader)
         {
             ValidationUtils.ArgumentNotNull(reader, "reader");
 
             if (reader.TokenType == JsonToken.None)
             {
                 if (!reader.Read())
-                    throw JsonReaderException.Create(reader, "Error reading JObject from JsonReader.");
+                    throw JsonReaderException.Create(reader, "Error reading ZObject from JsonReader.");
             }
 
             while (reader.TokenType == JsonToken.Comment)
@@ -306,10 +303,10 @@ namespace Difftaculous.ZModel
 
             if (reader.TokenType != JsonToken.StartObject)
             {
-                throw JsonReaderException.Create(reader, "Error reading JObject from JsonReader. Current JsonReader item is not an object: {0}".FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+                throw JsonReaderException.Create(reader, "Error reading ZObject from JsonReader. Current JsonReader item is not an object: {0}".FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
             }
 
-            JObject o = new JObject();
+            ZObject o = new ZObject();
             o.SetLineInfo(reader as IJsonLineInfo);
 
             o.ReadTokenFrom(reader);
@@ -318,18 +315,18 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Load a <see cref="JObject"/> from a string that contains JSON.
+        /// Load a <see cref="ZObject"/> from a string that contains JSON.
         /// </summary>
         /// <param name="json">A <see cref="String"/> that contains JSON.</param>
-        /// <returns>A <see cref="JObject"/> populated from the string that contains JSON.</returns>
+        /// <returns>A <see cref="ZObject"/> populated from the string that contains JSON.</returns>
         /// <example>
         ///   <code lang="cs" source="..\Src\Newtonsoft.Json.Tests\Documentation\LinqToJsonTests.cs" region="LinqToJsonCreateParse" title="Parsing a JSON Object from Text" />
         /// </example>
-        public new static JObject Parse(string json)
+        public new static ZObject Parse(string json)
         {
             using (JsonReader reader = new JsonTextReader(new StringReader(json)))
             {
-                JObject o = Load(reader);
+                ZObject o = Load(reader);
 
                 if (reader.Read() && reader.TokenType != JsonToken.Comment)
                     throw JsonReaderException.Create(reader, "Additional text found in JSON string after parsing content.");
@@ -339,29 +336,29 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Creates a <see cref="JObject"/> from an object.
+        /// Creates a <see cref="ZObject"/> from an object.
         /// </summary>
-        /// <param name="o">The object that will be used to create <see cref="JObject"/>.</param>
-        /// <returns>A <see cref="JObject"/> with the values of the specified object</returns>
-        public new static JObject FromObject(object o)
+        /// <param name="o">The object that will be used to create <see cref="ZObject"/>.</param>
+        /// <returns>A <see cref="ZObject"/> with the values of the specified object</returns>
+        public new static ZObject FromObject(object o)
         {
             return FromObject(o, JsonSerializer.CreateDefault());
         }
 
         /// <summary>
-        /// Creates a <see cref="JObject"/> from an object.
+        /// Creates a <see cref="ZObject"/> from an object.
         /// </summary>
-        /// <param name="o">The object that will be used to create <see cref="JObject"/>.</param>
+        /// <param name="o">The object that will be used to create <see cref="ZObject"/>.</param>
         /// <param name="jsonSerializer">The <see cref="JsonSerializer"/> that will be used to read the object.</param>
-        /// <returns>A <see cref="JObject"/> with the values of the specified object</returns>
-        public new static JObject FromObject(object o, JsonSerializer jsonSerializer)
+        /// <returns>A <see cref="ZObject"/> with the values of the specified object</returns>
+        public new static ZObject FromObject(object o, JsonSerializer jsonSerializer)
         {
-            JToken token = FromObjectInternal(o, jsonSerializer);
+            ZToken token = FromObjectInternal(o, jsonSerializer);
 
-            if (token != null && token.Type != JTokenType.Object)
-                throw new ArgumentException("Object serialized to {0}. JObject instance expected.".FormatWith(CultureInfo.InvariantCulture, token.Type));
+            if (token != null && token.Type != ZTokenType.Object)
+                throw new ArgumentException("Object serialized to {0}. ZObject instance expected.".FormatWith(CultureInfo.InvariantCulture, token.Type));
 
-            return (JObject)token;
+            return (ZObject)token;
         }
 
         /// <summary>
@@ -382,24 +379,24 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Gets the <see cref="Newtonsoft.Json.Linq.JToken"/> with the specified property name.
+        /// Gets the <see cref="Newtonsoft.Json.Linq.ZToken"/> with the specified property name.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        /// <returns>The <see cref="Newtonsoft.Json.Linq.JToken"/> with the specified property name.</returns>
-        public JToken GetValue(string propertyName)
+        /// <returns>The <see cref="Newtonsoft.Json.Linq.ZToken"/> with the specified property name.</returns>
+        public ZToken GetValue(string propertyName)
         {
             return GetValue(propertyName, StringComparison.Ordinal);
         }
 
         /// <summary>
-        /// Gets the <see cref="Newtonsoft.Json.Linq.JToken"/> with the specified property name.
+        /// Gets the <see cref="Newtonsoft.Json.Linq.ZToken"/> with the specified property name.
         /// The exact property name will be searched for first and if no matching property is found then
         /// the <see cref="StringComparison"/> will be used to match a property.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="comparison">One of the enumeration values that specifies how the strings will be compared.</param>
-        /// <returns>The <see cref="Newtonsoft.Json.Linq.JToken"/> with the specified property name.</returns>
-        public JToken GetValue(string propertyName, StringComparison comparison)
+        /// <returns>The <see cref="Newtonsoft.Json.Linq.ZToken"/> with the specified property name.</returns>
+        public ZToken GetValue(string propertyName, StringComparison comparison)
         {
             if (propertyName == null)
                 return null;
@@ -423,7 +420,7 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Tries to get the <see cref="Newtonsoft.Json.Linq.JToken"/> with the specified property name.
+        /// Tries to get the <see cref="Newtonsoft.Json.Linq.ZToken"/> with the specified property name.
         /// The exact property name will be searched for first and if no matching property is found then
         /// the <see cref="StringComparison"/> will be used to match a property.
         /// </summary>
@@ -431,7 +428,7 @@ namespace Difftaculous.ZModel
         /// <param name="value">The value.</param>
         /// <param name="comparison">One of the enumeration values that specifies how the strings will be compared.</param>
         /// <returns>true if a value was successfully retrieved; otherwise, false.</returns>
-        public bool TryGetValue(string propertyName, StringComparison comparison, out JToken value)
+        public bool TryGetValue(string propertyName, StringComparison comparison, out ZToken value)
         {
             value = GetValue(propertyName, comparison);
             return (value != null);
@@ -439,7 +436,7 @@ namespace Difftaculous.ZModel
 #endif
 
 
-        #region IDictionary<string,JToken> Members
+        #region IDictionary<string,ZToken> Members
 
         //public void Add(ZProperty property)
         //{
@@ -466,7 +463,7 @@ namespace Difftaculous.ZModel
 
         ICollection<string> IDictionary<string, ZToken>.Keys
         {
-            // todo: make order the collection returned match JObject order
+            // todo: make order the collection returned match ZObject order
             get { return _properties.Keys; }
         }
 
@@ -521,7 +518,7 @@ namespace Difftaculous.ZModel
         #endregion
         
 
-        #region ICollection<KeyValuePair<string,JToken>> Members
+        #region ICollection<KeyValuePair<string,ZToken>> Members
 
         void ICollection<KeyValuePair<string, ZToken>>.Add(KeyValuePair<string, ZToken> item)
         {
@@ -557,7 +554,7 @@ namespace Difftaculous.ZModel
             //if (arrayIndex >= array.Length && arrayIndex != 0)
             //    throw new ArgumentException("arrayIndex is equal to or greater than the length of array.");
             //if (Count > array.Length - arrayIndex)
-            //    throw new ArgumentException("The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.");
+            //    throw new ArgumentException("The number of elements in the source ZObject is greater than the available space from arrayIndex to the end of the destination array.");
 
             //int index = 0;
             //foreach (ZProperty property in _properties)
@@ -635,7 +632,7 @@ namespace Difftaculous.ZModel
 #endif
 
 #if !(NETFX_CORE || PORTABLE40 || PORTABLE)
-        // include custom type descriptor on JObject rather than use a provider because the properties are specific to a type
+        // include custom type descriptor on ZObject rather than use a provider because the properties are specific to a type
 
         #region ICustomTypeDescriptor
         /// <summary>
@@ -660,7 +657,7 @@ namespace Difftaculous.ZModel
         {
             PropertyDescriptorCollection descriptors = new PropertyDescriptorCollection(null);
 
-            foreach (KeyValuePair<string, JToken> propertyValue in this)
+            foreach (KeyValuePair<string, ZToken> propertyValue in this)
             {
                 descriptors.Add(new JPropertyDescriptor(propertyValue.Key));
             }
@@ -794,21 +791,21 @@ namespace Difftaculous.ZModel
         /// </returns>
         protected override DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return new DynamicProxyMetaObject<JObject>(parameter, this, new JObjectDynamicProxy(), true);
+            return new DynamicProxyMetaObject<ZObject>(parameter, this, new ZObjectDynamicProxy(), true);
         }
 
-        private class JObjectDynamicProxy : DynamicProxy<JObject>
+        private class ZObjectDynamicProxy : DynamicProxy<ZObject>
         {
-            public override bool TryGetMember(JObject instance, GetMemberBinder binder, out object result)
+            public override bool TryGetMember(ZObject instance, GetMemberBinder binder, out object result)
             {
                 // result can be null
                 result = instance[binder.Name];
                 return true;
             }
 
-            public override bool TrySetMember(JObject instance, SetMemberBinder binder, object value)
+            public override bool TrySetMember(ZObject instance, SetMemberBinder binder, object value)
             {
-                JToken v = value as JToken;
+                ZToken v = value as ZToken;
 
                 // this can throw an error if value isn't a valid for a JValue
                 if (v == null)
@@ -818,7 +815,7 @@ namespace Difftaculous.ZModel
                 return true;
             }
 
-            public override IEnumerable<string> GetDynamicMemberNames(JObject instance)
+            public override IEnumerable<string> GetDynamicMemberNames(ZObject instance)
             {
                 return instance.Properties().Select(p => p.Name);
             }
