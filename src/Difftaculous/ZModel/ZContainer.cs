@@ -91,9 +91,9 @@ namespace Difftaculous.ZModel
 #endif
         }
 
-        internal virtual IList<JToken> CreateChildrenCollection()
+        internal virtual IList<ZToken> CreateChildrenCollection()
         {
-            return new List<JToken>();
+            return new List<ZToken>();
         }
 
 #if !(NETFX_CORE || PORTABLE40 || PORTABLE)
@@ -175,8 +175,8 @@ namespace Difftaculous.ZModel
             if (container == this)
                 return true;
 
-            IList<JToken> t1 = ChildrenTokens;
-            IList<JToken> t2 = container.ChildrenTokens;
+            IList<ZToken> t1 = ChildrenTokens;
+            IList<ZToken> t2 = container.ChildrenTokens;
 
             if (t1.Count != t2.Count)
                 return false;
@@ -367,9 +367,10 @@ namespace Difftaculous.ZModel
 
 
 
-#if false
         internal virtual void RemoveItemAt(int index)
         {
+            throw new NotImplementedException();
+#if false
             if (index < 0)
                 throw new ArgumentOutOfRangeException("index", "Index is less than 0.");
             if (index >= ChildrenTokens.Count)
@@ -377,9 +378,9 @@ namespace Difftaculous.ZModel
 
             CheckReentrancy();
 
-            JToken item = ChildrenTokens[index];
-            JToken previous = (index == 0) ? null : ChildrenTokens[index - 1];
-            JToken next = (index == ChildrenTokens.Count - 1) ? null : ChildrenTokens[index + 1];
+            ZToken item = ChildrenTokens[index];
+            ZToken previous = (index == 0) ? null : ChildrenTokens[index - 1];
+            ZToken next = (index == ChildrenTokens.Count - 1) ? null : ChildrenTokens[index + 1];
 
             if (previous != null)
                 previous.Next = next;
@@ -400,9 +401,12 @@ namespace Difftaculous.ZModel
             if (_collectionChanged != null)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
 #endif
+#endif
         }
 
-        internal virtual bool RemoveItem(JToken item)
+
+
+        internal virtual bool RemoveItem(ZToken item)
         {
             int index = IndexOfItem(item);
             if (index >= 0)
@@ -413,7 +417,7 @@ namespace Difftaculous.ZModel
 
             return false;
         }
-#endif
+
 
 
         internal virtual ZToken GetItem(int index)
@@ -431,7 +435,7 @@ namespace Difftaculous.ZModel
             if (index >= ChildrenTokens.Count)
                 throw new ArgumentOutOfRangeException("index", "Index is equal to or greater than Count.");
 
-            JToken existing = ChildrenTokens[index];
+            ZToken existing = ChildrenTokens[index];
 
             if (IsTokenUnchanged(existing, item))
                 return;
@@ -442,8 +446,8 @@ namespace Difftaculous.ZModel
 
             ValidateToken(item, existing);
 
-            JToken previous = (index == 0) ? null : ChildrenTokens[index - 1];
-            JToken next = (index == ChildrenTokens.Count - 1) ? null : ChildrenTokens[index + 1];
+            ZToken previous = (index == 0) ? null : ChildrenTokens[index - 1];
+            ZToken next = (index == ChildrenTokens.Count - 1) ? null : ChildrenTokens[index + 1];
 
             item.Parent = this;
 
@@ -503,7 +507,7 @@ namespace Difftaculous.ZModel
 
 
 #if false
-        internal virtual void ReplaceItem(JToken existing, JToken replacement)
+        internal virtual void ReplaceItem(ZToken existing, ZToken replacement)
         {
             if (existing == null || existing.Parent != this)
                 return;
@@ -520,7 +524,6 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
         internal virtual void CopyItemsTo(Array array, int arrayIndex)
         {
             if (array == null)
@@ -533,20 +536,22 @@ namespace Difftaculous.ZModel
                 throw new ArgumentException("The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.");
 
             int index = 0;
-            foreach (JToken token in ChildrenTokens)
+            foreach (ZToken token in ChildrenTokens)
             {
                 array.SetValue(token, arrayIndex + index);
                 index++;
             }
         }
 
-        internal static bool IsTokenUnchanged(JToken currentValue, JToken newValue)
+
+#if false
+        internal static bool IsTokenUnchanged(ZToken currentValue, ZToken newValue)
         {
             JValue v1 = currentValue as JValue;
             if (v1 != null)
             {
                 // null will get turned into a JValue of type null
-                if (v1.Type == JTokenType.Null && newValue == null)
+                if (v1.Type == ZTokenType.Null && newValue == null)
                     return true;
 
                 return v1.Equals(newValue);
@@ -631,12 +636,12 @@ namespace Difftaculous.ZModel
 
 #if false
         /// <summary>
-        /// Creates an <see cref="JsonWriter"/> that can be used to add tokens to the <see cref="JToken"/>.
+        /// Creates an <see cref="JsonWriter"/> that can be used to add tokens to the <see cref="ZToken"/>.
         /// </summary>
         /// <returns>An <see cref="JsonWriter"/> that is ready to have content written to it.</returns>
         public JsonWriter CreateWriter()
         {
-            return new JTokenWriter(this);
+            return new ZTokenWriter(this);
         }
 
         /// <summary>
@@ -778,7 +783,7 @@ namespace Difftaculous.ZModel
         internal int ContentsHashCode()
         {
             int hashCode = 0;
-            foreach (JToken item in ChildrenTokens)
+            foreach (ZToken item in ChildrenTokens)
             {
                 hashCode ^= item.GetDeepHashCode();
             }
@@ -803,7 +808,7 @@ namespace Difftaculous.ZModel
 #endif
 
 
-        #region IList<JToken> Members
+        #region IList<ZToken> Members
 
         int IList<ZToken>.IndexOf(ZToken item)
         {
@@ -830,7 +835,7 @@ namespace Difftaculous.ZModel
         #endregion
 
 
-        #region ICollection<JToken> Members
+        #region ICollection<ZToken> Members
 
         void ICollection<ZToken>.Add(ZToken item)
         {
@@ -869,15 +874,15 @@ namespace Difftaculous.ZModel
 
 
 #if false
-        private JToken EnsureValue(object value)
+        private ZToken EnsureValue(object value)
         {
             if (value == null)
                 return null;
 
-            if (value is JToken)
-                return (JToken)value;
+            if (value is ZToken)
+                return (ZToken)value;
 
-            throw new ArgumentException("Argument is not a JToken.");
+            throw new ArgumentException("Argument is not a ZToken.");
         }
 
         #region IList Members
@@ -990,10 +995,10 @@ namespace Difftaculous.ZModel
             if (args.NewObject == null)
                 throw new JsonException("Could not determine new value to add to '{0}'.".FormatWith(CultureInfo.InvariantCulture, GetType()));
 
-            if (!(args.NewObject is JToken))
-                throw new JsonException("New item to be added to collection must be compatible with {0}.".FormatWith(CultureInfo.InvariantCulture, typeof(JToken)));
+            if (!(args.NewObject is ZToken))
+                throw new JsonException("New item to be added to collection must be compatible with {0}.".FormatWith(CultureInfo.InvariantCulture, typeof(ZToken)));
 
-            JToken newItem = (JToken)args.NewObject;
+            ZToken newItem = (ZToken)args.NewObject;
             Add(newItem);
 
             return newItem;
