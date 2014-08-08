@@ -460,23 +460,31 @@ namespace Difftaculous.Test.Paths
             Assert.IsTrue(JToken.DeepEquals(o2, t[3]));
             Assert.AreEqual(2, (int)t[4]);
         }
+#endif
 
-        [Test]
+
+        [Test, Ignore("Get this working!")]
         public void EvaluateScanNestResults()
         {
-            JObject o1 = new JObject { { "Name", 1 } };
-            JObject o2 = new JObject { { "Name", 2 } };
-            JObject o3 = new JObject { { "Name", new JObject { { "Name", new JArray(3) } } } };
-            JArray a = new JArray(o1, o2, o3);
+            ZObject o1 = new ZObject(new ZProperty("Name", 1));
+            ZObject o2 = new ZObject(new ZProperty("Name", 2));
+            ZObject o3 = new ZObject(new ZProperty("Name", new ZObject(new ZProperty("Name", new ZArray(3)))));
+            ZArray a = new ZArray(o1, o2, o3);
 
-            IList<JToken> t = a.SelectTokens("$..Name").ToList();
-            Assert.IsNotNull(t);
-            Assert.AreEqual(4, t.Count);
-            Assert.AreEqual(1, (int)t[0]);
-            Assert.AreEqual(2, (int)t[1]);
-            Assert.IsTrue(JToken.DeepEquals(new JObject { { "Name", new JArray(3) } }, t[2]));
-            Assert.IsTrue(JToken.DeepEquals(new JArray(3), t[3]));
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("$..Name")).ToList();
+            t.ShouldNotBe(null);
+            t.Count.ShouldBe(4);
+            ((int)t[0]).ShouldBe(1);
+            ((int)t[1]).ShouldBe(2);
+            // TODO - assert these, too!
+            //Assert.IsTrue(JToken.DeepEquals(new JObject { { "Name", new JArray(3) } }, t[2]));
+            //Assert.IsTrue(JToken.DeepEquals(new JArray(3), t[3]));
         }
+
+
+#if false
+
+
 
         [Test]
         public void EvaluateWildcardScanNestResults()
