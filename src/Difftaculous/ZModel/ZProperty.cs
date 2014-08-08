@@ -7,33 +7,6 @@ namespace Difftaculous.ZModel
 {
     internal class ZProperty : ZContainer
     {
-        public ZProperty(string name, object content)
-        {
-            _name = name;
-
-            if (IsMultiContent(content))
-            {
-                throw new NotImplementedException("Array construction is TBD.");
-            }
-
-            Value = CreateFromContent(content);
-
-            //Value = IsMultiContent(content)
-            //    ? new ZArray(content)
-            //    : CreateFromContent(content);
-
-            Value.Parent = this;
-        }
-
-        public override TokenType Type { get { return TokenType.Property; } }
-
-
-
-        // -------------------------------------------------------------
-        // -------------------------------------------------------------
-        // -------------------------------------------------------------
-
-
         private readonly List<ZToken> _content = new List<ZToken>();
         private readonly string _name;
 
@@ -87,25 +60,25 @@ namespace Difftaculous.ZModel
 
 
 
-#if false
         /// <summary>
-        /// Initializes a new instance of the <see cref="JProperty"/> class from another <see cref="JProperty"/> object.
+        /// Initializes a new instance of the <see cref="ZProperty"/> class from another <see cref="ZProperty"/> object.
         /// </summary>
-        /// <param name="other">A <see cref="JProperty"/> object to copy from.</param>
-        public JProperty(JProperty other)
+        /// <param name="other">A <see cref="ZProperty"/> object to copy from.</param>
+        public ZProperty(ZProperty other)
             : base(other)
         {
             _name = other.Name;
         }
 
-        internal override JToken GetItem(int index)
+
+
+        internal override ZToken GetItem(int index)
         {
             if (index != 0)
                 throw new ArgumentOutOfRangeException();
 
             return Value;
         }
-#endif
 
 
         internal override void SetItem(int index, ZToken item)
@@ -128,24 +101,23 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
-        internal override bool RemoveItem(JToken item)
+        internal override bool RemoveItem(ZToken item)
         {
-            throw new JsonException("Cannot add or remove items from {0}.".FormatWith(CultureInfo.InvariantCulture, typeof(JProperty)));
+            throw new ZException(string.Format("Cannot add or remove items from {0}.", typeof(ZProperty)));
         }
+
 
         internal override void RemoveItemAt(int index)
         {
-            throw new JsonException("Cannot add or remove items from {0}.".FormatWith(CultureInfo.InvariantCulture, typeof(JProperty)));
+            throw new ZException(string.Format("Cannot add or remove items from {0}.", typeof(ZProperty)));
         }
-#endif
 
 
         internal override void InsertItem(int index, ZToken item, bool skipParentCheck)
         {
-            // don't add comments to JProperty
-            //if (item != null && item.Type == TokenType.Comment)
-            //    return;
+            // don't add comments to ZProperty
+            if (item != null && item.Type == TokenType.Comment)
+                return;
 
             if (Value != null)
                 throw new ZException(string.Format("{0} cannot have multiple values.", typeof(ZProperty)));
@@ -154,72 +126,85 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
-        internal override bool ContainsItem(JToken item)
+        internal override bool ContainsItem(ZToken item)
         {
             return (Value == item);
         }
 
+
         internal override void ClearItems()
         {
-            throw new JsonException("Cannot add or remove items from {0}.".FormatWith(CultureInfo.InvariantCulture, typeof(JProperty)));
+            throw new ZException(string.Format("Cannot add or remove items from {0}.", typeof(ZProperty)));
         }
 
-        internal override bool DeepEquals(JToken node)
+
+#if false
+        internal override bool DeepEquals(ZToken node)
         {
-            JProperty t = node as JProperty;
+            ZProperty t = node as ZProperty;
             return (t != null && _name == t.Name && ContentsEqual(t));
         }
 
-        internal override JToken CloneToken()
+        internal override ZToken CloneToken()
         {
-            return new JProperty(this);
+            return new ZProperty(this);
         }
+#endif
+
 
         /// <summary>
-        /// Gets the node type for this <see cref="JToken"/>.
+        /// Gets the node type for this <see cref="ZToken"/>.
         /// </summary>
         /// <value>The type.</value>
-        public override JTokenType Type
+        public override TokenType Type
         {
-            [DebuggerStepThrough]
-            get { return JTokenType.Property; }
+            // [DebuggerStepThrough]
+            get { return TokenType.Property; }
         }
 
-        internal JProperty(string name)
+
+#if false
+        internal ZProperty(string name)
         {
             // called from JTokenWriter
             ValidationUtils.ArgumentNotNull(name, "name");
 
             _name = name;
         }
+#endif
+
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JProperty"/> class.
+        /// Initializes a new instance of the <see cref="ZProperty"/> class.
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <param name="content">The property content.</param>
-        public JProperty(string name, params object[] content)
+        public ZProperty(string name, params object[] content)
             : this(name, (object)content)
         {
         }
 
+
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JProperty"/> class.
+        /// Initializes a new instance of the <see cref="ZProperty"/> class.
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <param name="content">The property content.</param>
-        public JProperty(string name, object content)
+        public ZProperty(string name, object content)
         {
             ValidationUtils.ArgumentNotNull(name, "name");
 
             _name = name;
 
             Value = IsMultiContent(content)
-                ? new JArray(content)
+                ? new ZArray(content)
                 : CreateFromContent(content);
         }
 
+
+
+#if false
         /// <summary>
         /// Writes this token to a <see cref="JsonWriter"/>.
         /// </summary>
@@ -229,7 +214,7 @@ namespace Difftaculous.ZModel
         {
             writer.WritePropertyName(_name);
 
-            JToken value = Value;
+            ZToken value = Value;
             if (value != null)
                 value.WriteTo(writer, converters);
             else
@@ -242,16 +227,16 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Loads an <see cref="JProperty"/> from a <see cref="JsonReader"/>. 
+        /// Loads an <see cref="ZProperty"/> from a <see cref="JsonReader"/>. 
         /// </summary>
-        /// <param name="reader">A <see cref="JsonReader"/> that will be read for the content of the <see cref="JProperty"/>.</param>
-        /// <returns>A <see cref="JProperty"/> that contains the JSON that was read from the specified <see cref="JsonReader"/>.</returns>
-        public new static JProperty Load(JsonReader reader)
+        /// <param name="reader">A <see cref="JsonReader"/> that will be read for the content of the <see cref="ZProperty"/>.</param>
+        /// <returns>A <see cref="ZProperty"/> that contains the JSON that was read from the specified <see cref="JsonReader"/>.</returns>
+        public new static ZProperty Load(JsonReader reader)
         {
             if (reader.TokenType == JsonToken.None)
             {
                 if (!reader.Read())
-                    throw JsonReaderException.Create(reader, "Error reading JProperty from JsonReader.");
+                    throw JsonReaderException.Create(reader, "Error reading ZProperty from JsonReader.");
             }
 
             while (reader.TokenType == JsonToken.Comment)
@@ -260,9 +245,9 @@ namespace Difftaculous.ZModel
             }
 
             if (reader.TokenType != JsonToken.PropertyName)
-                throw JsonReaderException.Create(reader, "Error reading JProperty from JsonReader. Current JsonReader item is not a property: {0}".FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+                throw JsonReaderException.Create(reader, "Error reading ZProperty from JsonReader. Current JsonReader item is not a property: {0}".FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
 
-            JProperty p = new JProperty((string)reader.Value);
+            ZProperty p = new ZProperty((string)reader.Value);
             p.SetLineInfo(reader as IJsonLineInfo);
 
             p.ReadTokenFrom(reader);
