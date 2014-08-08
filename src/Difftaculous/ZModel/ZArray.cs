@@ -24,10 +24,14 @@ namespace Difftaculous.ZModel
         }
 
 
+        protected override IList<ZToken> ChildrenTokens
+        {
+            get { return _tokens; }
+        }
+
 
         public override TokenType Type { get { return TokenType.Array; } }
 
-        public int Count { get { return _tokens.Count; } }
 
 
         public ZToken this[int index]

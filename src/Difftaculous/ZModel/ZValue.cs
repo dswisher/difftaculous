@@ -176,6 +176,9 @@ namespace Difftaculous.ZModel
 
             return ValuesEquals(this, other);
         }
+#endif
+
+
 
         /// <summary>
         /// Gets a value indicating whether this token has child tokens.
@@ -188,6 +191,9 @@ namespace Difftaculous.ZModel
             get { return false; }
         }
 
+
+
+#if false
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
         private static int CompareBigInteger(BigInteger i1, object i2)
         {
@@ -513,15 +519,20 @@ namespace Difftaculous.ZModel
         {
             return new JValue(value, JTokenType.String);
         }
+#endif
+
 
         /// <summary>
-        /// Creates a <see cref="JValue"/> null value.
+        /// Creates a <see cref="ZValue"/> null value.
         /// </summary>
-        /// <returns>A <see cref="JValue"/> null value.</returns>
-        public static JValue CreateNull()
+        /// <returns>A <see cref="ZValue"/> null value.</returns>
+        public static ZValue CreateNull()
         {
-            return new JValue(null, JTokenType.Null);
+            return new ZValue(null, TokenType.Null);
         }
+
+
+#if false
 
         /// <summary>
         /// Creates a <see cref="JValue"/> null value.

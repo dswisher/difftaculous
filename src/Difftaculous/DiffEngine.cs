@@ -119,7 +119,7 @@ namespace Difftaculous
         {
             IDiffResult result = DiffResult.Same;
 
-            foreach (var pair in objA.Properties.FullOuterJoin(objB.Properties, x => x.Name, x => x.Name, (p1, p2, n) => new { PropA = p1, PropB = p2, Name = n }))
+            foreach (var pair in objA.Properties().FullOuterJoin(objB.Properties(), x => x.Name, x => x.Name, (p1, p2, n) => new { PropA = p1, PropB = p2, Name = n }))
             {
                 if ((pair.PropA == null) || (pair.PropB == null))
                 {

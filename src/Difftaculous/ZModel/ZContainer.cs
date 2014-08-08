@@ -1,8 +1,8 @@
-﻿using System;
+﻿
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Difftaculous.ZModel
 {
@@ -44,13 +44,17 @@ namespace Difftaculous.ZModel
             remove { _collectionChanged -= value; }
         }
 #endif
+#endif
+
 
         /// <summary>
         /// Gets the container's children tokens.
         /// </summary>
         /// <value>The container's children tokens.</value>
-        protected abstract IList<JToken> ChildrenTokens { get; }
+        protected abstract IList<ZToken> ChildrenTokens { get; }
 
+
+#if false
         private object _syncRoot;
 #if !(PORTABLE40)
         private bool _busy;
@@ -141,6 +145,8 @@ namespace Difftaculous.ZModel
             }
         }
 #endif
+#endif
+
 
         /// <summary>
         /// Gets a value indicating whether this token has child tokens.
@@ -153,6 +159,9 @@ namespace Difftaculous.ZModel
             get { return ChildrenTokens.Count > 0; }
         }
 
+
+
+#if false
         internal bool ContentsEqual(JContainer container)
         {
             if (container == this)
@@ -238,15 +247,21 @@ namespace Difftaculous.ZModel
             }
         }
 
+
+#endif
+
+
         internal bool IsMultiContent(object content)
         {
-            return (content is IEnumerable && !(content is string) && !(content is JToken) && !(content is byte[]));
+            return (content is IEnumerable && !(content is string) && !(content is ZToken) && !(content is byte[]));
         }
 
-        internal JToken EnsureParentToken(JToken item, bool skipParentCheck)
+
+
+        internal ZToken EnsureParentToken(ZToken item, bool skipParentCheck)
         {
             if (item == null)
-                return JValue.CreateNull();
+                return ZValue.CreateNull();
 
             if (skipParentCheck)
                 return item;
@@ -256,11 +271,16 @@ namespace Difftaculous.ZModel
             // the item is being added to itself
             // the item is being added to the root parent of itself
             if (item.Parent != null || item == this || (item.HasValues && Root == item))
-                item = item.CloneToken();
+            {
+                throw new NotImplementedException();
+                // item = item.CloneToken();
+            }
 
             return item;
         }
 
+
+#if false
         private class JTokenReferenceEqualityComparer : IEqualityComparer<JToken>
         {
             public static readonly JTokenReferenceEqualityComparer Instance = new JTokenReferenceEqualityComparer();
@@ -283,19 +303,23 @@ namespace Difftaculous.ZModel
         {
             return ChildrenTokens.IndexOf(item, JTokenReferenceEqualityComparer.Instance);
         }
+#endif
 
-        internal virtual void InsertItem(int index, JToken item, bool skipParentCheck)
+
+        internal virtual void InsertItem(int index, ZToken item, bool skipParentCheck)
         {
             if (index > ChildrenTokens.Count)
+            {
                 throw new ArgumentOutOfRangeException("index", "Index must be within the bounds of the List.");
+            }
 
-            CheckReentrancy();
+            //CheckReentrancy();
 
             item = EnsureParentToken(item, skipParentCheck);
 
-            JToken previous = (index == 0) ? null : ChildrenTokens[index - 1];
+            ZToken previous = (index == 0) ? null : ChildrenTokens[index - 1];
             // haven't inserted new token yet so next token is still at the inserting index
-            JToken next = (index == ChildrenTokens.Count) ? null : ChildrenTokens[index];
+            ZToken next = (index == ChildrenTokens.Count) ? null : ChildrenTokens[index];
 
             ValidateToken(item, null);
 
@@ -311,6 +335,8 @@ namespace Difftaculous.ZModel
 
             ChildrenTokens.Insert(index, item);
 
+            // TODO - OnChanged notifications
+#if false
 #if !(NETFX_CORE || PORTABLE40 || PORTABLE)
             if (_listChanged != null)
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
@@ -319,8 +345,12 @@ namespace Difftaculous.ZModel
             if (_collectionChanged != null)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
 #endif
+#endif
         }
 
+
+
+#if false
         internal virtual void RemoveItemAt(int index)
         {
             if (index < 0)
@@ -371,9 +401,14 @@ namespace Difftaculous.ZModel
         {
             return ChildrenTokens[index];
         }
+#endif
 
-        internal virtual void SetItem(int index, JToken item)
+
+
+        internal virtual void SetItem(int index, ZToken item)
         {
+            throw new NotImplementedException();
+#if false
             if (index < 0)
                 throw new ArgumentOutOfRangeException("index", "Index is less than 0.");
             if (index >= ChildrenTokens.Count)
@@ -417,8 +452,11 @@ namespace Difftaculous.ZModel
             if (_collectionChanged != null)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, existing, index));
 #endif
+#endif
         }
 
+
+#if false
         internal virtual void ClearItems()
         {
             CheckReentrancy();
@@ -489,17 +527,24 @@ namespace Difftaculous.ZModel
 
             return false;
         }
+#endif
 
-        internal virtual void ValidateToken(JToken o, JToken existing)
+
+
+        internal virtual void ValidateToken(ZToken o, ZToken existing)
         {
-            ValidationUtils.ArgumentNotNull(o, "o");
+            // TODO - add this!
+            // ValidationUtils.ArgumentNotNull(o, "o");
 
-            if (o.Type == JTokenType.Property)
-                throw new ArgumentException("Can not add {0} to {1}.".FormatWith(CultureInfo.InvariantCulture, o.GetType(), GetType()));
+            if (o.Type == TokenType.Property)
+            {
+                throw new ArgumentException(string.Format("Can not add {0} to {1}.", o.GetType(), GetType()));
+            }
         }
 
+
         /// <summary>
-        /// Adds the specified content as children of this <see cref="JToken"/>.
+        /// Adds the specified content as children of this <see cref="ZToken"/>.
         /// </summary>
         /// <param name="content">The content to be added.</param>
         public virtual void Add(object content)
@@ -507,6 +552,8 @@ namespace Difftaculous.ZModel
             AddInternal(ChildrenTokens.Count, content, false);
         }
 
+
+#if false
         internal void AddAndSkipParentCheck(JToken token)
         {
             AddInternal(ChildrenTokens.Count, token, true);
@@ -520,6 +567,8 @@ namespace Difftaculous.ZModel
         {
             AddInternal(0, content, false);
         }
+#endif
+
 
         internal void AddInternal(int index, object content, bool skipParentCheck)
         {
@@ -536,20 +585,24 @@ namespace Difftaculous.ZModel
             }
             else
             {
-                JToken item = CreateFromContent(content);
+                ZToken item = CreateFromContent(content);
 
                 InsertItem(index, item, skipParentCheck);
             }
         }
 
-        internal JToken CreateFromContent(object content)
-        {
-            if (content is JToken)
-                return (JToken)content;
 
-            return new JValue(content);
+        internal ZToken CreateFromContent(object content)
+        {
+            if (content is ZToken)
+                return (ZToken)content;
+
+            return new ZValue(content);
         }
 
+
+
+#if false
         /// <summary>
         /// Creates an <see cref="JsonWriter"/> that can be used to add tokens to the <see cref="JToken"/>.
         /// </summary>
@@ -840,12 +893,15 @@ namespace Difftaculous.ZModel
             set { SetItem(index, EnsureValue(value)); }
         }
         #endregion
+#endif
 
         #region ICollection Members
+#if false
         void ICollection.CopyTo(Array array, int index)
         {
             CopyItemsTo(array, index);
         }
+#endif
 
         /// <summary>
         /// Gets the count of child JSON tokens.
@@ -855,6 +911,9 @@ namespace Difftaculous.ZModel
         {
             get { return ChildrenTokens.Count; }
         }
+
+#if false
+
 
         bool ICollection.IsSynchronized
         {
@@ -871,8 +930,11 @@ namespace Difftaculous.ZModel
                 return _syncRoot;
             }
         }
+#endif
         #endregion
 
+
+#if false
         #region IBindingList Members
 #if !(NETFX_CORE || PORTABLE || PORTABLE40)
         void IBindingList.AddIndex(PropertyDescriptor property)

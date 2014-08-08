@@ -20,7 +20,7 @@ namespace Difftaculous.Paths
                 {
                     if (Name != null)
                     {
-                        ZToken v = (ZToken)o[Name];
+                        ZToken v = o[Name];
 
                         if (v != null)
                         {
@@ -29,9 +29,9 @@ namespace Difftaculous.Paths
                     }
                     else
                     {
-                        foreach (var p in o.Properties)
+                        foreach (KeyValuePair<string, ZToken> p in o)
                         {
-                            yield return (ZToken)p.Value;
+                            yield return p.Value;
                         }
                     }
                 }

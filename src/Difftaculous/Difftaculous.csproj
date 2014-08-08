@@ -60,10 +60,14 @@
     <Compile Include="Paths\ScanFilter.cs" />
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
+    <Compile Include="ZModel\Extensions.cs" />
     <Compile Include="ZModel\ZArray.cs" />
     <Compile Include="ZModel\ZContainer.cs" />
+    <Compile Include="ZModel\ZEnumerable.cs" />
+    <Compile Include="ZModel\ZException.cs" />
     <Compile Include="ZModel\ZObject.cs" />
     <Compile Include="ZModel\ZProperty.cs" />
+    <Compile Include="ZModel\ZPropertyKeyedCollection.cs" />
     <Compile Include="ZModel\ZToken.cs" />
     <Compile Include="ZModel\TokenType.cs" />
     <Compile Include="ZModel\ZValue.cs" />

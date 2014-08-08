@@ -15,7 +15,7 @@ namespace Difftaculous.Test.ZModel
             ZObject o = new ZObject();
             ZProperty p = new ZProperty("foo", new ZValue(1));
 
-            o.AddProperty(p);
+            o.Add(p);
 
             p.Parent.ShouldBe(o);
         }

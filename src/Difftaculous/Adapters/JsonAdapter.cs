@@ -48,7 +48,7 @@ namespace Difftaculous.Adapters
 
             foreach (var jprop in jobject.Properties())
             {
-                zobject.AddProperty(new ZProperty(jprop.Name, Adapt(jprop.Value)));
+                zobject.Add(new ZProperty(jprop.Name, Adapt(jprop.Value)));
             }
 
             return zobject;

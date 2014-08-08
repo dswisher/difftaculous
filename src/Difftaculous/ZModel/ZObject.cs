@@ -1,79 +1,27 @@
 ﻿
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Difftaculous.ZModel
 {
-    internal class ZObject : ZContainer // , IDictionary<string, JToken>, INotifyPropertyChanged, ICustomTypeDescriptor, INotifyPropertyChanging
+    internal class ZObject : ZContainer, IDictionary<string, ZToken> // , INotifyPropertyChanged, ICustomTypeDescriptor, INotifyPropertyChanging
     {
-        private readonly Dictionary<string, ZProperty> _properties = new Dictionary<string, ZProperty>();
+        private readonly ZPropertyKeyedCollection _properties = new ZPropertyKeyedCollection();
 
-
-        public override TokenType Type { get { return TokenType.Object; } }
-
-
-        public ZObject()
-        {
-        }
-
-
-        public ZObject(params ZProperty[] properties)
-        {
-            foreach (var p in properties)
-            {
-                AddProperty(p);
-            }
-        }
-
-
-        public IEnumerable<ZProperty> Properties
-        {
-            get { return _properties.Values; }
-        }
-
-
-        public ZProperty GetProperty(string name)
-        {
-            if (name == null)
-            {
-                return null;
-            }
-
-            ZProperty property;
-            _properties.TryGetValue(name, out property);
-            return property;
-        }
-
-
-        public override ZToken this[string propertyName]
-        {
-            get
-            {
-                ZProperty property = GetProperty(propertyName);
-                return (property != null) ? property.Value : null;
-            }
-        }
-
-
-        public void AddProperty(ZProperty property)
-        {
-            _properties.Add(property.Name, property);
-            property.Parent = this;
-        }
-
-
-#if false
-        private readonly JPropertyKeyedCollection _properties = new JPropertyKeyedCollection();
 
         /// <summary>
         /// Gets the container's children tokens.
         /// </summary>
         /// <value>The container's children tokens.</value>
-        protected override IList<JToken> ChildrenTokens
+        protected override IList<ZToken> ChildrenTokens
         {
             get { return _properties; }
         }
 
+
+#if false
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
@@ -86,13 +34,17 @@ namespace Difftaculous.ZModel
         public event PropertyChangingEventHandler PropertyChanging;
 #endif
 
+#endif
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JObject"/> class.
+        /// Initializes a new instance of the <see cref="ZObject"/> class.
         /// </summary>
-        public JObject()
+        public ZObject()
         {
         }
 
+
+#if false
         /// <summary>
         /// Initializes a new instance of the <see cref="JObject"/> class from another <see cref="JObject"/> object.
         /// </summary>
@@ -101,25 +53,32 @@ namespace Difftaculous.ZModel
             : base(other)
         {
         }
+#endif
+
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JObject"/> class with the specified content.
+        /// Initializes a new instance of the <see cref="ZObject"/> class with the specified content.
         /// </summary>
         /// <param name="content">The contents of the object.</param>
-        public JObject(params object[] content)
+        public ZObject(params object[] content)
             : this((object)content)
         {
         }
 
+
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JObject"/> class with the specified content.
+        /// Initializes a new instance of the <see cref="ZObject"/> class with the specified content.
         /// </summary>
         /// <param name="content">The contents of the object.</param>
-        public JObject(object content)
+        public ZObject(object content)
         {
             Add(content);
         }
 
+
+
+#if false
         internal override bool DeepEquals(JToken node)
         {
             JObject t = node as JObject;
@@ -128,37 +87,50 @@ namespace Difftaculous.ZModel
 
             return _properties.Compare(t._properties);
         }
+#endif
 
-        internal override void InsertItem(int index, JToken item, bool skipParentCheck)
+
+        internal override void InsertItem(int index, ZToken item, bool skipParentCheck)
         {
             // don't add comments to JObject, no name to reference comment by
-            if (item != null && item.Type == JTokenType.Comment)
+            if (item != null && item.Type == TokenType.Comment)
                 return;
 
             base.InsertItem(index, item, skipParentCheck);
         }
 
-        internal override void ValidateToken(JToken o, JToken existing)
+
+
+        internal override void ValidateToken(ZToken o, ZToken existing)
         {
-            ValidationUtils.ArgumentNotNull(o, "o");
+            // TODO - add this back in!
+            // ValidationUtils.ArgumentNotNull(o, "o");
 
-            if (o.Type != JTokenType.Property)
-                throw new ArgumentException("Can not add {0} to {1}.".FormatWith(CultureInfo.InvariantCulture, o.GetType(), GetType()));
+            if (o.Type != TokenType.Property)
+            {
+                throw new ArgumentException(string.Format("Can not add {0} to {1}.", o.GetType(), GetType()));
+            }
 
-            JProperty newProperty = (JProperty)o;
+            ZProperty newProperty = (ZProperty)o;
 
             if (existing != null)
             {
-                JProperty existingProperty = (JProperty)existing;
+                ZProperty existingProperty = (ZProperty)existing;
 
                 if (newProperty.Name == existingProperty.Name)
+                {
                     return;
+                }
             }
 
             if (_properties.TryGetValue(newProperty.Name, out existing))
-                throw new ArgumentException("Can not add property {0} to {1}. Property with the same name already exists on object.".FormatWith(CultureInfo.InvariantCulture, newProperty.Name, GetType()));
+            {
+                throw new ArgumentException(string.Format("Can not add property {0} to {1}. Property with the same name already exists on object.", newProperty.Name, GetType()));
+            }
         }
 
+
+#if false
         internal void InternalPropertyChanged(JProperty childProperty)
         {
             OnPropertyChanged(childProperty.Name);
@@ -183,40 +155,50 @@ namespace Difftaculous.ZModel
         {
             return new JObject(this);
         }
+#endif
+
+
 
         /// <summary>
-        /// Gets the node type for this <see cref="JToken"/>.
+        /// Gets the node type for this <see cref="ZToken"/>.
         /// </summary>
         /// <value>The type.</value>
-        public override JTokenType Type
+        public override TokenType Type
         {
-            get { return JTokenType.Object; }
+            get { return TokenType.Object; }
         }
 
+
+
         /// <summary>
-        /// Gets an <see cref="IEnumerable{JProperty}"/> of this object's properties.
+        /// Gets an <see cref="IEnumerable{ZProperty}"/> of this object's properties.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{JProperty}"/> of this object's properties.</returns>
-        public IEnumerable<JProperty> Properties()
+        /// <returns>An <see cref="IEnumerable{ZProperty}"/> of this object's properties.</returns>
+        public IEnumerable<ZProperty> Properties()
         {
-            return _properties.Cast<JProperty>();
+            return _properties.Cast<ZProperty>();
         }
 
+
         /// <summary>
-        /// Gets a <see cref="JProperty"/> the specified name.
+        /// Gets a <see cref="ZProperty"/> the specified name.
         /// </summary>
         /// <param name="name">The property name.</param>
-        /// <returns>A <see cref="JProperty"/> with the specified name or null.</returns>
-        public JProperty Property(string name)
+        /// <returns>A <see cref="ZProperty"/> with the specified name or null.</returns>
+        public ZProperty Property(string name)
         {
             if (name == null)
+            {
                 return null;
+            }
 
-            JToken property;
+            ZToken property;
             _properties.TryGetValue(name, out property);
-            return (JProperty)property;
+            return (ZProperty)property;
         }
 
+
+#if false
         /// <summary>
         /// Gets an <see cref="JEnumerable{JToken}"/> of this object's property values.
         /// </summary>
@@ -225,51 +207,66 @@ namespace Difftaculous.ZModel
         {
             return new JEnumerable<JToken>(Properties().Select(p => p.Value));
         }
+#endif
 
+
+
+#if true
         /// <summary>
-        /// Gets the <see cref="JToken"/> with the specified key.
+        /// Gets the <see cref="ZToken"/> with the specified key.
         /// </summary>
-        /// <value>The <see cref="JToken"/> with the specified key.</value>
-        public override JToken this[object key]
+        /// <value>The <see cref="ZToken"/> with the specified key.</value>
+        public override ZToken this[object key]
         {
             get
             {
-                ValidationUtils.ArgumentNotNull(key, "o");
+                // TODO - add this back!
+                //ValidationUtils.ArgumentNotNull(key, "o");
 
                 string propertyName = key as string;
                 if (propertyName == null)
-                    throw new ArgumentException("Accessed JObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                {
+                    throw new NotImplementedException();
+                    //throw new ArgumentException("Accessed JObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 return this[propertyName];
             }
             set
             {
-                ValidationUtils.ArgumentNotNull(key, "o");
+                // TODO - add this back!
+                //ValidationUtils.ArgumentNotNull(key, "o");
 
                 string propertyName = key as string;
                 if (propertyName == null)
-                    throw new ArgumentException("Set JObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                {
+                    throw new NotImplementedException();
+                    // throw new ArgumentException("Set JObject values with invalid key value: {0}. Object property name expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 this[propertyName] = value;
             }
         }
+#endif
+
+
 
         /// <summary>
-        /// Gets or sets the <see cref="Newtonsoft.Json.Linq.JToken"/> with the specified property name.
+        /// Gets or sets the <see cref="ZToken"/> with the specified property name.
         /// </summary>
         /// <value></value>
-        public JToken this[string propertyName]
+        public ZToken this[string propertyName]
         {
             get
             {
-                ValidationUtils.ArgumentNotNull(propertyName, "propertyName");
-
-                JProperty property = Property(propertyName);
-
+                // TODO- add this!
+                //ValidationUtils.ArgumentNotNull(propertyName, "propertyName");
+                ZProperty property = Property(propertyName);
                 return (property != null) ? property.Value : null;
             }
             set
             {
+#if false
                 JProperty property = Property(propertyName);
                 if (property != null)
                 {
@@ -283,9 +280,14 @@ namespace Difftaculous.ZModel
                     Add(new JProperty(propertyName, value));
                     OnPropertyChanged(propertyName);
                 }
+#endif
+                throw new NotImplementedException();
             }
         }
 
+
+
+#if false
         /// <summary>
         /// Loads an <see cref="JObject"/> from a <see cref="JsonReader"/>. 
         /// </summary>
@@ -438,28 +440,40 @@ namespace Difftaculous.ZModel
             value = GetValue(propertyName, comparison);
             return (value != null);
         }
+#endif
+
 
         #region IDictionary<string,JToken> Members
+
+        //public void Add(ZProperty property)
+        //{
+        //    _properties.Add(property.Name, property);
+        //    property.Parent = this;
+        //}
+
         /// <summary>
         /// Adds the specified property name.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
-        public void Add(string propertyName, JToken value)
+        public void Add(string propertyName, ZToken value)
         {
-            Add(new JProperty(propertyName, value));
+            Add(new ZProperty(propertyName, value));
         }
 
-        bool IDictionary<string, JToken>.ContainsKey(string key)
+
+        bool IDictionary<string, ZToken>.ContainsKey(string key)
         {
             return _properties.Contains(key);
         }
 
-        ICollection<string> IDictionary<string, JToken>.Keys
+
+        ICollection<string> IDictionary<string, ZToken>.Keys
         {
             // todo: make order the collection returned match JObject order
             get { return _properties.Keys; }
         }
+
 
         /// <summary>
         /// Removes the property with the specified name.
@@ -468,13 +482,16 @@ namespace Difftaculous.ZModel
         /// <returns>true if item was successfully removed; otherwise, false.</returns>
         public bool Remove(string propertyName)
         {
-            JProperty property = Property(propertyName);
+            ZProperty property = Property(propertyName);
             if (property == null)
                 return false;
 
-            property.Remove();
-            return true;
+            throw new NotImplementedException();
+            //property.Remove();
+            //return true;
         }
+
+
 
         /// <summary>
         /// Tries the get value.
@@ -482,9 +499,9 @@ namespace Difftaculous.ZModel
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
         /// <returns>true if a value was successfully retrieved; otherwise, false.</returns>
-        public bool TryGetValue(string propertyName, out JToken value)
+        public bool TryGetValue(string propertyName, out ZToken value)
         {
-            JProperty property = Property(propertyName);
+            ZProperty property = Property(propertyName);
             if (property == null)
             {
                 value = null;
@@ -495,7 +512,9 @@ namespace Difftaculous.ZModel
             return true;
         }
 
-        ICollection<JToken> IDictionary<string, JToken>.Values
+
+
+        ICollection<ZToken> IDictionary<string, ZToken>.Values
         {
             get
             {
@@ -504,65 +523,81 @@ namespace Difftaculous.ZModel
             }
         }
         #endregion
+        
 
         #region ICollection<KeyValuePair<string,JToken>> Members
-        void ICollection<KeyValuePair<string, JToken>>.Add(KeyValuePair<string, JToken> item)
+
+        void ICollection<KeyValuePair<string, ZToken>>.Add(KeyValuePair<string, ZToken> item)
         {
-            Add(new JProperty(item.Key, item.Value));
+            Add(new ZProperty(item.Key, item.Value));
         }
 
-        void ICollection<KeyValuePair<string, JToken>>.Clear()
+
+        void ICollection<KeyValuePair<string, ZToken>>.Clear()
         {
-            RemoveAll();
+            throw new NotImplementedException();
+            // RemoveAll();
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.Contains(KeyValuePair<string, JToken> item)
+
+        bool ICollection<KeyValuePair<string, ZToken>>.Contains(KeyValuePair<string, ZToken> item)
         {
-            JProperty property = Property(item.Key);
+            ZProperty property = Property(item.Key);
             if (property == null)
                 return false;
 
             return (property.Value == item.Value);
         }
 
-        void ICollection<KeyValuePair<string, JToken>>.CopyTo(KeyValuePair<string, JToken>[] array, int arrayIndex)
-        {
-            if (array == null)
-                throw new ArgumentNullException("array");
-            if (arrayIndex < 0)
-                throw new ArgumentOutOfRangeException("arrayIndex", "arrayIndex is less than 0.");
-            if (arrayIndex >= array.Length && arrayIndex != 0)
-                throw new ArgumentException("arrayIndex is equal to or greater than the length of array.");
-            if (Count > array.Length - arrayIndex)
-                throw new ArgumentException("The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.");
 
-            int index = 0;
-            foreach (JProperty property in _properties)
-            {
-                array[arrayIndex + index] = new KeyValuePair<string, JToken>(property.Name, property.Value);
-                index++;
-            }
+
+        void ICollection<KeyValuePair<string, ZToken>>.CopyTo(KeyValuePair<string, ZToken>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+            //if (array == null)
+            //    throw new ArgumentNullException("array");
+            //if (arrayIndex < 0)
+            //    throw new ArgumentOutOfRangeException("arrayIndex", "arrayIndex is less than 0.");
+            //if (arrayIndex >= array.Length && arrayIndex != 0)
+            //    throw new ArgumentException("arrayIndex is equal to or greater than the length of array.");
+            //if (Count > array.Length - arrayIndex)
+            //    throw new ArgumentException("The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.");
+
+            //int index = 0;
+            //foreach (ZProperty property in _properties)
+            //{
+            //    array[arrayIndex + index] = new KeyValuePair<string, ZToken>(property.Name, property.Value);
+            //    index++;
+            //}
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.IsReadOnly
+
+
+        bool ICollection<KeyValuePair<string, ZToken>>.IsReadOnly
         {
             get { return false; }
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.Remove(KeyValuePair<string, JToken> item)
+
+        bool ICollection<KeyValuePair<string, ZToken>>.Remove(KeyValuePair<string, ZToken> item)
         {
-            if (!((ICollection<KeyValuePair<string, JToken>>)this).Contains(item))
+            if (!((ICollection<KeyValuePair<string, ZToken>>)this).Contains(item))
                 return false;
 
-            ((IDictionary<string, JToken>)this).Remove(item.Key);
+            ((IDictionary<string, ZToken>)this).Remove(item.Key);
             return true;
         }
         #endregion
 
+
+#if false
         internal override int GetDeepHashCode()
         {
             return ContentsHashCode();
         }
+#endif
+
+
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
@@ -570,14 +605,17 @@ namespace Difftaculous.ZModel
         /// <returns>
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
         /// </returns>
-        public IEnumerator<KeyValuePair<string, JToken>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, ZToken>> GetEnumerator()
         {
-            foreach (JProperty property in _properties)
+            foreach (ZProperty property in _properties)
             {
-                yield return new KeyValuePair<string, JToken>(property.Name, property.Value);
+                yield return new KeyValuePair<string, ZToken>(property.Name, property.Value);
             }
         }
 
+
+
+#if false
         /// <summary>
         /// Raises the <see cref="PropertyChanged"/> event with the provided arguments.
         /// </summary>

@@ -1,15 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Difftaculous.ZModel;
 using NUnit.Framework;
+using Shouldly;
+
 
 namespace Difftaculous.Test.ZModel
 {
     [TestFixture]
     public class ZObjectTests
     {
+
+        [Test]
+        public void CanFetchProperty()
+        {
+            ZObject o = new ZObject { new ZProperty("id", new ZValue(1)) };
+
+            o.Property("id").ShouldNotBe(null);
+            o["id"].ShouldNotBe(null);
+        }
+
+
+        // -----------------------------------------------------
+
 
 #if false
 #if !(NET35 || NET20 || PORTABLE40)

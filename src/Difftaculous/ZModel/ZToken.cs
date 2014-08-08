@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,14 +13,14 @@ using Difftaculous.Paths;
 
 namespace Difftaculous.ZModel
 {
-    internal abstract class ZToken // : IJEnumerable<JToken>, IJsonLineInfo, ICloneable, IDynamicMetaObjectProvider
+    internal abstract class ZToken : IZEnumerable<ZToken> // , IJsonLineInfo, ICloneable, IDynamicMetaObjectProvider
     {
         private ZContainer _parent;
+        private ZToken _previous;
+        private ZToken _next;
 
 
 #if false
-        private JToken _previous;
-        private JToken _next;
         private static JTokenEqualityComparer _equalityComparer;
 
         private int? _lineNumber;
@@ -72,16 +73,15 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
         /// <summary>
-        /// Gets the root <see cref="JToken"/> of this <see cref="JToken"/>.
+        /// Gets the root <see cref="ZToken"/> of this <see cref="ZToken"/>.
         /// </summary>
-        /// <value>The root <see cref="JToken"/> of this <see cref="JToken"/>.</value>
-        public JToken Root
+        /// <value>The root <see cref="ZToken"/> of this <see cref="ZToken"/>.</value>
+        public ZToken Root
         {
             get
             {
-                JContainer parent = Parent;
+                ZContainer parent = Parent;
                 if (parent == null)
                     return this;
 
@@ -94,6 +94,9 @@ namespace Difftaculous.ZModel
             }
         }
 
+
+
+#if false
         internal abstract JToken CloneToken();
         internal abstract bool DeepEquals(JToken node);
 #endif 
@@ -106,8 +109,6 @@ namespace Difftaculous.ZModel
         public abstract TokenType Type { get; }
 
 
-#if false
-
         /// <summary>
         /// Gets a value indicating whether this token has child tokens.
         /// </summary>
@@ -116,6 +117,8 @@ namespace Difftaculous.ZModel
         /// </value>
         public abstract bool HasValues { get; }
 
+
+#if false
         /// <summary>
         /// Compares the values of two tokens, including the values of all descendant tokens.
         /// </summary>
@@ -126,12 +129,13 @@ namespace Difftaculous.ZModel
         {
             return (t1 == t2 || (t1 != null && t2 != null && t1.DeepEquals(t2)));
         }
+#endif
 
         /// <summary>
         /// Gets the next sibling token of this node.
         /// </summary>
-        /// <value>The <see cref="JToken"/> that contains the next sibling token.</value>
-        public JToken Next
+        /// <value>The <see cref="ZToken"/> that contains the next sibling token.</value>
+        public ZToken Next
         {
             get { return _next; }
             internal set { _next = value; }
@@ -140,14 +144,12 @@ namespace Difftaculous.ZModel
         /// <summary>
         /// Gets the previous sibling token of this node.
         /// </summary>
-        /// <value>The <see cref="JToken"/> that contains the previous sibling token.</value>
-        public JToken Previous
+        /// <value>The <see cref="ZToken"/> that contains the previous sibling token.</value>
+        public ZToken Previous
         {
             get { return _previous; }
             internal set { _previous = value; }
         }
-
-#endif
 
 
         /// <summary>
@@ -292,11 +294,12 @@ namespace Difftaculous.ZModel
         /// Gets the <see cref="ZToken"/> with the specified key.
         /// </summary>
         /// <value>The <see cref="ZToken"/> with the specified key.</value>
-        public virtual ZToken this[string key]
+        public virtual ZToken this[object key]
         {
             get { throw new InvalidOperationException(string.Format("Cannot access child value on {0}.", GetType())); }
             set { throw new InvalidOperationException(string.Format("Cannot set child value on {0}.", GetType())); }
         }
+
 
 
 #if false
@@ -331,16 +334,21 @@ namespace Difftaculous.ZModel
         {
             get { throw new InvalidOperationException("Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType())); }
         }
+#endif
+
+
 
         /// <summary>
         /// Returns a collection of the child tokens of this token, in document order.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> containing the child tokens of this <see cref="JToken"/>, in document order.</returns>
-        public virtual JEnumerable<JToken> Children()
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ZToken"/> containing the child tokens of this <see cref="ZToken"/>, in document order.</returns>
+        public virtual ZEnumerable<ZToken> Children()
         {
-            return JEnumerable<JToken>.Empty;
+            return ZEnumerable<ZToken>.Empty;
         }
 
+
+#if false
         /// <summary>
         /// Returns a collection of the child tokens of this token, in document order, filtered by the specified type.
         /// </summary>
@@ -1641,23 +1649,33 @@ namespace Difftaculous.ZModel
             return new JValue(value);
         }
         #endregion
+#endif
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<JToken>)this).GetEnumerator();
+            return ((IEnumerable<ZToken>)this).GetEnumerator();
         }
 
-        IEnumerator<JToken> IEnumerable<JToken>.GetEnumerator()
+
+        IEnumerator<ZToken> IEnumerable<ZToken>.GetEnumerator()
         {
             return Children().GetEnumerator();
         }
 
-        internal abstract int GetDeepHashCode();
 
-        IJEnumerable<JToken> IJEnumerable<JToken>.this[object key]
+#if false
+        internal abstract int GetDeepHashCode();
+#endif
+
+
+        IZEnumerable<ZToken> IZEnumerable<ZToken>.this[object key]
         {
             get { return this[key]; }
         }
+
+
+#if false
+
 
         /// <summary>
         /// Creates an <see cref="JsonReader"/> for this token.

@@ -16,6 +16,8 @@ namespace Difftaculous.ZModel
 
         String,
 
+        Comment,
+
         Null,
         Undefined
     }

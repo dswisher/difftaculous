@@ -25,7 +25,7 @@ namespace Difftaculous.Test.Paths
         {
             ZObject o = new ZObject();
             ZProperty p = new ZProperty("name", new ZValue("Fred"));
-            o.AddProperty(p);
+            o.Add(p);
 
             p.Path.AsJsonPath.ShouldBe("name");            
         }
@@ -51,8 +51,8 @@ namespace Difftaculous.Test.Paths
 
             ZObject o = new ZObject();
             ZObject c = new ZObject();
-            o.AddProperty(new ZProperty("person", c));
-            c.AddProperty(new ZProperty("$id", new ZValue(1)));
+            o.Add(new ZProperty("person", c));
+            c.Add(new ZProperty("$id", new ZValue(1)));
 
             var prop = o["person"]["$id"].Parent;
 
