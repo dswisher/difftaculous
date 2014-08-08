@@ -209,24 +209,28 @@ namespace Difftaculous.ZModel
 
             return source.SelectMany(c => c.Children()).Convert<JToken, U>();
         }
+#endif
 
-        internal static IEnumerable<U> Convert<T, U>(this IEnumerable<T> source) where T : JToken
+
+        internal static IEnumerable<U> Convert<T, U>(this IEnumerable<T> source) where T : ZToken
         {
             ValidationUtils.ArgumentNotNull(source, "source");
 
             foreach (T token in source)
             {
-                yield return Convert<JToken, U>(token);
+                yield return Convert<ZToken, U>(token);
             }
         }
 
-        internal static U Convert<T, U>(this T token) where T : JToken
+
+
+        internal static U Convert<T, U>(this T token) where T : ZToken
         {
             if (token == null)
                 return default(U);
 
             if (token is U
-                // don't want to cast JValue to its interfaces, want to get the internal value
+                // don't want to cast ZValue to its interfaces, want to get the internal value
                 && typeof(U) != typeof(IComparable) && typeof(U) != typeof(IFormattable))
             {
                 // HACK
@@ -234,9 +238,9 @@ namespace Difftaculous.ZModel
             }
             else
             {
-                JValue value = token as JValue;
+                ZValue value = token as ZValue;
                 if (value == null)
-                    throw new InvalidCastException("Cannot cast {0} to {1}.".FormatWith(CultureInfo.InvariantCulture, token.GetType(), typeof(T)));
+                    throw new InvalidCastException(string.Format("Cannot cast {0} to {1}.", token.GetType(), typeof(T)));
 
                 if (value.Value is U)
                     return (U)value.Value;
@@ -251,10 +255,13 @@ namespace Difftaculous.ZModel
                     targetType = Nullable.GetUnderlyingType(targetType);
                 }
 
-                return (U)System.Convert.ChangeType(value.Value, targetType, CultureInfo.InvariantCulture);
+                return (U)System.Convert.ChangeType(value.Value, targetType /*, CultureInfo.InvariantCulture */);
             }
         }
 
+
+
+#if false
         //TODO
         //public static void Remove<T>(this IEnumerable<T> source) where T : JContainer;
 

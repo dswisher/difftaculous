@@ -103,8 +103,7 @@ namespace Difftaculous.ZModel
 
         internal override void ValidateToken(ZToken o, ZToken existing)
         {
-            // TODO - add this back in!
-            // ValidationUtils.ArgumentNotNull(o, "o");
+            ValidationUtils.ArgumentNotNull(o, "o");
 
             if (o.Type != TokenType.Property)
             {
@@ -220,8 +219,7 @@ namespace Difftaculous.ZModel
         {
             get
             {
-                // TODO - add this back!
-                //ValidationUtils.ArgumentNotNull(key, "o");
+                ValidationUtils.ArgumentNotNull(key, "o");
 
                 string propertyName = key as string;
                 if (propertyName == null)
@@ -234,8 +232,7 @@ namespace Difftaculous.ZModel
             }
             set
             {
-                // TODO - add this back!
-                //ValidationUtils.ArgumentNotNull(key, "o");
+                ValidationUtils.ArgumentNotNull(key, "o");
 
                 string propertyName = key as string;
                 if (propertyName == null)
@@ -259,8 +256,7 @@ namespace Difftaculous.ZModel
         {
             get
             {
-                // TODO- add this!
-                //ValidationUtils.ArgumentNotNull(propertyName, "propertyName");
+                ValidationUtils.ArgumentNotNull(propertyName, "propertyName");
                 ZProperty property = Property(propertyName);
                 return (property != null) ? property.Value : null;
             }

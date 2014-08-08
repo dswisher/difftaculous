@@ -131,6 +131,7 @@ namespace Difftaculous.ZModel
         }
 #endif
 
+
         /// <summary>
         /// Gets the next sibling token of this node.
         /// </summary>
@@ -140,6 +141,7 @@ namespace Difftaculous.ZModel
             get { return _next; }
             internal set { _next = value; }
         }
+
 
         /// <summary>
         /// Gets the previous sibling token of this node.
@@ -207,12 +209,12 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
-
-        internal JToken()
+        internal ZToken()
         {
         }
 
+
+#if false
         /// <summary>
         /// Adds the specified content immediately after this token.
         /// </summary>
@@ -304,37 +306,39 @@ namespace Difftaculous.ZModel
 
 #if false
         /// <summary>
-        /// Gets the <see cref="JToken"/> with the specified key converted to the specified type.
+        /// Gets the <see cref="ZToken"/> with the specified key converted to the specified type.
         /// </summary>
         /// <typeparam name="T">The type to convert the token to.</typeparam>
         /// <param name="key">The token key.</param>
         /// <returns>The converted token value.</returns>
         public virtual T Value<T>(object key)
         {
-            JToken token = this[key];
+            ZToken token = this[key];
 
             // null check to fix MonoTouch issue - https://github.com/dolbz/Newtonsoft.Json/commit/a24e3062846b30ee505f3271ac08862bb471b822
-            return token == null ? default(T) : Extensions.Convert<JToken, T>(token);
+            return token == null ? default(T) : Extensions.Convert<ZToken, T>(token);
         }
+#endif
+
 
         /// <summary>
         /// Get the first child token of this token.
         /// </summary>
-        /// <value>A <see cref="JToken"/> containing the first child token of the <see cref="JToken"/>.</value>
-        public virtual JToken First
+        /// <value>A <see cref="ZToken"/> containing the first child token of the <see cref="ZToken"/>.</value>
+        public virtual ZToken First
         {
-            get { throw new InvalidOperationException("Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType())); }
+            get { throw new InvalidOperationException(string.Format("Cannot access child value on {0}.", GetType())); }
         }
+
 
         /// <summary>
         /// Get the last child token of this token.
         /// </summary>
-        /// <value>A <see cref="JToken"/> containing the last child token of the <see cref="JToken"/>.</value>
-        public virtual JToken Last
+        /// <value>A <see cref="ZToken"/> containing the last child token of the <see cref="ZToken"/>.</value>
+        public virtual ZToken Last
         {
-            get { throw new InvalidOperationException("Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType())); }
+            get { throw new InvalidOperationException(string.Format("Cannot access child value on {0}.", GetType())); }
         }
-#endif
 
 
 
@@ -358,17 +362,23 @@ namespace Difftaculous.ZModel
         {
             return new JEnumerable<T>(Children().OfType<T>());
         }
+#endif
+
+
 
         /// <summary>
         /// Returns a collection of the child values of this token, in document order.
         /// </summary>
         /// <typeparam name="T">The type to convert the values to.</typeparam>
-        /// <returns>A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="JToken"/>, in document order.</returns>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="ZToken"/>, in document order.</returns>
         public virtual IEnumerable<T> Values<T>()
         {
-            throw new InvalidOperationException("Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType()));
+            throw new InvalidOperationException(string.Format("Cannot access child value on {0}.", GetType()));
         }
 
+
+
+#if false
         /// <summary>
         /// Removes this token from its parent.
         /// </summary>
@@ -428,7 +438,6 @@ namespace Difftaculous.ZModel
                 return sw.ToString();
             }
         }
-
 #endif
 
 
@@ -453,8 +462,7 @@ namespace Difftaculous.ZModel
 
         private static string GetType(ZToken token)
         {
-            // TODO - put this in!
-            // ValidationUtils.ArgumentNotNull(token, "token");
+            ValidationUtils.ArgumentNotNull(token, "token");
 
             if (token is ZProperty)
             {
@@ -1675,8 +1683,6 @@ namespace Difftaculous.ZModel
 
 
 #if false
-
-
         /// <summary>
         /// Creates an <see cref="JsonReader"/> for this token.
         /// </summary>

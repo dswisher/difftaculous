@@ -2,11 +2,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Difftaculous.ZModel
 {
-    internal abstract class ZContainer : ZToken // , IList<JToken>, ITypedList, IBindingList, INotifyCollectionChanged, IList, INotifyCollectionChanged
+    internal abstract class ZContainer : ZToken, IList<ZToken> // , ITypedList, IBindingList, INotifyCollectionChanged, IList, INotifyCollectionChanged
     {
 
 #if false
@@ -59,21 +60,28 @@ namespace Difftaculous.ZModel
 #if !(PORTABLE40)
         private bool _busy;
 #endif
+#endif
 
-        internal JContainer()
+
+        internal ZContainer()
         {
         }
 
-        internal JContainer(JContainer other)
+
+        internal ZContainer(ZContainer other)
             : this()
         {
             ValidationUtils.ArgumentNotNull(other, "c");
 
-            foreach (JToken child in other)
+            foreach (ZToken child in other)
             {
                 Add(child);
             }
         }
+
+
+#if false
+
 
         internal void CheckReentrancy()
         {
@@ -181,14 +189,17 @@ namespace Difftaculous.ZModel
 
             return true;
         }
+#endif
+
+
 
         /// <summary>
         /// Get the first child token of this token.
         /// </summary>
         /// <value>
-        /// A <see cref="JToken"/> containing the first child token of the <see cref="JToken"/>.
+        /// A <see cref="ZToken"/> containing the first child token of the <see cref="ZToken"/>.
         /// </value>
-        public override JToken First
+        public override ZToken First
         {
             get { return ChildrenTokens.FirstOrDefault(); }
         }
@@ -197,49 +208,55 @@ namespace Difftaculous.ZModel
         /// Get the last child token of this token.
         /// </summary>
         /// <value>
-        /// A <see cref="JToken"/> containing the last child token of the <see cref="JToken"/>.
+        /// A <see cref="ZToken"/> containing the last child token of the <see cref="ZToken"/>.
         /// </value>
-        public override JToken Last
+        public override ZToken Last
         {
             get { return ChildrenTokens.LastOrDefault(); }
         }
+
+
 
         /// <summary>
         /// Returns a collection of the child tokens of this token, in document order.
         /// </summary>
         /// <returns>
-        /// An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> containing the child tokens of this <see cref="JToken"/>, in document order.
+        /// An <see cref="IEnumerable{T}"/> of <see cref="ZToken"/> containing the child tokens of this <see cref="ZToken"/>, in document order.
         /// </returns>
-        public override JEnumerable<JToken> Children()
+        public override ZEnumerable<ZToken> Children()
         {
-            return new JEnumerable<JToken>(ChildrenTokens);
+            return new ZEnumerable<ZToken>(ChildrenTokens);
         }
+
+
 
         /// <summary>
         /// Returns a collection of the child values of this token, in document order.
         /// </summary>
         /// <typeparam name="T">The type to convert the values to.</typeparam>
         /// <returns>
-        /// A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="JToken"/>, in document order.
+        /// A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="ZToken"/>, in document order.
         /// </returns>
         public override IEnumerable<T> Values<T>()
         {
-            return ChildrenTokens.Convert<JToken, T>();
+            return ChildrenTokens.Convert<ZToken, T>();
         }
+
+
 
         /// <summary>
         /// Returns a collection of the descendant tokens for this token in document order.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{JToken}"/> containing the descendant tokens of the <see cref="JToken"/>.</returns>
-        public IEnumerable<JToken> Descendants()
+        /// <returns>An <see cref="IEnumerable{ZToken}"/> containing the descendant tokens of the <see cref="ZToken"/>.</returns>
+        public IEnumerable<ZToken> Descendants()
         {
-            foreach (JToken o in ChildrenTokens)
+            foreach (ZToken o in ChildrenTokens)
             {
                 yield return o;
-                JContainer c = o as JContainer;
+                ZContainer c = o as ZContainer;
                 if (c != null)
                 {
-                    foreach (JToken d in c.Descendants())
+                    foreach (ZToken d in c.Descendants())
                     {
                         yield return d;
                     }
@@ -247,8 +264,6 @@ namespace Difftaculous.ZModel
             }
         }
 
-
-#endif
 
 
         internal bool IsMultiContent(object content)
@@ -280,17 +295,17 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
-        private class JTokenReferenceEqualityComparer : IEqualityComparer<JToken>
-        {
-            public static readonly JTokenReferenceEqualityComparer Instance = new JTokenReferenceEqualityComparer();
 
-            public bool Equals(JToken x, JToken y)
+        private class ZTokenReferenceEqualityComparer : IEqualityComparer<ZToken>
+        {
+            public static readonly ZTokenReferenceEqualityComparer Instance = new ZTokenReferenceEqualityComparer();
+
+            public bool Equals(ZToken x, ZToken y)
             {
                 return ReferenceEquals(x, y);
             }
 
-            public int GetHashCode(JToken obj)
+            public int GetHashCode(ZToken obj)
             {
                 if (obj == null)
                     return 0;
@@ -299,11 +314,13 @@ namespace Difftaculous.ZModel
             }
         }
 
-        internal int IndexOfItem(JToken item)
+
+
+        internal int IndexOfItem(ZToken item)
         {
-            return ChildrenTokens.IndexOf(item, JTokenReferenceEqualityComparer.Instance);
+            return ChildrenTokens.IndexOf(item, ZTokenReferenceEqualityComparer.Instance);
         }
-#endif
+
 
 
         internal virtual void InsertItem(int index, ZToken item, bool skipParentCheck)
@@ -396,13 +413,13 @@ namespace Difftaculous.ZModel
 
             return false;
         }
+#endif
 
-        internal virtual JToken GetItem(int index)
+
+        internal virtual ZToken GetItem(int index)
         {
             return ChildrenTokens[index];
         }
-#endif
-
 
 
         internal virtual void SetItem(int index, ZToken item)
@@ -456,12 +473,12 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
+
         internal virtual void ClearItems()
         {
-            CheckReentrancy();
+            //CheckReentrancy();
 
-            foreach (JToken item in ChildrenTokens)
+            foreach (ZToken item in ChildrenTokens)
             {
                 item.Parent = null;
                 item.Previous = null;
@@ -471,15 +488,21 @@ namespace Difftaculous.ZModel
             ChildrenTokens.Clear();
 
 #if !(NETFX_CORE || PORTABLE40 || PORTABLE)
+#if false
             if (_listChanged != null)
                 OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
 #endif
+#endif
 #if !(NET20 || NET35 || PORTABLE40)
+#if false
             if (_collectionChanged != null)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 #endif
+#endif
         }
 
+
+#if false
         internal virtual void ReplaceItem(JToken existing, JToken replacement)
         {
             if (existing == null || existing.Parent != this)
@@ -488,12 +511,16 @@ namespace Difftaculous.ZModel
             int index = IndexOfItem(existing);
             SetItem(index, replacement);
         }
+#endif
 
-        internal virtual bool ContainsItem(JToken item)
+
+        internal virtual bool ContainsItem(ZToken item)
         {
             return (IndexOfItem(item) != -1);
         }
 
+
+#if false
         internal virtual void CopyItemsTo(Array array, int arrayIndex)
         {
             if (array == null)
@@ -533,8 +560,7 @@ namespace Difftaculous.ZModel
 
         internal virtual void ValidateToken(ZToken o, ZToken existing)
         {
-            // TODO - add this!
-            // ValidationUtils.ArgumentNotNull(o, "o");
+            ValidationUtils.ArgumentNotNull(o, "o");
 
             if (o.Type == TokenType.Property)
             {
@@ -553,21 +579,21 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
-        internal void AddAndSkipParentCheck(JToken token)
+        internal void AddAndSkipParentCheck(ZToken token)
         {
             AddInternal(ChildrenTokens.Count, token, true);
         }
 
+
         /// <summary>
-        /// Adds the specified content as the first children of this <see cref="JToken"/>.
+        /// Adds the specified content as the first child of this <see cref="ZToken"/>.
         /// </summary>
         /// <param name="content">The content to be added.</param>
         public void AddFirst(object content)
         {
             AddInternal(0, content, false);
         }
-#endif
+
 
 
         internal void AddInternal(int index, object content, bool skipParentCheck)
@@ -590,6 +616,7 @@ namespace Difftaculous.ZModel
                 InsertItem(index, item, skipParentCheck);
             }
         }
+
 
 
         internal ZToken CreateFromContent(object content)
@@ -773,62 +800,75 @@ namespace Difftaculous.ZModel
             return null;
         }
 #endif
+#endif
+
 
         #region IList<JToken> Members
-        int IList<JToken>.IndexOf(JToken item)
+
+        int IList<ZToken>.IndexOf(ZToken item)
         {
             return IndexOfItem(item);
         }
 
-        void IList<JToken>.Insert(int index, JToken item)
+        void IList<ZToken>.Insert(int index, ZToken item)
         {
             InsertItem(index, item, false);
         }
 
-        void IList<JToken>.RemoveAt(int index)
+        void IList<ZToken>.RemoveAt(int index)
         {
-            RemoveItemAt(index);
+            throw new NotImplementedException();
+            // RemoveItemAt(index);
         }
 
-        JToken IList<JToken>.this[int index]
+        ZToken IList<ZToken>.this[int index]
         {
             get { return GetItem(index); }
             set { SetItem(index, value); }
         }
+
         #endregion
 
+
         #region ICollection<JToken> Members
-        void ICollection<JToken>.Add(JToken item)
+
+        void ICollection<ZToken>.Add(ZToken item)
         {
             Add(item);
         }
 
-        void ICollection<JToken>.Clear()
+        void ICollection<ZToken>.Clear()
         {
             ClearItems();
         }
 
-        bool ICollection<JToken>.Contains(JToken item)
+        bool ICollection<ZToken>.Contains(ZToken item)
         {
             return ContainsItem(item);
         }
 
-        void ICollection<JToken>.CopyTo(JToken[] array, int arrayIndex)
+        void ICollection<ZToken>.CopyTo(ZToken[] array, int arrayIndex)
         {
-            CopyItemsTo(array, arrayIndex);
+            throw new NotImplementedException();
+            // CopyItemsTo(array, arrayIndex);
         }
 
-        bool ICollection<JToken>.IsReadOnly
+        bool ICollection<ZToken>.IsReadOnly
         {
             get { return false; }
         }
 
-        bool ICollection<JToken>.Remove(JToken item)
+        bool ICollection<ZToken>.Remove(ZToken item)
         {
-            return RemoveItem(item);
+            throw new NotImplementedException();
+            // return RemoveItem(item);
         }
+
         #endregion
 
+
+
+#if false
         private JToken EnsureValue(object value)
         {
             if (value == null)
@@ -895,6 +935,7 @@ namespace Difftaculous.ZModel
         #endregion
 #endif
 
+
         #region ICollection Members
 #if false
         void ICollection.CopyTo(Array array, int index)
@@ -902,6 +943,7 @@ namespace Difftaculous.ZModel
             CopyItemsTo(array, index);
         }
 #endif
+
 
         /// <summary>
         /// Gets the count of child JSON tokens.
@@ -912,9 +954,8 @@ namespace Difftaculous.ZModel
             get { return ChildrenTokens.Count; }
         }
 
+
 #if false
-
-
         bool ICollection.IsSynchronized
         {
             get { return false; }

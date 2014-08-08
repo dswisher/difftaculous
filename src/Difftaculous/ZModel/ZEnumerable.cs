@@ -35,8 +35,7 @@ namespace Difftaculous.ZModel
         /// <param name="enumerable">The enumerable.</param>
         public ZEnumerable(IEnumerable<T> enumerable)
         {
-            // TODO - add this back!
-            //ValidationUtils.ArgumentNotNull(enumerable, "enumerable");
+            ValidationUtils.ArgumentNotNull(enumerable, "enumerable");
 
             _enumerable = enumerable;
         }
@@ -78,7 +77,6 @@ namespace Difftaculous.ZModel
 
 
 
-#if false
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
         /// </summary>
@@ -88,11 +86,12 @@ namespace Difftaculous.ZModel
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (obj is JEnumerable<T>)
-                return _enumerable.Equals(((JEnumerable<T>)obj)._enumerable);
+            if (obj is ZEnumerable<T>)
+                return _enumerable.Equals(((ZEnumerable<T>)obj)._enumerable);
 
             return false;
         }
+
 
         /// <summary>
         /// Returns a hash code for this instance.
@@ -104,6 +103,5 @@ namespace Difftaculous.ZModel
         {
             return _enumerable.GetHashCode();
         }
-#endif
     }
 }

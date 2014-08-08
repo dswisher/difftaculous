@@ -60,7 +60,11 @@
     <Compile Include="Paths\ScanFilter.cs" />
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
+    <Compile Include="ZModel\CollectionUtils.cs" />
     <Compile Include="ZModel\Extensions.cs" />
+    <Compile Include="ZModel\ReflectionUtils.cs" />
+    <Compile Include="ZModel\TypeExtensions.cs" />
+    <Compile Include="ZModel\ValidationUtils.cs" />
     <Compile Include="ZModel\ZArray.cs" />
     <Compile Include="ZModel\ZContainer.cs" />
     <Compile Include="ZModel\ZEnumerable.cs" />
