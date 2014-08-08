@@ -35,6 +35,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,6 +61,7 @@
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="ZModel\ZArray.cs" />
+    <Compile Include="ZModel\ZContainer.cs" />
     <Compile Include="ZModel\ZObject.cs" />
     <Compile Include="ZModel\ZProperty.cs" />
     <Compile Include="ZModel\ZToken.cs" />

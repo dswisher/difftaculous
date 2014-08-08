@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Difftaculous.ZModel
 {
-    internal class ZProperty : ZToken
+    internal class ZProperty : ZContainer
     {
         public ZProperty(string name, object content)
         {

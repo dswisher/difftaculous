@@ -114,7 +114,7 @@ namespace Difftaculous.Test.Paths
 
             var t = o.SelectToken(DiffPath.FromJsonPath("Blah"));
             t.ShouldNotBe(null);
-            t.Type.ShouldBe(TokenType.Value);       // TODO - Integer?
+            t.Type.ShouldBe(TokenType.Integer);
             ((int)t).ShouldBe(1);
         }
 

@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Difftaculous.ZModel
 {
     public enum TokenType
@@ -7,8 +9,12 @@ namespace Difftaculous.ZModel
         Property,
         Array,
 
-        // TODO - should we swap this out for the actual type (String, Integer, Float, etc)?
+        [Obsolete]
         Value,
+
+        Integer,
+
+        String,
 
         Null,
         Undefined

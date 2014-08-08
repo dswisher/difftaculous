@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Difftaculous.ZModel
 {
-    internal class ZArray : ZToken, IEnumerable<ZToken>
+    internal class ZArray : ZContainer, IEnumerable<ZToken> // , IList<JToken>
     {
         private readonly List<ZToken> _tokens = new List<ZToken>();
 
