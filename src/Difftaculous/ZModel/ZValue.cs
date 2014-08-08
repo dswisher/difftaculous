@@ -4,7 +4,7 @@ using System;
 
 namespace Difftaculous.ZModel
 {
-    internal class ZValue : ZToken /* IEquatable<JValue>, IFormattable, IComparable, IComparable<JValue>, IConvertible */
+    internal class ZValue : ZToken /* IEquatable<ZValue>, IFormattable, IComparable, IComparable<ZValue>, IConvertible */
     {
         private TokenType _valueType;
         private object _value;
@@ -18,139 +18,150 @@ namespace Difftaculous.ZModel
         }
 
 
-
-#if false
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class from another <see cref="JValue"/> object.
+        /// Initializes a new instance of the <see cref="ZValue"/> class from another <see cref="ZValue"/> object.
         /// </summary>
-        /// <param name="other">A <see cref="JValue"/> object to copy from.</param>
-        public JValue(JValue other)
+        /// <param name="other">A <see cref="ZValue"/> object to copy from.</param>
+        public ZValue(ZValue other)
             : this(other.Value, other.Type)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(long value)
-            : this(value, JTokenType.Integer)
+        public ZValue(long value)
+            : this(value, TokenType.Integer)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(decimal value)
-            : this(value, JTokenType.Float)
+        public ZValue(decimal value)
+            : this(value, TokenType.Float)
         {
         }
 
+
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(char value)
-            : this(value, JTokenType.String)
+        public ZValue(char value)
+            : this(value, TokenType.String)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
         [CLSCompliant(false)]
-        public JValue(ulong value)
-            : this(value, JTokenType.Integer)
+        public ZValue(ulong value)
+            : this(value, TokenType.Integer)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(double value)
-            : this(value, JTokenType.Float)
+        public ZValue(double value)
+            : this(value, TokenType.Float)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(float value)
-            : this(value, JTokenType.Float)
+        public ZValue(float value)
+            : this(value, TokenType.Float)
         {
         }
 
+
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(DateTime value)
-            : this(value, JTokenType.Date)
+        public ZValue(DateTime value)
+            : this(value, TokenType.Date)
         {
         }
+
 
 #if !NET20
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(DateTimeOffset value)
-            : this(value, JTokenType.Date)
+        public ZValue(DateTimeOffset value)
+            : this(value, TokenType.Date)
         {
         }
 #endif
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(bool value)
-            : this(value, JTokenType.Boolean)
+        public ZValue(bool value)
+            : this(value, TokenType.Boolean)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(string value)
-            : this(value, JTokenType.String)
+        public ZValue(string value)
+            : this(value, TokenType.String)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(Guid value)
-            : this(value, JTokenType.Guid)
+        public ZValue(Guid value)
+            : this(value, TokenType.Guid)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(Uri value)
-            : this(value, (value != null) ? JTokenType.Uri : JTokenType.Null)
+        public ZValue(Uri value)
+            : this(value, (value != null) ? TokenType.Uri : TokenType.Null)
         {
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="JValue"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public JValue(TimeSpan value)
-            : this(value, JTokenType.TimeSpan)
+        public ZValue(TimeSpan value)
+            : this(value, TokenType.TimeSpan)
         {
         }
 
-#endif
 
 
         /// <summary>
@@ -163,12 +174,11 @@ namespace Difftaculous.ZModel
         }
 
 
+
 #if false
-
-
         internal override bool DeepEquals(JToken node)
         {
-            JValue other = node as JValue;
+            ZValue other = node as ZValue;
             if (other == null)
                 return false;
             if (other == this)
@@ -219,7 +229,7 @@ namespace Difftaculous.ZModel
         }
 #endif
 
-        internal static int Compare(JTokenType valueType, object objA, object objB)
+        internal static int Compare(TokenType valueType, object objA, object objB)
         {
             if (objA == null && objB == null)
                 return 0;
@@ -230,7 +240,7 @@ namespace Difftaculous.ZModel
 
             switch (valueType)
             {
-                case JTokenType.Integer:
+                case TokenType.Integer:
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
                     if (objA is BigInteger)
                         return CompareBigInteger((BigInteger)objA, objB);
@@ -243,7 +253,7 @@ namespace Difftaculous.ZModel
                         return CompareFloat(objA, objB);
                     else
                         return Convert.ToInt64(objA, CultureInfo.InvariantCulture).CompareTo(Convert.ToInt64(objB, CultureInfo.InvariantCulture));
-                case JTokenType.Float:
+                case TokenType.Float:
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
                     if (objA is BigInteger)
                         return CompareBigInteger((BigInteger)objA, objB);
@@ -251,19 +261,19 @@ namespace Difftaculous.ZModel
                         return -CompareBigInteger((BigInteger)objB, objA);
 #endif
                     return CompareFloat(objA, objB);
-                case JTokenType.Comment:
-                case JTokenType.String:
-                case JTokenType.Raw:
+                case TokenType.Comment:
+                case TokenType.String:
+                case TokenType.Raw:
                     string s1 = Convert.ToString(objA, CultureInfo.InvariantCulture);
                     string s2 = Convert.ToString(objB, CultureInfo.InvariantCulture);
 
                     return string.CompareOrdinal(s1, s2);
-                case JTokenType.Boolean:
+                case TokenType.Boolean:
                     bool b1 = Convert.ToBoolean(objA, CultureInfo.InvariantCulture);
                     bool b2 = Convert.ToBoolean(objB, CultureInfo.InvariantCulture);
 
                     return b1.CompareTo(b2);
-                case JTokenType.Date:
+                case TokenType.Date:
 #if !NET20
                     if (objA is DateTime)
                     {
@@ -294,7 +304,7 @@ namespace Difftaculous.ZModel
                         return date1.CompareTo(date2);
                     }
 #endif
-                case JTokenType.Bytes:
+                case TokenType.Bytes:
                     if (!(objB is byte[]))
                         throw new ArgumentException("Object must be of type byte[].");
 
@@ -306,7 +316,7 @@ namespace Difftaculous.ZModel
                         return 1;
 
                     return MiscellaneousUtils.ByteArrayCompare(bytes1, bytes2);
-                case JTokenType.Guid:
+                case TokenType.Guid:
                     if (!(objB is Guid))
                         throw new ArgumentException("Object must be of type Guid.");
 
@@ -314,7 +324,7 @@ namespace Difftaculous.ZModel
                     Guid guid2 = (Guid)objB;
 
                     return guid1.CompareTo(guid2);
-                case JTokenType.Uri:
+                case TokenType.Uri:
                     if (!(objB is Uri))
                         throw new ArgumentException("Object must be of type Uri.");
 
@@ -322,7 +332,7 @@ namespace Difftaculous.ZModel
                     Uri uri2 = (Uri)objB;
 
                     return Comparer<string>.Default.Compare(uri1.ToString(), uri2.ToString());
-                case JTokenType.TimeSpan:
+                case TokenType.TimeSpan:
                     if (!(objB is TimeSpan))
                         throw new ArgumentException("Object must be of type TimeSpan.");
 
@@ -497,29 +507,30 @@ namespace Difftaculous.ZModel
 
         internal override JToken CloneToken()
         {
-            return new JValue(this);
+            return new ZValue(this);
         }
 
         /// <summary>
-        /// Creates a <see cref="JValue"/> comment with the given value.
+        /// Creates a <see cref="ZValue"/> comment with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns>A <see cref="JValue"/> comment with the given value.</returns>
-        public static JValue CreateComment(string value)
+        /// <returns>A <see cref="ZValue"/> comment with the given value.</returns>
+        public static ZValue CreateComment(string value)
         {
-            return new JValue(value, JTokenType.Comment);
-        }
-
-        /// <summary>
-        /// Creates a <see cref="JValue"/> string with the given value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>A <see cref="JValue"/> string with the given value.</returns>
-        public static JValue CreateString(string value)
-        {
-            return new JValue(value, JTokenType.String);
+            return new ZValue(value, TokenType.Comment);
         }
 #endif
+
+
+        /// <summary>
+        /// Creates a <see cref="ZValue"/> string with the given value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>A <see cref="ZValue"/> string with the given value.</returns>
+        public static ZValue CreateString(string value)
+        {
+            return new ZValue(value, TokenType.String);
+        }
 
 
         /// <summary>
@@ -533,16 +544,14 @@ namespace Difftaculous.ZModel
 
 
 #if false
-
         /// <summary>
-        /// Creates a <see cref="JValue"/> null value.
+        /// Creates a <see cref="ZValue"/> null value.
         /// </summary>
-        /// <returns>A <see cref="JValue"/> null value.</returns>
-        public static JValue CreateUndefined()
+        /// <returns>A <see cref="ZValue"/> null value.</returns>
+        public static ZValue CreateUndefined()
         {
-            return new JValue(null, JTokenType.Undefined);
+            return new ZValue(null, TokenType.Undefined);
         }
-
 #endif
 
 
@@ -552,7 +561,7 @@ namespace Difftaculous.ZModel
                 return TokenType.Null;
             //#if !(NETFX_CORE || PORTABLE40 || PORTABLE)
             //            else if (value == DBNull.Value)
-            //                return JTokenType.Null;
+            //                return TokenType.Null;
             //#endif
             else if (value is string)
                 return GetStringValueType(current);
@@ -560,29 +569,29 @@ namespace Difftaculous.ZModel
                      || value is ulong || value is uint || value is ushort || value is byte)
                 return TokenType.Integer;
             //            else if (value is Enum)
-            //                return JTokenType.Integer;
+            //                return TokenType.Integer;
             //#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
             //            else if (value is BigInteger)
-            //                return JTokenType.Integer;
+            //                return TokenType.Integer;
             //#endif
             //            else if (value is double || value is float || value is decimal)
-            //                return JTokenType.Float;
+            //                return TokenType.Float;
             //            else if (value is DateTime)
-            //                return JTokenType.Date;
+            //                return TokenType.Date;
             //#if !NET20
             //            else if (value is DateTimeOffset)
-            //                return JTokenType.Date;
+            //                return TokenType.Date;
             //#endif
             //            else if (value is byte[])
-            //                return JTokenType.Bytes;
+            //                return TokenType.Bytes;
             //            else if (value is bool)
-            //                return JTokenType.Boolean;
+            //                return TokenType.Boolean;
             //            else if (value is Guid)
-            //                return JTokenType.Guid;
+            //                return TokenType.Guid;
             //            else if (value is Uri)
-            //                return JTokenType.Uri;
+            //                return TokenType.Uri;
             //            else if (value is TimeSpan)
-            //                return JTokenType.TimeSpan;
+            //                return TokenType.TimeSpan;
 
             throw new ArgumentException(string.Format("Could not determine JSON object type for type {0}.", value.GetType()));
         }
@@ -598,7 +607,7 @@ namespace Difftaculous.ZModel
             {
                 // case TokenType.Comment:
                 case TokenType.String:
-                //case JTokenType.Raw:
+                //case TokenType.Raw:
                 //    return current.Value;
                 default:
                     return TokenType.String;
@@ -659,19 +668,19 @@ namespace Difftaculous.ZModel
 
             switch (_valueType)
             {
-                case JTokenType.Comment:
+                case TokenType.Comment:
                     writer.WriteComment((_value != null) ? _value.ToString() : null);
                     return;
-                case JTokenType.Raw:
+                case TokenType.Raw:
                     writer.WriteRawValue((_value != null) ? _value.ToString() : null);
                     return;
-                case JTokenType.Null:
+                case TokenType.Null:
                     writer.WriteNull();
                     return;
-                case JTokenType.Undefined:
+                case TokenType.Undefined:
                     writer.WriteUndefined();
                     return;
-                case JTokenType.Integer:
+                case TokenType.Integer:
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
                     if (_value is BigInteger)
                         writer.WriteValue((BigInteger)_value);
@@ -679,7 +688,7 @@ namespace Difftaculous.ZModel
 #endif
                         writer.WriteValue(Convert.ToInt64(_value, CultureInfo.InvariantCulture));
                     return;
-                case JTokenType.Float:
+                case TokenType.Float:
                     if (_value is decimal)
                         writer.WriteValue((decimal)_value);
                     else if (_value is double)
@@ -689,13 +698,13 @@ namespace Difftaculous.ZModel
                     else
                         writer.WriteValue(Convert.ToDouble(_value, CultureInfo.InvariantCulture));
                     return;
-                case JTokenType.String:
+                case TokenType.String:
                     writer.WriteValue((_value != null) ? _value.ToString() : null);
                     return;
-                case JTokenType.Boolean:
+                case TokenType.Boolean:
                     writer.WriteValue(Convert.ToBoolean(_value, CultureInfo.InvariantCulture));
                     return;
-                case JTokenType.Date:
+                case TokenType.Date:
 #if !NET20
                     if (_value is DateTimeOffset)
                         writer.WriteValue((DateTimeOffset)_value);
@@ -703,12 +712,12 @@ namespace Difftaculous.ZModel
 #endif
                         writer.WriteValue(Convert.ToDateTime(_value, CultureInfo.InvariantCulture));
                     return;
-                case JTokenType.Bytes:
+                case TokenType.Bytes:
                     writer.WriteValue((byte[])_value);
                     return;
-                case JTokenType.Guid:
-                case JTokenType.Uri:
-                case JTokenType.TimeSpan:
+                case TokenType.Guid:
+                case TokenType.Uri:
+                case TokenType.TimeSpan:
                     writer.WriteValue((_value != null) ? _value.ToString() : null);
                     return;
             }
@@ -723,7 +732,7 @@ namespace Difftaculous.ZModel
             return _valueType.GetHashCode() ^ valueHashCode;
         }
 
-        private static bool ValuesEquals(JValue v1, JValue v2)
+        private static bool ValuesEquals(ZValue v1, ZValue v2)
         {
             return (v1 == v2 || (v1._valueType == v2._valueType && Compare(v1._valueType, v1._value, v2._value) == 0));
         }
@@ -735,7 +744,7 @@ namespace Difftaculous.ZModel
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(JValue other)
+        public bool Equals(ZValue other)
         {
             if (other == null)
                 return false;
@@ -758,7 +767,7 @@ namespace Difftaculous.ZModel
             if (obj == null)
                 return false;
 
-            JValue otherValue = obj as JValue;
+            ZValue otherValue = obj as ZValue;
             if (otherValue != null)
                 return Equals(otherValue);
 
@@ -778,7 +787,7 @@ namespace Difftaculous.ZModel
 
             return _value.GetHashCode();
         }
-
+#endif
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
         /// </summary>
@@ -793,6 +802,8 @@ namespace Difftaculous.ZModel
             return _value.ToString();
         }
 
+
+#if false
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
         /// </summary>
@@ -847,14 +858,14 @@ namespace Difftaculous.ZModel
         /// </returns>
         protected override DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return new DynamicProxyMetaObject<JValue>(parameter, this, new JValueDynamicProxy(), true);
+            return new DynamicProxyMetaObject<ZValue>(parameter, this, new ZValueDynamicProxy(), true);
         }
 
-        private class JValueDynamicProxy : DynamicProxy<JValue>
+        private class ZValueDynamicProxy : DynamicProxy<ZValue>
         {
-            public override bool TryConvert(JValue instance, ConvertBinder binder, out object result)
+            public override bool TryConvert(ZValue instance, ConvertBinder binder, out object result)
             {
-                if (binder.Type == typeof(JValue))
+                if (binder.Type == typeof(ZValue))
                 {
                     result = instance;
                     return true;
@@ -872,9 +883,9 @@ namespace Difftaculous.ZModel
                 return true;
             }
 
-            public override bool TryBinaryOperation(JValue instance, BinaryOperationBinder binder, object arg, out object result)
+            public override bool TryBinaryOperation(ZValue instance, BinaryOperationBinder binder, object arg, out object result)
             {
-                object compareValue = (arg is JValue) ? ((JValue)arg).Value : arg;
+                object compareValue = (arg is ZValue) ? ((ZValue)arg).Value : arg;
 
                 switch (binder.Operation)
                 {
@@ -906,7 +917,7 @@ namespace Difftaculous.ZModel
                     case ExpressionType.DivideAssign:
                         if (Operation(binder.Operation, instance.Value, compareValue, out result))
                         {
-                            result = new JValue(result);
+                            result = new ZValue(result);
                             return true;
                         }
                         break;
@@ -923,7 +934,7 @@ namespace Difftaculous.ZModel
             if (obj == null)
                 return 1;
 
-            object otherValue = (obj is JValue) ? ((JValue)obj).Value : obj;
+            object otherValue = (obj is ZValue) ? ((ZValue)obj).Value : obj;
 
             return Compare(_valueType, _value, otherValue);
         }
@@ -946,7 +957,7 @@ namespace Difftaculous.ZModel
         /// <exception cref="T:System.ArgumentException">
         /// 	<paramref name="obj"/> is not the same type as this instance.
         /// </exception>
-        public int CompareTo(JValue obj)
+        public int CompareTo(ZValue obj)
         {
             if (obj == null)
                 return 1;

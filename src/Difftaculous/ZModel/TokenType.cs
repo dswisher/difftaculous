@@ -12,7 +12,14 @@ namespace Difftaculous.ZModel
         [Obsolete]
         Value,
 
+        Boolean,
         Integer,
+        Float,
+
+        Date,
+        TimeSpan,
+        Guid,
+        Uri,
 
         String,
 
