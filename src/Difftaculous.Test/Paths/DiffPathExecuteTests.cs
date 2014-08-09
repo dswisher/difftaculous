@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Difftaculous.Adapters;
 using Difftaculous.Paths;
+using Difftaculous.Test.Helpers;
 using Difftaculous.ZModel;
 using NUnit.Framework;
 using Shouldly;
@@ -175,7 +176,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 @"Index 1 not valid on ZObject.",
                 () => { o.SelectToken("[1]", true); });
         }
@@ -186,7 +187,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 @"Index * not valid on ZObject.",
                 () => { o.SelectToken("[*]", true); });
         }
@@ -197,7 +198,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 @"Array slice is not valid on ZObject.",
                 () => { o.SelectToken("[:]", true); });
         }
@@ -216,7 +217,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 @"Path returned multiple tokens.",
                 () => { a.SelectToken("[0, 1]"); });
         }
@@ -226,7 +227,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 @"Property 'BlahBlah' not valid on ZArray.",
                 () => { a.SelectToken("BlahBlah", true); });
         }
@@ -236,7 +237,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 @"Index 9 outside the bounds of ZArray.",
                 () => { a.SelectToken("[9,10]", true); });
         }
@@ -246,7 +247,7 @@ namespace Difftaculous.Test.Paths
         {
             JConstructor c = new JConstructor("Blah");
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 @"Index 1 outside the bounds of JConstructor.",
                 () => { c.SelectToken("[1]", true); });
         }
@@ -265,20 +266,22 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Property 'Missing' does not exist on ZObject.",
                 () => { o.SelectToken("Missing", true); });
         }
+#endif
+
 
         [Test]
         public void EvaluatePropertyWithoutError()
         {
-            ZObject o = new ZObject(
-                new ZProperty("Blah", 1));
+            ZObject o = new ZObject(new ZProperty("Blah", 1));
 
-            JValue v = (JValue)o.SelectToken("Blah", true);
+            ZValue v = (ZValue)o.SelectToken(DiffPath.FromJsonPath("Blah"), true);
             Assert.AreEqual(1, v.Value);
         }
+
 
         [Test]
         public void EvaluateMissingPropertyIndexWithError()
@@ -286,103 +289,115 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Property 'Missing' does not exist on ZObject.",
-                () => { o.SelectToken("['Missing','Missing2']", true); });
+                () => o.SelectToken(DiffPath.FromJsonPath("['Missing','Missing2']"), true));
         }
+
 
         [Test]
         public void EvaluateMultiPropertyIndexOnArrayWithError()
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Properties 'Missing', 'Missing2' not valid on ZArray.",
-                () => { a.SelectToken("['Missing','Missing2']", true); });
+                () => a.SelectToken(DiffPath.FromJsonPath("['Missing','Missing2']"), true));
         }
+
 
         [Test]
         public void EvaluateArraySliceWithError()
         {
+// ReSharper disable AccessToModifiedClosure
+
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Array slice of 99 to * returned no results.",
-                () => { a.SelectToken("[99:]", true); });
+                () => a.SelectToken(DiffPath.FromJsonPath("[99:]"), true));
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Array slice of 1 to -19 returned no results.",
-                () => { a.SelectToken("[1:-19]", true); });
+                () => a.SelectToken(DiffPath.FromJsonPath("[1:-19]"), true));
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Array slice of * to -19 returned no results.",
-                () => { a.SelectToken("[:-19]", true); });
+                () => a.SelectToken(DiffPath.FromJsonPath("[:-19]"), true));
 
             a = new ZArray();
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Array slice of * to * returned no results.",
-                () => { a.SelectToken("[:]", true); });
+                () => a.SelectToken(DiffPath.FromJsonPath("[:]"), true));
+
+// ReSharper restore AccessToModifiedClosure
         }
+
+
 
         [Test]
         public void EvaluateOutOfBoundsIndxer()
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ZToken t = a.SelectToken("[1000].Ha");
+            ZToken t = a.SelectToken(DiffPath.FromJsonPath("[1000].Ha"));
             Assert.IsNull(t);
         }
+
+
 
         [Test]
         public void EvaluateArrayOutOfBoundsIndxerWithError()
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonException>(
+            ExceptionAssert.Throws<JsonPathException>(
                 "Index 1000 outside the bounds of ZArray.",
-                () => { a.SelectToken("[1000].Ha", true); });
+                () => { a.SelectToken(DiffPath.FromJsonPath("[1000].Ha"), true); });
         }
+
 
         [Test]
         public void EvaluateArray()
         {
             ZArray a = new ZArray(1, 2, 3, 4);
 
-            ZToken t = a.SelectToken("[1]");
+            ZToken t = a.SelectToken(DiffPath.FromJsonPath("[1]"));
             Assert.IsNotNull(t);
-            Assert.AreEqual(ZTokenType.Integer, t.Type);
+            Assert.AreEqual(TokenType.Integer, t.Type);
             Assert.AreEqual(2, (int)t);
         }
+
 
         [Test]
         public void EvaluateArraySlice()
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5, 6, 7, 8, 9);
-            IList<ZToken> t = null;
+            IList<ZToken> t;
 
-            t = a.SelectTokens("[-3:]").ToList();
+            t = a.SelectTokens(DiffPath.FromJsonPath("[-3:]")).ToList();
             Assert.AreEqual(3, t.Count);
             Assert.AreEqual(7, (int)t[0]);
             Assert.AreEqual(8, (int)t[1]);
             Assert.AreEqual(9, (int)t[2]);
 
-            t = a.SelectTokens("[-1:-2:-1]").ToList();
+            t = a.SelectTokens(DiffPath.FromJsonPath("[-1:-2:-1]")).ToList();
             Assert.AreEqual(1, t.Count);
             Assert.AreEqual(9, (int)t[0]);
 
-            t = a.SelectTokens("[-2:-1]").ToList();
+            t = a.SelectTokens(DiffPath.FromJsonPath("[-2:-1]")).ToList();
             Assert.AreEqual(1, t.Count);
             Assert.AreEqual(8, (int)t[0]);
 
-            t = a.SelectTokens("[1:1]").ToList();
+            t = a.SelectTokens(DiffPath.FromJsonPath("[1:1]")).ToList();
             Assert.AreEqual(0, t.Count);
 
-            t = a.SelectTokens("[1:2]").ToList();
+            t = a.SelectTokens(DiffPath.FromJsonPath("[1:2]")).ToList();
             Assert.AreEqual(1, t.Count);
             Assert.AreEqual(2, (int)t[0]);
 
-            t = a.SelectTokens("[::-1]").ToList();
+            t = a.SelectTokens(DiffPath.FromJsonPath("[::-1]")).ToList();
             Assert.AreEqual(9, t.Count);
             Assert.AreEqual(9, (int)t[0]);
             Assert.AreEqual(8, (int)t[1]);
@@ -394,7 +409,7 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual(2, (int)t[7]);
             Assert.AreEqual(1, (int)t[8]);
 
-            t = a.SelectTokens("[::-2]").ToList();
+            t = a.SelectTokens(DiffPath.FromJsonPath("[::-2]")).ToList();
             Assert.AreEqual(5, t.Count);
             Assert.AreEqual(9, (int)t[0]);
             Assert.AreEqual(7, (int)t[1]);
@@ -402,7 +417,6 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual(3, (int)t[3]);
             Assert.AreEqual(1, (int)t[4]);
         }
-#endif
 
 
         [Test]
@@ -426,7 +440,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4);
 
-            IEnumerable<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[1,2,0]"));
+            var t = a.SelectTokens(DiffPath.FromJsonPath("[1,2,0]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(3, t.Count());
             Assert.AreEqual(2, (int)t.ElementAt(0));

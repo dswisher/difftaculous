@@ -76,17 +76,19 @@ namespace Difftaculous.Paths
 
 
 
-        internal IEnumerable<ZToken> Evaluate(ZToken t)
+        internal IEnumerable<ZToken> Evaluate(ZToken t, bool errorWhenNoMatch)
         {
-            return Evaluate(Filters, t);
+            return Evaluate(Filters, t, errorWhenNoMatch);
         }
 
-        internal static IEnumerable<ZToken> Evaluate(List<PathFilter> filters, ZToken t)
+
+
+        internal static IEnumerable<ZToken> Evaluate(List<PathFilter> filters, ZToken t, bool errorWhenNoMatch)
         {
             IEnumerable<ZToken> current = new[] { t };
             foreach (PathFilter filter in filters)
             {
-                current = filter.ExecuteFilter(current);
+                current = filter.ExecuteFilter(current, errorWhenNoMatch);
             }
 
             return current;

@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Difftaculous.ZModel;
 
@@ -14,15 +15,16 @@ namespace Difftaculous.Paths
         public int? Step { get; set; }
 
 
-        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
+        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current, bool errorWhenNoMatch)
         {
-#if false
             if (Step == 0)
-                throw new JsonException("Step cannot be zero.");
-
-            foreach (JToken t in current)
             {
-                JArray a = t as JArray;
+                throw new JsonPathException("Step cannot be zero.");
+            }
+
+            foreach (ZToken t in current)
+            {
+                ZArray a = t as ZArray;
                 if (a != null)
                 {
                     // set defaults for null arguments
@@ -54,25 +56,26 @@ namespace Difftaculous.Paths
                     else
                     {
                         if (errorWhenNoMatch)
-                            throw new JsonException("Array slice of {0} to {1} returned no results.".FormatWith(CultureInfo.InvariantCulture,
+                        {
+                            throw new JsonPathException(string.Format("Array slice of {0} to {1} returned no results.",
                                 Start != null ? Start.Value.ToString(CultureInfo.InvariantCulture) : "*",
                                 End != null ? End.Value.ToString(CultureInfo.InvariantCulture) : "*"));
+                        }
                     }
                 }
                 else
                 {
                     if (errorWhenNoMatch)
-                        throw new JsonException("Array slice is not valid on {0}.".FormatWith(CultureInfo.InvariantCulture, t.GetType().Name));
+                    {
+                        throw new JsonPathException(string.Format("Array slice is not valid on {0}.", t.GetType().Name));
+                    }
                 }
-            }
-#endif
 
-            throw new NotImplementedException();
+            }
         }
 
 
 
-#if false
         private bool IsValid(int index, int stopIndex, bool positiveStep)
         {
             if (positiveStep)
@@ -80,7 +83,7 @@ namespace Difftaculous.Paths
 
             return (index > stopIndex);
         }
-#endif
+
 
 
         public override void AddJsonPath(StringBuilder sb)

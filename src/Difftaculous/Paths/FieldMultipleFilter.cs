@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Difftaculous.ZModel;
 
@@ -11,34 +12,30 @@ namespace Difftaculous.Paths
     {
         public List<string> Names { get; set; }
 
-        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
+        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current, bool errorWhenNoMatch)
         {
-#if false
-            foreach (JToken t in current)
+            foreach (ZToken t in current)
             {
-                JObject o = t as JObject;
+                ZObject o = t as ZObject;
                 if (o != null)
                 {
                     foreach (string name in Names)
                     {
-                        JToken v = o[name];
+                        ZToken v = o[name];
 
                         if (v != null)
                             yield return v;
 
                         if (errorWhenNoMatch)
-                            throw new JsonException("Property '{0}' does not exist on JObject.".FormatWith(CultureInfo.InvariantCulture, name));
+                            throw new JsonPathException(string.Format("Property '{0}' does not exist on ZObject.", name));
                     }
                 }
                 else
                 {
                     if (errorWhenNoMatch)
-                        throw new JsonException("Properties {0} not valid on {1}.".FormatWith(CultureInfo.InvariantCulture, string.Join(", ", Names.Select(n => "'" + n + "'").ToArray()), t.GetType().Name));
+                        throw new JsonPathException(string.Format("Properties {0} not valid on {1}.", string.Join(", ", Names.Select(n => "'" + n + "'").ToArray()), t.GetType().Name));
                 }
             }
-#endif
-
-            throw new NotImplementedException();
         }
 
 

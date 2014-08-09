@@ -13,7 +13,7 @@ namespace Difftaculous.Paths
         public QueryExpression Expression { get; set; }
 
 
-        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
+        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current, bool errorWhenNoMatch)
         {
 #if false
             foreach (JToken t in current)

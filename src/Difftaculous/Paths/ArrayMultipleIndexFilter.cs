@@ -12,13 +12,13 @@ namespace Difftaculous.Paths
         public List<int> Indexes { get; set; }
 
 
-        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
+        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current, bool errorWhenNoMatch)
         {
             foreach (ZToken t in current)
             {
                 foreach (int i in Indexes)
                 {
-                    ZToken v = GetTokenIndex(t, i);
+                    ZToken v = GetTokenIndex(t, errorWhenNoMatch, i);
 
                     if (v != null)
                         yield return v;

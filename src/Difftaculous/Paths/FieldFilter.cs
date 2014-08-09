@@ -11,7 +11,7 @@ namespace Difftaculous.Paths
         public string Name { get; set; }
 
 
-        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
+        public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current, bool errorWhenNoMatch)
         {
             foreach (ZToken t in current)
             {

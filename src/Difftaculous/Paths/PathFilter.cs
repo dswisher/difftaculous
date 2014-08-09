@@ -8,62 +8,33 @@ namespace Difftaculous.Paths
 {
     internal abstract class PathFilter
     {
-        public abstract IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current);
+        public abstract IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current, bool errorWhenNoMatch);
         public abstract void AddJsonPath(StringBuilder sb);
 
-        protected static ZToken GetTokenIndex(ZToken t, int index)
+        protected static ZToken GetTokenIndex(ZToken t, bool errorWhenNoMatch, int index)
         {
             ZArray a = t as ZArray;
             if (a != null)
             {
                 if (a.Count <= index)
                 {
-                    return null;
-                }
-
-                return a[index];
-            }
-            else
-            {
-                return null;
-            }
-
-#if false
-            JArray a = t as JArray;
-            JConstructor c = t as JConstructor;
-
-            if (a != null)
-            {
-                if (a.Count <= index)
-                {
                     if (errorWhenNoMatch)
-                        throw new JsonException("Index {0} outside the bounds of JArray.".FormatWith(CultureInfo.InvariantCulture, index));
+                    {
+                        throw new JsonPathException(string.Format("Index {0} outside the bounds of ZArray.", index));
+                    }
 
                     return null;
                 }
 
                 return a[index];
             }
-            else if (c != null)
+
+            if (errorWhenNoMatch)
             {
-                if (c.Count <= index)
-                {
-                    if (errorWhenNoMatch)
-                        throw new JsonException("Index {0} outside the bounds of JConstructor.".FormatWith(CultureInfo.InvariantCulture, index));
-
-                    return null;
-                }
-
-                return c[index];
+                throw new JsonPathException(string.Format("Index {0} not valid on {1}.", index, t.GetType().Name));
             }
-            else
-            {
-                if (errorWhenNoMatch)
-                    throw new JsonException("Index {0} not valid on {1}.".FormatWith(CultureInfo.InvariantCulture, index, t.GetType().Name));
 
-                return null;
-            }
-#endif
+            return null;
         }
     }
 }

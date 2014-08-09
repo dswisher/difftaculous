@@ -2008,7 +2008,7 @@ namespace Difftaculous.ZModel
         public ZToken SelectToken(DiffPath path, bool errorWhenNoMatch)
         {
             ZToken token = null;
-            foreach (ZToken t in path.Evaluate(this))
+            foreach (ZToken t in path.Evaluate(this, errorWhenNoMatch))
             {
                 if (token != null)
                 {
@@ -2030,7 +2030,7 @@ namespace Difftaculous.ZModel
 
         public IEnumerable<ZToken> SelectTokens(DiffPath path, bool errorWhenNoMatch)
         {
-            return path.Evaluate(this);
+            return path.Evaluate(this, errorWhenNoMatch);
         }
 
 
