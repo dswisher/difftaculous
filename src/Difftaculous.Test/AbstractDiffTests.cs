@@ -21,6 +21,24 @@ namespace Difftaculous.Test
         protected abstract IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints);
 
 
+        public class EmptyObject 
+        {
+        }
+
+
+        [Test]
+        public void TwoEmptyObjectsAreSame()
+        {
+            var a = new EmptyObject();
+            var b = new EmptyObject();
+
+            var result = DoCompare(a, b);
+
+            result.AreSame.ShouldBe(true);
+        }
+
+
+
         public class SimpleObject
         {
             public string Name { get; set; }
