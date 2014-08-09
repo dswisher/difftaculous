@@ -138,13 +138,15 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
+
         internal override bool DeepEquals(ZToken node)
         {
             ZProperty t = node as ZProperty;
             return (t != null && _name == t.Name && ContentsEqual(t));
         }
 
+
+#if false
         internal override ZToken CloneToken()
         {
             return new ZProperty(this);

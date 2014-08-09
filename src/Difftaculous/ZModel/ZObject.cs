@@ -78,7 +78,6 @@ namespace Difftaculous.ZModel
 
 
 
-#if false
         internal override bool DeepEquals(ZToken node)
         {
             ZObject t = node as ZObject;
@@ -87,7 +86,7 @@ namespace Difftaculous.ZModel
 
             return _properties.Compare(t._properties);
         }
-#endif
+
 
 
         internal override void InsertItem(int index, ZToken item, bool skipParentCheck)

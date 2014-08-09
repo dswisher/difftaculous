@@ -67,12 +67,15 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
         internal override bool DeepEquals(ZToken node)
         {
             ZArray t = node as ZArray;
             return (t != null && ContentsEqual(t));
         }
+
+
+#if false
+
 
         internal override ZToken CloneToken()
         {

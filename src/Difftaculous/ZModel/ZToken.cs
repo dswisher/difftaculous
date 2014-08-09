@@ -21,38 +21,38 @@ namespace Difftaculous.ZModel
 
 
 #if false
-        private static JTokenEqualityComparer _equalityComparer;
+        private static ZTokenEqualityComparer _equalityComparer;
 
         private int? _lineNumber;
         private int? _linePosition;
 
-        private static readonly JTokenType[] BooleanTypes = new[] { JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Boolean };
+        private static readonly ZTokenType[] BooleanTypes = new[] { ZTokenType.Integer, ZTokenType.Float, ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw, ZTokenType.Boolean };
 #endif
 
         private static readonly TokenType[] NumberTypes = { TokenType.Integer, TokenType.Value }; // new[] { TokenType.Float, TokenType.String, TokenType.Comment, TokenType.Raw, TokenType.Boolean };
 
 #if false
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-        private static readonly JTokenType[] BigIntegerTypes = new[] { JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Boolean, JTokenType.Bytes };
+        private static readonly ZTokenType[] BigIntegerTypes = new[] { ZTokenType.Integer, ZTokenType.Float, ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw, ZTokenType.Boolean, ZTokenType.Bytes };
 #endif
-        private static readonly JTokenType[] StringTypes = new[] { JTokenType.Date, JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Boolean, JTokenType.Bytes, JTokenType.Guid, JTokenType.TimeSpan, JTokenType.Uri };
-        private static readonly JTokenType[] GuidTypes = new[] { JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Guid, JTokenType.Bytes };
-        private static readonly JTokenType[] TimeSpanTypes = new[] { JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.TimeSpan };
-        private static readonly JTokenType[] UriTypes = new[] { JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Uri };
-        private static readonly JTokenType[] CharTypes = new[] { JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw };
-        private static readonly JTokenType[] DateTimeTypes = new[] { JTokenType.Date, JTokenType.String, JTokenType.Comment, JTokenType.Raw };
-        private static readonly JTokenType[] BytesTypes = new[] { JTokenType.Bytes, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Integer };
+        private static readonly ZTokenType[] StringTypes = new[] { ZTokenType.Date, ZTokenType.Integer, ZTokenType.Float, ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw, ZTokenType.Boolean, ZTokenType.Bytes, ZTokenType.Guid, ZTokenType.TimeSpan, ZTokenType.Uri };
+        private static readonly ZTokenType[] GuidTypes = new[] { ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw, ZTokenType.Guid, ZTokenType.Bytes };
+        private static readonly ZTokenType[] TimeSpanTypes = new[] { ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw, ZTokenType.TimeSpan };
+        private static readonly ZTokenType[] UriTypes = new[] { ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw, ZTokenType.Uri };
+        private static readonly ZTokenType[] CharTypes = new[] { ZTokenType.Integer, ZTokenType.Float, ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw };
+        private static readonly ZTokenType[] DateTimeTypes = new[] { ZTokenType.Date, ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw };
+        private static readonly ZTokenType[] BytesTypes = new[] { ZTokenType.Bytes, ZTokenType.String, ZTokenType.Comment, ZTokenType.Raw, ZTokenType.Integer };
 
         /// <summary>
         /// Gets a comparer that can compare two tokens for value equality.
         /// </summary>
-        /// <value>A <see cref="JTokenEqualityComparer"/> that can compare two nodes for value equality.</value>
-        public static JTokenEqualityComparer EqualityComparer
+        /// <value>A <see cref="ZTokenEqualityComparer"/> that can compare two nodes for value equality.</value>
+        public static ZTokenEqualityComparer EqualityComparer
         {
             get
             {
                 if (_equalityComparer == null)
-                    _equalityComparer = new JTokenEqualityComparer();
+                    _equalityComparer = new ZTokenEqualityComparer();
 
                 return _equalityComparer;
             }
@@ -97,9 +97,10 @@ namespace Difftaculous.ZModel
 
 
 #if false
-        internal abstract JToken CloneToken();
-        internal abstract bool DeepEquals(JToken node);
+        internal abstract ZToken CloneToken();
 #endif 
+
+        internal abstract bool DeepEquals(ZToken node);
 
 
         /// <summary>
@@ -118,18 +119,18 @@ namespace Difftaculous.ZModel
         public abstract bool HasValues { get; }
 
 
-#if false
+
         /// <summary>
         /// Compares the values of two tokens, including the values of all descendant tokens.
         /// </summary>
-        /// <param name="t1">The first <see cref="JToken"/> to compare.</param>
-        /// <param name="t2">The second <see cref="JToken"/> to compare.</param>
+        /// <param name="t1">The first <see cref="ZToken"/> to compare.</param>
+        /// <param name="t2">The second <see cref="ZToken"/> to compare.</param>
         /// <returns>true if the tokens are equal; otherwise false.</returns>
-        public static bool DeepEquals(JToken t1, JToken t2)
+        public static bool DeepEquals(ZToken t1, ZToken t2)
         {
             return (t1 == t2 || (t1 != null && t2 != null && t1.DeepEquals(t2)));
         }
-#endif
+
 
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace Difftaculous.ZModel
             {
                 // TODO - this should really be building up an expression directly so we don't have to parse the JsonPath at the end
 
-                // Based on Json.Net...see JToken.cs, line 181
+                // Based on Json.Net...see ZToken.cs, line 181
                 var ancestors = Ancestors.Reverse().ToList();
                 ancestors.Add(this);
 
@@ -267,12 +268,12 @@ namespace Difftaculous.ZModel
         /// Returns a collection of the sibling tokens after this token, in document order.
         /// </summary>
         /// <returns>A collection of the sibling tokens after this tokens, in document order.</returns>
-        public IEnumerable<JToken> AfterSelf()
+        public IEnumerable<ZToken> AfterSelf()
         {
             if (Parent == null)
                 yield break;
 
-            for (JToken o = Next; o != null; o = o.Next)
+            for (ZToken o = Next; o != null; o = o.Next)
             {
                 yield return o;
             }
@@ -282,9 +283,9 @@ namespace Difftaculous.ZModel
         /// Returns a collection of the sibling tokens before this token, in document order.
         /// </summary>
         /// <returns>A collection of the sibling tokens before this token, in document order.</returns>
-        public IEnumerable<JToken> BeforeSelf()
+        public IEnumerable<ZToken> BeforeSelf()
         {
-            for (JToken o = Parent.First; o != this; o = o.Next)
+            for (ZToken o = Parent.First; o != this; o = o.Next)
             {
                 yield return o;
             }
@@ -357,8 +358,8 @@ namespace Difftaculous.ZModel
         /// Returns a collection of the child tokens of this token, in document order, filtered by the specified type.
         /// </summary>
         /// <typeparam name="T">The type to filter the child tokens on.</typeparam>
-        /// <returns>A <see cref="JEnumerable{T}"/> containing the child tokens of this <see cref="JToken"/>, in document order.</returns>
-        public JEnumerable<T> Children<T>() where T : JToken
+        /// <returns>A <see cref="JEnumerable{T}"/> containing the child tokens of this <see cref="ZToken"/>, in document order.</returns>
+        public JEnumerable<T> Children<T>() where T : ZToken
         {
             return new JEnumerable<T>(Children().OfType<T>());
         }
@@ -394,7 +395,7 @@ namespace Difftaculous.ZModel
         /// Replaces this token with the specified token.
         /// </summary>
         /// <param name="value">The value.</param>
-        public void Replace(JToken value)
+        public void Replace(ZToken value)
         {
             if (_parent == null)
                 throw new InvalidOperationException("The parent is missing.");
@@ -484,11 +485,11 @@ namespace Difftaculous.ZModel
         #region Cast from operators
 #if false
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Boolean"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Boolean"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator bool(JToken value)
+        public static explicit operator bool(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, BooleanTypes, false))
@@ -504,11 +505,11 @@ namespace Difftaculous.ZModel
 
 #if !NET20
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.DateTimeOffset"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.DateTimeOffset"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTimeOffset(JToken value)
+        public static explicit operator DateTimeOffset(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, DateTimeTypes, false))
@@ -523,11 +524,11 @@ namespace Difftaculous.ZModel
 #endif
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Boolean}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Boolean}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator bool?(JToken value)
+        public static explicit operator bool?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -545,11 +546,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Int64"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Int64"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator long(JToken value)
+        public static explicit operator long(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -564,11 +565,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{DateTime}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{DateTime}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTime?(JToken value)
+        public static explicit operator DateTime?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -587,11 +588,11 @@ namespace Difftaculous.ZModel
 
 #if !NET20
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{DateTimeOffset}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{DateTimeOffset}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTimeOffset?(JToken value)
+        public static explicit operator DateTimeOffset?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -611,11 +612,11 @@ namespace Difftaculous.ZModel
 #endif
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Decimal}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Decimal}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator decimal?(JToken value)
+        public static explicit operator decimal?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -633,11 +634,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Double}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Double}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator double?(JToken value)
+        public static explicit operator double?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -655,11 +656,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Char}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Char}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator char?(JToken value)
+        public static explicit operator char?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -703,11 +704,11 @@ namespace Difftaculous.ZModel
 
 #if false
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Int16"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Int16"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator short(JToken value)
+        public static explicit operator short(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -722,12 +723,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.UInt16"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.UInt16"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ushort(JToken value)
+        public static explicit operator ushort(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -742,12 +743,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Char"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Char"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator char(JToken value)
+        public static explicit operator char(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, CharTypes, false))
@@ -762,11 +763,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Byte"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Byte"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator byte(JToken value)
+        public static explicit operator byte(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -781,12 +782,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.SByte"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.SByte"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator sbyte(JToken value)
+        public static explicit operator sbyte(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -801,11 +802,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Int32}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Int32}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator int?(JToken value)
+        public static explicit operator int?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -823,11 +824,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Int16}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Int16}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator short?(JToken value)
+        public static explicit operator short?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -845,12 +846,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{UInt16}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{UInt16}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ushort?(JToken value)
+        public static explicit operator ushort?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -868,11 +869,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Byte}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Byte}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator byte?(JToken value)
+        public static explicit operator byte?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -890,12 +891,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{SByte}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{SByte}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator sbyte?(JToken value)
+        public static explicit operator sbyte?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -913,11 +914,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.DateTime"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.DateTime"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTime(JToken value)
+        public static explicit operator DateTime(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, DateTimeTypes, false))
@@ -932,11 +933,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Int64}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Int64}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator long?(JToken value)
+        public static explicit operator long?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -954,11 +955,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{Single}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{Single}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator float?(JToken value)
+        public static explicit operator float?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -976,11 +977,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Decimal"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Decimal"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator decimal(JToken value)
+        public static explicit operator decimal(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -995,12 +996,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{UInt32}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{UInt32}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator uint?(JToken value)
+        public static explicit operator uint?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -1018,12 +1019,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="Nullable{UInt64}"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="Nullable{UInt64}"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ulong?(JToken value)
+        public static explicit operator ulong?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -1041,11 +1042,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Double"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Double"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator double(JToken value)
+        public static explicit operator double(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -1060,11 +1061,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Single"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Single"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator float(JToken value)
+        public static explicit operator float(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -1079,11 +1080,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.String"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.String"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator string(JToken value)
+        public static explicit operator string(ZToken value)
         {
             if (value == null)
                 return null;
@@ -1105,12 +1106,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.UInt32"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.UInt32"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator uint(JToken value)
+        public static explicit operator uint(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -1125,12 +1126,12 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.UInt64"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.UInt64"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ulong(JToken value)
+        public static explicit operator ulong(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, NumberTypes, false))
@@ -1145,11 +1146,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="T:System.Byte[]"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="T:System.Byte[]"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator byte[](JToken value)
+        public static explicit operator byte[](ZToken value)
         {
             if (value == null)
                 return null;
@@ -1172,11 +1173,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Guid"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Guid"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Guid(JToken value)
+        public static explicit operator Guid(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, GuidTypes, false))
@@ -1189,11 +1190,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Guid"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Guid"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Guid?(JToken value)
+        public static explicit operator Guid?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -1212,11 +1213,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.TimeSpan"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.TimeSpan"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator TimeSpan(JToken value)
+        public static explicit operator TimeSpan(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, TimeSpanTypes, false))
@@ -1226,11 +1227,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.TimeSpan"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.TimeSpan"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator TimeSpan?(JToken value)
+        public static explicit operator TimeSpan?(ZToken value)
         {
             if (value == null)
                 return null;
@@ -1246,11 +1247,11 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.JToken"/> to <see cref="System.Uri"/>.
+        /// Performs an explicit conversion from <see cref="Newtonsoft.Json.Linq.ZToken"/> to <see cref="System.Uri"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Uri(JToken value)
+        public static explicit operator Uri(ZToken value)
         {
             if (value == null)
                 return null;
@@ -1266,7 +1267,7 @@ namespace Difftaculous.ZModel
         }
 
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-        private static BigInteger ToBigInteger(JToken value)
+        private static BigInteger ToBigInteger(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, BigIntegerTypes, false))
@@ -1275,7 +1276,7 @@ namespace Difftaculous.ZModel
             return ConvertUtils.ToBigInteger(v.Value);
         }
 
-        private static BigInteger? ToBigIntegerNullable(JToken value)
+        private static BigInteger? ToBigIntegerNullable(ZToken value)
         {
             JValue v = EnsureValue(value);
             if (v == null || !ValidateToken(v, BigIntegerTypes, true))
@@ -1294,365 +1295,365 @@ namespace Difftaculous.ZModel
 #if false
         #region Cast to operators
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Boolean"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Boolean"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(bool value)
+        public static implicit operator ZToken(bool value)
         {
             return new JValue(value);
         }
 
 #if !NET20
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DateTimeOffset"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="DateTimeOffset"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(DateTimeOffset value)
+        public static implicit operator ZToken(DateTimeOffset value)
         {
             return new JValue(value);
         }
 #endif
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Byte"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Byte"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(byte value)
+        public static implicit operator ZToken(byte value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Byte}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Byte}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(byte? value)
+        public static implicit operator ZToken(byte? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SByte"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="SByte"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(sbyte value)
+        public static implicit operator ZToken(sbyte value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{SByte}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{SByte}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(sbyte? value)
+        public static implicit operator ZToken(sbyte? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Boolean}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Boolean}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(bool? value)
+        public static implicit operator ZToken(bool? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Int64}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Int64}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(long value)
+        public static implicit operator ZToken(long value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{DateTime}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{DateTime}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(DateTime? value)
+        public static implicit operator ZToken(DateTime? value)
         {
             return new JValue(value);
         }
 
 #if !NET20
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{DateTimeOffset}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{DateTimeOffset}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(DateTimeOffset? value)
+        public static implicit operator ZToken(DateTimeOffset? value)
         {
             return new JValue(value);
         }
 #endif
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Decimal}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Decimal}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(decimal? value)
+        public static implicit operator ZToken(decimal? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Double}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Double}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(double? value)
+        public static implicit operator ZToken(double? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Int16"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Int16"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(short value)
+        public static implicit operator ZToken(short value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="UInt16"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="UInt16"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ushort value)
+        public static implicit operator ZToken(ushort value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Int32"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Int32"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(int value)
+        public static implicit operator ZToken(int value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Int32}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Int32}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(int? value)
+        public static implicit operator ZToken(int? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DateTime"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="DateTime"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(DateTime value)
+        public static implicit operator ZToken(DateTime value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Int64}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Int64}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(long? value)
+        public static implicit operator ZToken(long? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Single}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Single}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(float? value)
+        public static implicit operator ZToken(float? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Decimal"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Decimal"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(decimal value)
+        public static implicit operator ZToken(decimal value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Int16}"/> to <see cref="JToken"/>.
-        /// </summary>
-        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
-        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
-        public static implicit operator JToken(short? value)
-        {
-            return new JValue(value);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{UInt16}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{Int16}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ushort? value)
+        public static implicit operator ZToken(short? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{UInt32}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{UInt16}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(uint? value)
+        public static implicit operator ZToken(ushort? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{UInt64}"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{UInt32}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ulong? value)
+        public static implicit operator ZToken(uint? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Double"/> to <see cref="JToken"/>.
-        /// </summary>
-        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
-        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(double value)
-        {
-            return new JValue(value);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Single"/> to <see cref="JToken"/>.
-        /// </summary>
-        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
-        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(float value)
-        {
-            return new JValue(value);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="String"/> to <see cref="JToken"/>.
-        /// </summary>
-        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
-        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(string value)
-        {
-            return new JValue(value);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="UInt32"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{UInt64}"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(uint value)
+        public static implicit operator ZToken(ulong? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="UInt64"/> to <see cref="JToken"/>.
+        /// Performs an implicit conversion from <see cref="Double"/> to <see cref="ZToken"/>.
+        /// </summary>
+        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
+        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
+        public static implicit operator ZToken(double value)
+        {
+            return new JValue(value);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Single"/> to <see cref="ZToken"/>.
+        /// </summary>
+        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
+        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
+        public static implicit operator ZToken(float value)
+        {
+            return new JValue(value);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="String"/> to <see cref="ZToken"/>.
+        /// </summary>
+        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
+        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
+        public static implicit operator ZToken(string value)
+        {
+            return new JValue(value);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="UInt32"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ulong value)
+        public static implicit operator ZToken(uint value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="T:System.Byte[]"/> to <see cref="Newtonsoft.Json.Linq.JToken"/>.
+        /// Performs an implicit conversion from <see cref="UInt64"/> to <see cref="ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(byte[] value)
+        [CLSCompliant(false)]
+        public static implicit operator ZToken(ulong value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="T:System.Uri"/> to <see cref="Newtonsoft.Json.Linq.JToken"/>.
+        /// Performs an implicit conversion from <see cref="T:System.Byte[]"/> to <see cref="Newtonsoft.Json.Linq.ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(Uri value)
+        public static implicit operator ZToken(byte[] value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="T:System.TimeSpan"/> to <see cref="Newtonsoft.Json.Linq.JToken"/>.
+        /// Performs an implicit conversion from <see cref="T:System.Uri"/> to <see cref="Newtonsoft.Json.Linq.ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(TimeSpan value)
+        public static implicit operator ZToken(Uri value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{TimeSpan}"/> to <see cref="Newtonsoft.Json.Linq.JToken"/>.
+        /// Performs an implicit conversion from <see cref="T:System.TimeSpan"/> to <see cref="Newtonsoft.Json.Linq.ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(TimeSpan? value)
+        public static implicit operator ZToken(TimeSpan value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="T:System.Guid"/> to <see cref="Newtonsoft.Json.Linq.JToken"/>.
+        /// Performs an implicit conversion from <see cref="Nullable{TimeSpan}"/> to <see cref="Newtonsoft.Json.Linq.ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(Guid value)
+        public static implicit operator ZToken(TimeSpan? value)
         {
             return new JValue(value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Nullable{Guid}"/> to <see cref="Newtonsoft.Json.Linq.JToken"/>.
+        /// Performs an implicit conversion from <see cref="T:System.Guid"/> to <see cref="Newtonsoft.Json.Linq.ZToken"/>.
         /// </summary>
         /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
         /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
-        public static implicit operator JToken(Guid? value)
+        public static implicit operator ZToken(Guid value)
+        {
+            return new JValue(value);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Nullable{Guid}"/> to <see cref="Newtonsoft.Json.Linq.ZToken"/>.
+        /// </summary>
+        /// <param name="value">The value to create a <see cref="JValue"/> from.</param>
+        /// <returns>The <see cref="JValue"/> initialized with the specified value.</returns>
+        public static implicit operator ZToken(Guid? value)
         {
             return new JValue(value);
         }
@@ -1689,16 +1690,16 @@ namespace Difftaculous.ZModel
         /// <returns>An <see cref="JsonReader"/> that can be used to read this token and its descendants.</returns>
         public JsonReader CreateReader()
         {
-            return new JTokenReader(this, Path);
+            return new ZTokenReader(this, Path);
         }
 
-        internal static JToken FromObjectInternal(object o, JsonSerializer jsonSerializer)
+        internal static ZToken FromObjectInternal(object o, JsonSerializer jsonSerializer)
         {
             ValidationUtils.ArgumentNotNull(o, "o");
             ValidationUtils.ArgumentNotNull(jsonSerializer, "jsonSerializer");
 
-            JToken token;
-            using (JTokenWriter jsonWriter = new JTokenWriter())
+            ZToken token;
+            using (ZTokenWriter jsonWriter = new ZTokenWriter())
             {
                 jsonSerializer.Serialize(jsonWriter, o);
                 token = jsonWriter.Token;
@@ -1708,28 +1709,28 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Creates a <see cref="JToken"/> from an object.
+        /// Creates a <see cref="ZToken"/> from an object.
         /// </summary>
-        /// <param name="o">The object that will be used to create <see cref="JToken"/>.</param>
-        /// <returns>A <see cref="JToken"/> with the value of the specified object</returns>
-        public static JToken FromObject(object o)
+        /// <param name="o">The object that will be used to create <see cref="ZToken"/>.</param>
+        /// <returns>A <see cref="ZToken"/> with the value of the specified object</returns>
+        public static ZToken FromObject(object o)
         {
             return FromObjectInternal(o, JsonSerializer.CreateDefault());
         }
 
         /// <summary>
-        /// Creates a <see cref="JToken"/> from an object using the specified <see cref="JsonSerializer"/>.
+        /// Creates a <see cref="ZToken"/> from an object using the specified <see cref="JsonSerializer"/>.
         /// </summary>
-        /// <param name="o">The object that will be used to create <see cref="JToken"/>.</param>
+        /// <param name="o">The object that will be used to create <see cref="ZToken"/>.</param>
         /// <param name="jsonSerializer">The <see cref="JsonSerializer"/> that will be used when reading the object.</param>
-        /// <returns>A <see cref="JToken"/> with the value of the specified object</returns>
-        public static JToken FromObject(object o, JsonSerializer jsonSerializer)
+        /// <returns>A <see cref="ZToken"/> with the value of the specified object</returns>
+        public static ZToken FromObject(object o, JsonSerializer jsonSerializer)
         {
             return FromObjectInternal(o, jsonSerializer);
         }
 
         /// <summary>
-        /// Creates the specified .NET type from the <see cref="JToken"/>.
+        /// Creates the specified .NET type from the <see cref="ZToken"/>.
         /// </summary>
         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
         /// <returns>The new object created from the JSON value.</returns>
@@ -1739,7 +1740,7 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Creates the specified .NET type from the <see cref="JToken"/>.
+        /// Creates the specified .NET type from the <see cref="ZToken"/>.
         /// </summary>
         /// <param name="objectType">The object type that the token will be deserialized to.</param>
         /// <returns>The new object created from the JSON value.</returns>
@@ -1838,7 +1839,7 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Creates the specified .NET type from the <see cref="JToken"/> using the specified <see cref="JsonSerializer"/>.
+        /// Creates the specified .NET type from the <see cref="ZToken"/> using the specified <see cref="JsonSerializer"/>.
         /// </summary>
         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
         /// <param name="jsonSerializer">The <see cref="JsonSerializer"/> that will be used when creating the object.</param>
@@ -1849,7 +1850,7 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Creates the specified .NET type from the <see cref="JToken"/> using the specified <see cref="JsonSerializer"/>.
+        /// Creates the specified .NET type from the <see cref="ZToken"/> using the specified <see cref="JsonSerializer"/>.
         /// </summary>
         /// <param name="objectType">The object type that the token will be deserialized to.</param>
         /// <param name="jsonSerializer">The <see cref="JsonSerializer"/> that will be used when creating the object.</param>
@@ -1858,29 +1859,29 @@ namespace Difftaculous.ZModel
         {
             ValidationUtils.ArgumentNotNull(jsonSerializer, "jsonSerializer");
 
-            using (JTokenReader jsonReader = new JTokenReader(this))
+            using (ZTokenReader jsonReader = new ZTokenReader(this))
             {
                 return jsonSerializer.Deserialize(jsonReader, objectType);
             }
         }
 
         /// <summary>
-        /// Creates a <see cref="JToken"/> from a <see cref="JsonReader"/>.
+        /// Creates a <see cref="ZToken"/> from a <see cref="JsonReader"/>.
         /// </summary>
-        /// <param name="reader">An <see cref="JsonReader"/> positioned at the token to read into this <see cref="JToken"/>.</param>
+        /// <param name="reader">An <see cref="JsonReader"/> positioned at the token to read into this <see cref="ZToken"/>.</param>
         /// <returns>
-        /// An <see cref="JToken"/> that contains the token and its descendant tokens
+        /// An <see cref="ZToken"/> that contains the token and its descendant tokens
         /// that were read from the reader. The runtime type of the token is determined
         /// by the token type of the first token encountered in the reader.
         /// </returns>
-        public static JToken ReadFrom(JsonReader reader)
+        public static ZToken ReadFrom(JsonReader reader)
         {
             ValidationUtils.ArgumentNotNull(reader, "reader");
 
             if (reader.TokenType == JsonToken.None)
             {
                 if (!reader.Read())
-                    throw JsonReaderException.Create(reader, "Error reading JToken from JsonReader.");
+                    throw JsonReaderException.Create(reader, "Error reading ZToken from JsonReader.");
             }
 
             IJsonLineInfo lineInfo = reader as IJsonLineInfo;
@@ -1917,20 +1918,20 @@ namespace Difftaculous.ZModel
                     v.SetLineInfo(lineInfo);
                     return v;
                 default:
-                    throw JsonReaderException.Create(reader, "Error reading JToken from JsonReader. Unexpected token: {0}".FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+                    throw JsonReaderException.Create(reader, "Error reading ZToken from JsonReader. Unexpected token: {0}".FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
             }
         }
 
         /// <summary>
-        /// Load a <see cref="JToken"/> from a string that contains JSON.
+        /// Load a <see cref="ZToken"/> from a string that contains JSON.
         /// </summary>
         /// <param name="json">A <see cref="String"/> that contains JSON.</param>
-        /// <returns>A <see cref="JToken"/> populated from the string that contains JSON.</returns>
-        public static JToken Parse(string json)
+        /// <returns>A <see cref="ZToken"/> populated from the string that contains JSON.</returns>
+        public static ZToken Parse(string json)
         {
             using (JsonReader reader = new JsonTextReader(new StringReader(json)))
             {
-                JToken t = Load(reader);
+                ZToken t = Load(reader);
 
                 if (reader.Read() && reader.TokenType != JsonToken.Comment)
                     throw JsonReaderException.Create(reader, "Additional text found in JSON string after parsing content.");
@@ -1940,15 +1941,15 @@ namespace Difftaculous.ZModel
         }
 
         /// <summary>
-        /// Creates a <see cref="JToken"/> from a <see cref="JsonReader"/>.
+        /// Creates a <see cref="ZToken"/> from a <see cref="JsonReader"/>.
         /// </summary>
-        /// <param name="reader">An <see cref="JsonReader"/> positioned at the token to read into this <see cref="JToken"/>.</param>
+        /// <param name="reader">An <see cref="JsonReader"/> positioned at the token to read into this <see cref="ZToken"/>.</param>
         /// <returns>
-        /// An <see cref="JToken"/> that contains the token and its descendant tokens
+        /// An <see cref="ZToken"/> that contains the token and its descendant tokens
         /// that were read from the reader. The runtime type of the token is determined
         /// by the token type of the first token encountered in the reader.
         /// </returns>
-        public static JToken Load(JsonReader reader)
+        public static ZToken Load(JsonReader reader)
         {
             return ReadFrom(reader);
         }
@@ -2031,7 +2032,7 @@ namespace Difftaculous.ZModel
         /// </returns>
         protected virtual DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return new DynamicProxyMetaObject<JToken>(parameter, this, new DynamicProxy<JToken>(), true);
+            return new DynamicProxyMetaObject<ZToken>(parameter, this, new DynamicProxy<ZToken>(), true);
         }
 
         /// <summary>
@@ -2055,10 +2056,10 @@ namespace Difftaculous.ZModel
 #endif
 
         /// <summary>
-        /// Creates a new instance of the <see cref="JToken"/>. All child tokens are recursively cloned.
+        /// Creates a new instance of the <see cref="ZToken"/>. All child tokens are recursively cloned.
         /// </summary>
-        /// <returns>A new instance of the <see cref="JToken"/>.</returns>
-        public JToken DeepClone()
+        /// <returns>A new instance of the <see cref="ZToken"/>.</returns>
+        public ZToken DeepClone()
         {
             return CloneToken();
         }

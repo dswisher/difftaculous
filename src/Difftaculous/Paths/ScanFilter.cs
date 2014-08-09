@@ -13,14 +13,13 @@ namespace Difftaculous.Paths
 
         public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
         {
-#if false
-            foreach (JToken root in current)
+            foreach (ZToken root in current)
             {
                 if (Name == null)
                     yield return root;
 
-                JToken value = root;
-                JToken container = root;
+                ZToken value = root;
+                ZToken container = root;
 
                 while (true)
                 {
@@ -41,7 +40,8 @@ namespace Difftaculous.Paths
                         value = value.Next;
                     }
 
-                    JProperty e = value as JProperty;
+                    ZProperty e = value as ZProperty;
+
                     if (e != null)
                     {
                         if (e.Name == Name)
@@ -53,12 +53,9 @@ namespace Difftaculous.Paths
                             yield return value;
                     }
 
-                    container = value as JContainer;
+                    container = value as ZContainer;
                 }
             }
-#endif
-
-            throw new NotImplementedException();
         }
 
 

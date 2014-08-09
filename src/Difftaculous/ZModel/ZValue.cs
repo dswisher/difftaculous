@@ -1,6 +1,8 @@
 ﻿
 
 using System;
+using System.Globalization;
+using System.Numerics;
 
 namespace Difftaculous.ZModel
 {
@@ -175,8 +177,7 @@ namespace Difftaculous.ZModel
 
 
 
-#if false
-        internal override bool DeepEquals(JToken node)
+        internal override bool DeepEquals(ZToken node)
         {
             ZValue other = node as ZValue;
             if (other == null)
@@ -186,7 +187,6 @@ namespace Difftaculous.ZModel
 
             return ValuesEquals(this, other);
         }
-#endif
 
 
 
@@ -203,7 +203,6 @@ namespace Difftaculous.ZModel
 
 
 
-#if false
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
         private static int CompareBigInteger(BigInteger i1, object i2)
         {
@@ -229,6 +228,8 @@ namespace Difftaculous.ZModel
         }
 #endif
 
+
+
         internal static int Compare(TokenType valueType, object objA, object objB)
         {
             if (objA == null && objB == null)
@@ -253,6 +254,7 @@ namespace Difftaculous.ZModel
                         return CompareFloat(objA, objB);
                     else
                         return Convert.ToInt64(objA, CultureInfo.InvariantCulture).CompareTo(Convert.ToInt64(objB, CultureInfo.InvariantCulture));
+
                 case TokenType.Float:
 #if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
                     if (objA is BigInteger)
@@ -261,18 +263,22 @@ namespace Difftaculous.ZModel
                         return -CompareBigInteger((BigInteger)objB, objA);
 #endif
                     return CompareFloat(objA, objB);
+
                 case TokenType.Comment:
                 case TokenType.String:
-                case TokenType.Raw:
+                //case TokenType.Raw:
                     string s1 = Convert.ToString(objA, CultureInfo.InvariantCulture);
                     string s2 = Convert.ToString(objB, CultureInfo.InvariantCulture);
 
                     return string.CompareOrdinal(s1, s2);
+
                 case TokenType.Boolean:
                     bool b1 = Convert.ToBoolean(objA, CultureInfo.InvariantCulture);
                     bool b2 = Convert.ToBoolean(objB, CultureInfo.InvariantCulture);
 
                     return b1.CompareTo(b2);
+
+#if false
                 case TokenType.Date:
 #if !NET20
                     if (objA is DateTime)
@@ -340,10 +346,13 @@ namespace Difftaculous.ZModel
                     TimeSpan ts2 = (TimeSpan)objB;
 
                     return ts1.CompareTo(ts2);
+#endif
                 default:
-                    throw MiscellaneousUtils.CreateArgumentOutOfRangeException("valueType", valueType, "Unexpected value type: {0}".FormatWith(CultureInfo.InvariantCulture, valueType));
+                    throw MiscellaneousUtils.CreateArgumentOutOfRangeException("valueType", valueType, string.Format("Unexpected value type: {0}", valueType));
             }
         }
+
+
 
         private static int CompareFloat(object objA, object objB)
         {
@@ -357,6 +366,9 @@ namespace Difftaculous.ZModel
             return d1.CompareTo(d2);
         }
 
+
+
+#if false
 #if !(NET35 || NET20 || PORTABLE40)
         private static bool Operation(ExpressionType operation, object objA, object objB, out object result)
         {
@@ -731,12 +743,16 @@ namespace Difftaculous.ZModel
 
             return _valueType.GetHashCode() ^ valueHashCode;
         }
+#endif
+
 
         private static bool ValuesEquals(ZValue v1, ZValue v2)
         {
             return (v1 == v2 || (v1._valueType == v2._valueType && Compare(v1._valueType, v1._value, v2._value) == 0));
         }
 
+
+#if false
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>

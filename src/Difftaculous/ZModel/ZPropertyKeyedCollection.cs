@@ -23,7 +23,7 @@ namespace Difftaculous.ZModel
 
 
 #if false
-        protected void ChangeItemKey(JToken item, string newKey)
+        protected void ChangeItemKey(ZToken item, string newKey)
         {
             if (!ContainsItem(item))
                 throw new ArgumentException("The specified item does not exist in this KeyedCollection.");
@@ -63,13 +63,13 @@ namespace Difftaculous.ZModel
 
 
 #if false
-        private bool ContainsItem(JToken item)
+        private bool ContainsItem(ZToken item)
         {
             if (_dictionary == null)
                 return false;
 
             string key = GetKeyForItem(item);
-            JToken value;
+            ZToken value;
             return _dictionary.TryGetValue(key, out value);
         }
 #endif
@@ -123,7 +123,7 @@ namespace Difftaculous.ZModel
                 _dictionary.Remove(key);
         }
 
-        protected override void SetItem(int index, JToken item)
+        protected override void SetItem(int index, ZToken item)
         {
             string keyForItem = GetKeyForItem(item);
             string keyAtIndex = GetKeyForItem(Items[index]);
@@ -143,7 +143,7 @@ namespace Difftaculous.ZModel
             base.SetItem(index, item);
         }
 
-        public JToken this[string key]
+        public ZToken this[string key]
         {
             get
             {
@@ -191,16 +191,16 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
-        public bool Compare(JPropertyKeyedCollection other)
+
+        public bool Compare(ZPropertyKeyedCollection other)
         {
             if (this == other)
                 return true;
 
             // dictionaries in JavaScript aren't ordered
             // ignore order when comparing properties
-            Dictionary<string, JToken> d1 = _dictionary;
-            Dictionary<string, JToken> d2 = other._dictionary;
+            Dictionary<string, ZToken> d1 = _dictionary;
+            Dictionary<string, ZToken> d2 = other._dictionary;
 
             if (d1 == null && d2 == null)
                 return true;
@@ -214,14 +214,14 @@ namespace Difftaculous.ZModel
             if (d1.Count != d2.Count)
                 return false;
 
-            foreach (KeyValuePair<string, JToken> keyAndProperty in d1)
+            foreach (KeyValuePair<string, ZToken> keyAndProperty in d1)
             {
-                JToken secondValue;
+                ZToken secondValue;
                 if (!d2.TryGetValue(keyAndProperty.Key, out secondValue))
                     return false;
 
-                JProperty p1 = (JProperty)keyAndProperty.Value;
-                JProperty p2 = (JProperty)secondValue;
+                ZProperty p1 = (ZProperty)keyAndProperty.Value;
+                ZProperty p2 = (ZProperty)secondValue;
 
                 if (p1.Value == null)
                     return (p2.Value == null);
@@ -232,7 +232,5 @@ namespace Difftaculous.ZModel
 
             return true;
         }
-#endif
-
     }
 }

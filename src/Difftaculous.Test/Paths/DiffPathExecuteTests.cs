@@ -22,9 +22,9 @@ namespace Difftaculous.Test.Paths
     'test': 'no one will find me'
 }";
 
-            JObject o = JObject.Parse(json);
+            ZObject o = ZObject.Parse(json);
 
-            IList<JToken> results = o.SelectTokens("$..test").ToList();
+            IList<ZToken> results = o.SelectTokens("$..test").ToList();
 
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("no one will find me", (string)results[0]);
@@ -34,7 +34,7 @@ namespace Difftaculous.Test.Paths
         public void EvaluatePropertyWithRequired()
         {
             string json = "{\"bookId\":\"1000\"}";
-            JObject o = JObject.Parse(json);
+            ZObject o = ZObject.Parse(json);
 
             string bookId = (string)o.SelectToken("bookId", true);
 
@@ -44,20 +44,20 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateEmptyPropertyIndexer()
         {
-            JObject o = new JObject(
-                new JProperty("", 1));
+            ZObject o = new ZObject(
+                new ZProperty("", 1));
 
-            JToken t = o.SelectToken("['']");
+            ZToken t = o.SelectToken("['']");
             Assert.AreEqual(1, (int)t);
         }
 
         [Test]
         public void EvaluateEmptyString()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
-            JToken t = o.SelectToken("");
+            ZToken t = o.SelectToken("");
             Assert.AreEqual(o, t);
 
             t = o.SelectToken("['']");
@@ -67,20 +67,20 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateEmptyStringWithMatchingEmptyProperty()
         {
-            JObject o = new JObject(
-                new JProperty(" ", 1));
+            ZObject o = new ZObject(
+                new ZProperty(" ", 1));
 
-            JToken t = o.SelectToken("[' ']");
+            ZToken t = o.SelectToken("[' ']");
             Assert.AreEqual(1, (int)t);
         }
 
         [Test]
         public void EvaluateWhitespaceString()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
-            JToken t = o.SelectToken(" ");
+            ZToken t = o.SelectToken(" ");
             Assert.AreEqual(o, t);
         }
 #endif
@@ -136,81 +136,81 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void QuoteName()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
-            JToken t = o.SelectToken("['Blah']");
+            ZToken t = o.SelectToken("['Blah']");
             Assert.IsNotNull(t);
-            Assert.AreEqual(JTokenType.Integer, t.Type);
+            Assert.AreEqual(ZTokenType.Integer, t.Type);
             Assert.AreEqual(1, (int)t);
         }
 
         [Test]
         public void EvaluateMissingProperty()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
-            JToken t = o.SelectToken("Missing[1]");
+            ZToken t = o.SelectToken("Missing[1]");
             Assert.IsNull(t);
         }
 
         [Test]
         public void EvaluateIndexerOnObject()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
-            JToken t = o.SelectToken("[1]");
+            ZToken t = o.SelectToken("[1]");
             Assert.IsNull(t);
         }
 
         [Test]
         public void EvaluateIndexerOnObjectWithError()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
             ExceptionAssert.Throws<JsonException>(
-                @"Index 1 not valid on JObject.",
+                @"Index 1 not valid on ZObject.",
                 () => { o.SelectToken("[1]", true); });
         }
 
         [Test]
         public void EvaluateWildcardIndexOnObjectWithError()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
             ExceptionAssert.Throws<JsonException>(
-                @"Index * not valid on JObject.",
+                @"Index * not valid on ZObject.",
                 () => { o.SelectToken("[*]", true); });
         }
 
         [Test]
         public void EvaluateSliceOnObjectWithError()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
             ExceptionAssert.Throws<JsonException>(
-                @"Array slice is not valid on JObject.",
+                @"Array slice is not valid on ZObject.",
                 () => { o.SelectToken("[:]", true); });
         }
 
         [Test]
         public void EvaluatePropertyOnArray()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            JToken t = a.SelectToken("BlahBlah");
+            ZToken t = a.SelectToken("BlahBlah");
             Assert.IsNull(t);
         }
 
         [Test]
         public void EvaluateMultipleResultsError()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
             ExceptionAssert.Throws<JsonException>(
                 @"Path returned multiple tokens.",
@@ -220,20 +220,20 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluatePropertyOnArrayWithError()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
             ExceptionAssert.Throws<JsonException>(
-                @"Property 'BlahBlah' not valid on JArray.",
+                @"Property 'BlahBlah' not valid on ZArray.",
                 () => { a.SelectToken("BlahBlah", true); });
         }
 
         [Test]
         public void EvaluateNoResultsWithMultipleArrayIndexes()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
             ExceptionAssert.Throws<JsonException>(
-                @"Index 9 outside the bounds of JArray.",
+                @"Index 9 outside the bounds of ZArray.",
                 () => { a.SelectToken("[9,10]", true); });
         }
 
@@ -258,19 +258,19 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateMissingPropertyWithError()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
             ExceptionAssert.Throws<JsonException>(
-                "Property 'Missing' does not exist on JObject.",
+                "Property 'Missing' does not exist on ZObject.",
                 () => { o.SelectToken("Missing", true); });
         }
 
         [Test]
         public void EvaluatePropertyWithoutError()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
             JValue v = (JValue)o.SelectToken("Blah", true);
             Assert.AreEqual(1, v.Value);
@@ -279,28 +279,28 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateMissingPropertyIndexWithError()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", 1));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", 1));
 
             ExceptionAssert.Throws<JsonException>(
-                "Property 'Missing' does not exist on JObject.",
+                "Property 'Missing' does not exist on ZObject.",
                 () => { o.SelectToken("['Missing','Missing2']", true); });
         }
 
         [Test]
         public void EvaluateMultiPropertyIndexOnArrayWithError()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
             ExceptionAssert.Throws<JsonException>(
-                "Properties 'Missing', 'Missing2' not valid on JArray.",
+                "Properties 'Missing', 'Missing2' not valid on ZArray.",
                 () => { a.SelectToken("['Missing','Missing2']", true); });
         }
 
         [Test]
         public void EvaluateArraySliceWithError()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
             ExceptionAssert.Throws<JsonException>(
                 "Array slice of 99 to * returned no results.",
@@ -314,7 +314,7 @@ namespace Difftaculous.Test.Paths
                 "Array slice of * to -19 returned no results.",
                 () => { a.SelectToken("[:-19]", true); });
 
-            a = new JArray();
+            a = new ZArray();
 
             ExceptionAssert.Throws<JsonException>(
                 "Array slice of * to * returned no results.",
@@ -324,38 +324,38 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateOutOfBoundsIndxer()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            JToken t = a.SelectToken("[1000].Ha");
+            ZToken t = a.SelectToken("[1000].Ha");
             Assert.IsNull(t);
         }
 
         [Test]
         public void EvaluateArrayOutOfBoundsIndxerWithError()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
             ExceptionAssert.Throws<JsonException>(
-                "Index 1000 outside the bounds of JArray.",
+                "Index 1000 outside the bounds of ZArray.",
                 () => { a.SelectToken("[1000].Ha", true); });
         }
 
         [Test]
         public void EvaluateArray()
         {
-            JArray a = new JArray(1, 2, 3, 4);
+            ZArray a = new ZArray(1, 2, 3, 4);
 
-            JToken t = a.SelectToken("[1]");
+            ZToken t = a.SelectToken("[1]");
             Assert.IsNotNull(t);
-            Assert.AreEqual(JTokenType.Integer, t.Type);
+            Assert.AreEqual(ZTokenType.Integer, t.Type);
             Assert.AreEqual(2, (int)t);
         }
 
         [Test]
         public void EvaluateArraySlice()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5, 6, 7, 8, 9);
-            IList<JToken> t = null;
+            ZArray a = new ZArray(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            IList<ZToken> t = null;
 
             t = a.SelectTokens("[-3:]").ToList();
             Assert.AreEqual(3, t.Count);
@@ -420,9 +420,9 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateArrayMultipleIndexes()
         {
-            JArray a = new JArray(1, 2, 3, 4);
+            ZArray a = new ZArray(1, 2, 3, 4);
 
-            IEnumerable<JToken> t = a.SelectTokens("[1,2,0]");
+            IEnumerable<ZToken> t = a.SelectTokens("[1,2,0]");
             Assert.IsNotNull(t);
             Assert.AreEqual(3, t.Count());
             Assert.AreEqual(2, (int)t.ElementAt(0));
@@ -433,11 +433,11 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateScan()
         {
-            JObject o1 = new JObject { { "Name", 1 } };
-            JObject o2 = new JObject { { "Name", 2 } };
-            JArray a = new JArray(o1, o2);
+            ZObject o1 = new ZObject { { "Name", 1 } };
+            ZObject o2 = new ZObject { { "Name", 2 } };
+            ZArray a = new ZArray(o1, o2);
 
-            IList<JToken> t = a.SelectTokens("$..Name").ToList();
+            IList<ZToken> t = a.SelectTokens("$..Name").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.AreEqual(1, (int)t[0]);
@@ -447,23 +447,23 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateWildcardScan()
         {
-            JObject o1 = new JObject { { "Name", 1 } };
-            JObject o2 = new JObject { { "Name", 2 } };
-            JArray a = new JArray(o1, o2);
+            ZObject o1 = new ZObject { { "Name", 1 } };
+            ZObject o2 = new ZObject { { "Name", 2 } };
+            ZArray a = new ZArray(o1, o2);
 
-            IList<JToken> t = a.SelectTokens("$..*").ToList();
+            IList<ZToken> t = a.SelectTokens("$..*").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(5, t.Count);
-            Assert.IsTrue(JToken.DeepEquals(a, t[0]));
-            Assert.IsTrue(JToken.DeepEquals(o1, t[1]));
+            Assert.IsTrue(ZToken.DeepEquals(a, t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(o1, t[1]));
             Assert.AreEqual(1, (int)t[2]);
-            Assert.IsTrue(JToken.DeepEquals(o2, t[3]));
+            Assert.IsTrue(ZToken.DeepEquals(o2, t[3]));
             Assert.AreEqual(2, (int)t[4]);
         }
 #endif
 
 
-        [Test, Ignore("Get this working!")]
+        [Test]
         public void EvaluateScanNestResults()
         {
             ZObject o1 = new ZObject(new ZProperty("Name", 1));
@@ -476,58 +476,54 @@ namespace Difftaculous.Test.Paths
             t.Count.ShouldBe(4);
             ((int)t[0]).ShouldBe(1);
             ((int)t[1]).ShouldBe(2);
-            // TODO - assert these, too!
-            //Assert.IsTrue(JToken.DeepEquals(new JObject { { "Name", new JArray(3) } }, t[2]));
-            //Assert.IsTrue(JToken.DeepEquals(new JArray(3), t[3]));
+            ZToken.DeepEquals(new ZObject { { "Name", new ZArray(3) } }, t[2]).ShouldBe(true);
+            ZToken.DeepEquals(new ZArray(3), t[3]).ShouldBe(true);
         }
 
 
 #if false
-
-
-
         [Test]
         public void EvaluateWildcardScanNestResults()
         {
-            JObject o1 = new JObject { { "Name", 1 } };
-            JObject o2 = new JObject { { "Name", 2 } };
-            JObject o3 = new JObject { { "Name", new JObject { { "Name", new JArray(3) } } } };
-            JArray a = new JArray(o1, o2, o3);
+            ZObject o1 = new ZObject { { "Name", 1 } };
+            ZObject o2 = new ZObject { { "Name", 2 } };
+            ZObject o3 = new ZObject { { "Name", new ZObject { { "Name", new ZArray(3) } } } };
+            ZArray a = new ZArray(o1, o2, o3);
 
-            IList<JToken> t = a.SelectTokens("$..*").ToList();
+            IList<ZToken> t = a.SelectTokens("$..*").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(9, t.Count);
 
-            Assert.IsTrue(JToken.DeepEquals(a, t[0]));
-            Assert.IsTrue(JToken.DeepEquals(o1, t[1]));
+            Assert.IsTrue(ZToken.DeepEquals(a, t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(o1, t[1]));
             Assert.AreEqual(1, (int)t[2]);
-            Assert.IsTrue(JToken.DeepEquals(o2, t[3]));
+            Assert.IsTrue(ZToken.DeepEquals(o2, t[3]));
             Assert.AreEqual(2, (int)t[4]);
-            Assert.IsTrue(JToken.DeepEquals(o3, t[5]));
-            Assert.IsTrue(JToken.DeepEquals(new JObject { { "Name", new JArray(3) } }, t[6]));
-            Assert.IsTrue(JToken.DeepEquals(new JArray(3), t[7]));
+            Assert.IsTrue(ZToken.DeepEquals(o3, t[5]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject { { "Name", new ZArray(3) } }, t[6]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZArray(3), t[7]));
             Assert.AreEqual(3, (int)t[8]);
         }
 
         [Test]
         public void EvaluateSinglePropertyReturningArray()
         {
-            JObject o = new JObject(
-                new JProperty("Blah", new[] { 1, 2, 3 }));
+            ZObject o = new ZObject(
+                new ZProperty("Blah", new[] { 1, 2, 3 }));
 
-            JToken t = o.SelectToken("Blah");
+            ZToken t = o.SelectToken("Blah");
             Assert.IsNotNull(t);
-            Assert.AreEqual(JTokenType.Array, t.Type);
+            Assert.AreEqual(ZTokenType.Array, t.Type);
 
             t = o.SelectToken("Blah[2]");
-            Assert.AreEqual(JTokenType.Integer, t.Type);
+            Assert.AreEqual(ZTokenType.Integer, t.Type);
             Assert.AreEqual(3, (int)t);
         }
 
         [Test]
         public void EvaluateLastSingleCharacterProperty()
         {
-            JObject o2 = JObject.Parse("{'People':[{'N':'Jeff'}]}");
+            ZObject o2 = ZObject.Parse("{'People':[{'N':'Jeff'}]}");
             string a2 = (string)o2.SelectToken("People[0].N");
 
             Assert.AreEqual("Jeff", a2);
@@ -536,46 +532,46 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void ExistsQuery()
         {
-            JArray a = new JArray(new JObject(new JProperty("hi", "ho")), new JObject(new JProperty("hi2", "ha")));
+            ZArray a = new ZArray(new ZObject(new ZProperty("hi", "ho")), new ZObject(new ZProperty("hi2", "ha")));
 
-            IList<JToken> t = a.SelectTokens("[ ?( @.hi ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens("[ ?( @.hi ) ]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(1, t.Count);
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", "ho")), t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", "ho")), t[0]));
         }
 
         [Test]
         public void EqualsQuery()
         {
-            JArray a = new JArray(
-                new JObject(new JProperty("hi", "ho")),
-                new JObject(new JProperty("hi", "ha")));
+            ZArray a = new ZArray(
+                new ZObject(new ZProperty("hi", "ho")),
+                new ZObject(new ZProperty("hi", "ha")));
 
-            IList<JToken> t = a.SelectTokens("[ ?( @.['hi'] == 'ha' ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens("[ ?( @.['hi'] == 'ha' ) ]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(1, t.Count);
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", "ha")), t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", "ha")), t[0]));
         }
 
         [Test]
         public void NotEqualsQuery()
         {
-            JArray a = new JArray(
-                new JArray(new JObject(new JProperty("hi", "ho"))),
-                new JArray(new JObject(new JProperty("hi", "ha"))));
+            ZArray a = new ZArray(
+                new ZArray(new ZObject(new ZProperty("hi", "ho"))),
+                new ZArray(new ZObject(new ZProperty("hi", "ha"))));
 
-            IList<JToken> t = a.SelectTokens("[ ?( @..hi <> 'ha' ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens("[ ?( @..hi <> 'ha' ) ]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(1, t.Count);
-            Assert.IsTrue(JToken.DeepEquals(new JArray(new JObject(new JProperty("hi", "ho"))), t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZArray(new ZObject(new ZProperty("hi", "ho"))), t[0]));
         }
 
         [Test]
         public void NoPathQuery()
         {
-            JArray a = new JArray(1, 2, 3);
+            ZArray a = new ZArray(1, 2, 3);
 
-            IList<JToken> t = a.SelectTokens("[ ?( @ > 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens("[ ?( @ > 1 ) ]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.AreEqual(2, (int)t[0]);
@@ -585,12 +581,12 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void MultipleQueries()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            ZArray a = new ZArray(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
             // json path does item based evaluation - http://www.sitepen.com/blog/2008/03/17/jsonpath-support/
             // first query resolves array to ints
             // int has no children to query
-            IList<JToken> t = a.SelectTokens("[?(@ <> 1)][?(@ <> 4)][?(@ < 7)]").ToList();
+            IList<ZToken> t = a.SelectTokens("[?(@ <> 1)][?(@ <> 4)][?(@ < 7)]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(0, t.Count);
         }
@@ -598,72 +594,72 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void GreaterQuery()
         {
-            JArray a = new JArray(
-                new JObject(new JProperty("hi", 1)),
-                new JObject(new JProperty("hi", 2)),
-                new JObject(new JProperty("hi", 3)));
+            ZArray a = new ZArray(
+                new ZObject(new ZProperty("hi", 1)),
+                new ZObject(new ZProperty("hi", 2)),
+                new ZObject(new ZProperty("hi", 3)));
 
-            IList<JToken> t = a.SelectTokens("[ ?( @.hi > 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens("[ ?( @.hi > 1 ) ]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 2)), t[0]));
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 3)), t[1]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 2)), t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 3)), t[1]));
         }
 
 #if !(PORTABLE || PORTABLE40 || NET35 || NET20)
         [Test]
         public void GreaterQueryBigInteger()
         {
-            JArray a = new JArray(
-                new JObject(new JProperty("hi", new BigInteger(1))),
-                new JObject(new JProperty("hi", new BigInteger(2))),
-                new JObject(new JProperty("hi", new BigInteger(3))));
+            ZArray a = new ZArray(
+                new ZObject(new ZProperty("hi", new BigInteger(1))),
+                new ZObject(new ZProperty("hi", new BigInteger(2))),
+                new ZObject(new ZProperty("hi", new BigInteger(3))));
 
-            IList<JToken> t = a.SelectTokens("[ ?( @.hi > 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens("[ ?( @.hi > 1 ) ]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 2)), t[0]));
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 3)), t[1]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 2)), t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 3)), t[1]));
         }
 #endif
 
         [Test]
         public void GreaterOrEqualQuery()
         {
-            JArray a = new JArray(
-                new JObject(new JProperty("hi", 1)),
-                new JObject(new JProperty("hi", 2)),
-                new JObject(new JProperty("hi", 2.0)),
-                new JObject(new JProperty("hi", 3)));
+            ZArray a = new ZArray(
+                new ZObject(new ZProperty("hi", 1)),
+                new ZObject(new ZProperty("hi", 2)),
+                new ZObject(new ZProperty("hi", 2.0)),
+                new ZObject(new ZProperty("hi", 3)));
 
-            IList<JToken> t = a.SelectTokens("[ ?( @.hi >= 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens("[ ?( @.hi >= 1 ) ]").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(4, t.Count);
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 1)), t[0]));
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 2)), t[1]));
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 2.0)), t[2]));
-            Assert.IsTrue(JToken.DeepEquals(new JObject(new JProperty("hi", 3)), t[3]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 1)), t[0]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 2)), t[1]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 2.0)), t[2]));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 3)), t[3]));
         }
 
         [Test]
         public void NestedQuery()
         {
-            JArray a = new JArray(
-                new JObject(
-                    new JProperty("name", "Bad Boys"),
-                    new JProperty("cast", new JArray(
-                        new JObject(new JProperty("name", "Will Smith"))))),
-                new JObject(
-                    new JProperty("name", "Independence Day"),
-                    new JProperty("cast", new JArray(
-                        new JObject(new JProperty("name", "Will Smith"))))),
-                new JObject(
-                    new JProperty("name", "The Rock"),
-                    new JProperty("cast", new JArray(
-                        new JObject(new JProperty("name", "Nick Cage")))))
+            ZArray a = new ZArray(
+                new ZObject(
+                    new ZProperty("name", "Bad Boys"),
+                    new ZProperty("cast", new ZArray(
+                        new ZObject(new ZProperty("name", "Will Smith"))))),
+                new ZObject(
+                    new ZProperty("name", "Independence Day"),
+                    new ZProperty("cast", new ZArray(
+                        new ZObject(new ZProperty("name", "Will Smith"))))),
+                new ZObject(
+                    new ZProperty("name", "The Rock"),
+                    new ZProperty("cast", new ZArray(
+                        new ZObject(new ZProperty("name", "Nick Cage")))))
                 );
 
-            IList<JToken> t = a.SelectTokens("[?(@.cast[?(@.name=='Will Smith')])].name").ToList();
+            IList<ZToken> t = a.SelectTokens("[?(@.cast[?(@.name=='Will Smith')])].name").ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.AreEqual("Bad Boys", (string)t[0]);
@@ -673,7 +669,7 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void PathWithConstructor()
         {
-            JArray a = JArray.Parse(@"[
+            ZArray a = ZArray.Parse(@"[
   {
     ""Property1"": [
       1,
@@ -702,7 +698,7 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void Example()
         {
-            JObject o = JObject.Parse(@"{
+            ZObject o = ZObject.Parse(@"{
         ""Stores"": [
           ""Lambton Quay"",
           ""Willis Street""

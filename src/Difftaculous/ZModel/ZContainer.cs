@@ -169,8 +169,7 @@ namespace Difftaculous.ZModel
 
 
 
-#if false
-        internal bool ContentsEqual(JContainer container)
+        internal bool ContentsEqual(ZContainer container)
         {
             if (container == this)
                 return true;
@@ -189,7 +188,6 @@ namespace Difftaculous.ZModel
 
             return true;
         }
-#endif
 
 
 
