@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using Difftaculous.Adapters;
 using Difftaculous.Paths;
 using Difftaculous.ZModel;
 using NUnit.Framework;
@@ -132,18 +133,18 @@ namespace Difftaculous.Test.Paths
         }
 
 
-#if false
         [Test]
         public void QuoteName()
         {
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ZToken t = o.SelectToken("['Blah']");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("['Blah']"));
             Assert.IsNotNull(t);
-            Assert.AreEqual(ZTokenType.Integer, t.Type);
+            Assert.AreEqual(TokenType.Integer, t.Type);
             Assert.AreEqual(1, (int)t);
         }
+
 
         [Test]
         public void EvaluateMissingProperty()
@@ -151,10 +152,13 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ZToken t = o.SelectToken("Missing[1]");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("Missing[1]"));
             Assert.IsNull(t);
         }
 
+
+
+#if false
         [Test]
         public void EvaluateIndexerOnObject()
         {
@@ -416,19 +420,20 @@ namespace Difftaculous.Test.Paths
         }
 
 
-#if false
+
         [Test]
         public void EvaluateArrayMultipleIndexes()
         {
             ZArray a = new ZArray(1, 2, 3, 4);
 
-            IEnumerable<ZToken> t = a.SelectTokens("[1,2,0]");
+            IEnumerable<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[1,2,0]"));
             Assert.IsNotNull(t);
             Assert.AreEqual(3, t.Count());
             Assert.AreEqual(2, (int)t.ElementAt(0));
             Assert.AreEqual(3, (int)t.ElementAt(1));
             Assert.AreEqual(1, (int)t.ElementAt(2));
         }
+
 
         [Test]
         public void EvaluateScan()
@@ -437,12 +442,13 @@ namespace Difftaculous.Test.Paths
             ZObject o2 = new ZObject { { "Name", 2 } };
             ZArray a = new ZArray(o1, o2);
 
-            IList<ZToken> t = a.SelectTokens("$..Name").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("$..Name")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.AreEqual(1, (int)t[0]);
             Assert.AreEqual(2, (int)t[1]);
         }
+
 
         [Test]
         public void EvaluateWildcardScan()
@@ -451,7 +457,7 @@ namespace Difftaculous.Test.Paths
             ZObject o2 = new ZObject { { "Name", 2 } };
             ZArray a = new ZArray(o1, o2);
 
-            IList<ZToken> t = a.SelectTokens("$..*").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("$..*")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(5, t.Count);
             Assert.IsTrue(ZToken.DeepEquals(a, t[0]));
@@ -460,7 +466,6 @@ namespace Difftaculous.Test.Paths
             Assert.IsTrue(ZToken.DeepEquals(o2, t[3]));
             Assert.AreEqual(2, (int)t[4]);
         }
-#endif
 
 
         [Test]
@@ -481,7 +486,7 @@ namespace Difftaculous.Test.Paths
         }
 
 
-#if false
+
         [Test]
         public void EvaluateWildcardScanNestResults()
         {
@@ -490,7 +495,7 @@ namespace Difftaculous.Test.Paths
             ZObject o3 = new ZObject { { "Name", new ZObject { { "Name", new ZArray(3) } } } };
             ZArray a = new ZArray(o1, o2, o3);
 
-            IList<ZToken> t = a.SelectTokens("$..*").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("$..*")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(9, t.Count);
 
@@ -505,30 +510,35 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual(3, (int)t[8]);
         }
 
+
+
         [Test]
         public void EvaluateSinglePropertyReturningArray()
         {
             ZObject o = new ZObject(
                 new ZProperty("Blah", new[] { 1, 2, 3 }));
 
-            ZToken t = o.SelectToken("Blah");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("Blah"));
             Assert.IsNotNull(t);
-            Assert.AreEqual(ZTokenType.Array, t.Type);
+            Assert.AreEqual(TokenType.Array, t.Type);
 
-            t = o.SelectToken("Blah[2]");
-            Assert.AreEqual(ZTokenType.Integer, t.Type);
+            t = o.SelectToken(DiffPath.FromJsonPath("Blah[2]"));
+            Assert.AreEqual(TokenType.Integer, t.Type);
             Assert.AreEqual(3, (int)t);
         }
+
 
         [Test]
         public void EvaluateLastSingleCharacterProperty()
         {
-            ZObject o2 = ZObject.Parse("{'People':[{'N':'Jeff'}]}");
-            string a2 = (string)o2.SelectToken("People[0].N");
+            ZObject o2 = ParseJson("{'People':[{'N':'Jeff'}]}");
+            string a2 = (string)o2.SelectToken(DiffPath.FromJsonPath("People[0].N"));
 
             Assert.AreEqual("Jeff", a2);
         }
 
+
+#if false
         [Test]
         public void ExistsQuery()
         {
@@ -762,6 +772,13 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual(149.95m, totalPrice);
         }
 #endif
+
+
+        private static ZObject ParseJson(string json)
+        {
+            return (ZObject)new JsonAdapter(json).Content.Content;
+        }
+
 
     }
 }

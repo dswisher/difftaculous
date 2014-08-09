@@ -21,7 +21,7 @@ namespace Difftaculous.Paths
                     return null;
                 }
 
-                return (ZToken)(a[index]);
+                return a[index];
             }
             else
             {

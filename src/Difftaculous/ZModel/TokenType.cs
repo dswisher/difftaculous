@@ -1,5 +1,4 @@
 ﻿
-using System;
 
 namespace Difftaculous.ZModel
 {
@@ -8,9 +7,6 @@ namespace Difftaculous.ZModel
         Object,
         Property,
         Array,
-
-        [Obsolete]
-        Value,
 
         Boolean,
         Integer,
@@ -23,6 +19,8 @@ namespace Difftaculous.ZModel
 
         String,
 
+        Raw,
+        Bytes,
         Comment,
 
         Null,

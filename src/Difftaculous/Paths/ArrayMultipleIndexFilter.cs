@@ -14,19 +14,16 @@ namespace Difftaculous.Paths
 
         public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current)
         {
-#if false
-            foreach (JToken t in current)
+            foreach (ZToken t in current)
             {
                 foreach (int i in Indexes)
                 {
-                    JToken v = GetTokenIndex(t, errorWhenNoMatch, i);
+                    ZToken v = GetTokenIndex(t, i);
 
                     if (v != null)
                         yield return v;
                 }
             }
-#endif
-            throw new NotImplementedException();
         }
 
 
