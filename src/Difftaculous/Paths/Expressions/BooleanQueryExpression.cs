@@ -19,38 +19,41 @@ namespace Difftaculous.Paths.Expressions
                 ZValue v = r as ZValue;
                 switch (Operator)
                 {
-#if false
                     case QueryOperator.Equals:
                         if (v != null && v.Equals(Value))
                             return true;
                         break;
+
                     case QueryOperator.NotEquals:
                         if (v != null && !v.Equals(Value))
                             return true;
                         break;
+
                     case QueryOperator.GreaterThan:
                         if (v != null && v.CompareTo(Value) > 0)
                             return true;
                         break;
+
                     case QueryOperator.GreaterThanOrEquals:
                         if (v != null && v.CompareTo(Value) >= 0)
                             return true;
                         break;
+
                     case QueryOperator.LessThan:
                         if (v != null && v.CompareTo(Value) < 0)
                             return true;
                         break;
+
                     case QueryOperator.LessThanOrEquals:
                         if (v != null && v.CompareTo(Value) <= 0)
                             return true;
                         break;
-#endif
 
                     case QueryOperator.Exists:
                         return true;
 
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new NotImplementedException(Operator + " query operator is not implemented");
                 }
             }
 

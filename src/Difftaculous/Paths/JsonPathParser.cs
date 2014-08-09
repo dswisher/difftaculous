@@ -524,7 +524,6 @@ namespace Difftaculous.Paths
             }
             else if (char.IsDigit(currentChar) || currentChar == '-')
             {
-#if false
                 StringBuilder sb = new StringBuilder();
                 sb.Append(currentChar);
 
@@ -542,7 +541,7 @@ namespace Difftaculous.Paths
                             if (double.TryParse(numberText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out d))
                                 return d;
                             else
-                                throw new JsonException("Could not read query value.");
+                                throw new JsonPathException("Could not read query value.");
                         }
                         else
                         {
@@ -550,7 +549,7 @@ namespace Difftaculous.Paths
                             if (long.TryParse(numberText, NumberStyles.Integer, CultureInfo.InvariantCulture, out l))
                                 return l;
                             else
-                                throw new JsonException("Could not read query value.");
+                                throw new JsonPathException("Could not read query value.");
                         }
                     }
                     else
@@ -559,8 +558,6 @@ namespace Difftaculous.Paths
                         _currentIndex++;
                     }
                 }
-#endif
-                throw new NotImplementedException();
             }
             else if (currentChar == 't')
             {

@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace Difftaculous.ZModel
 {
-    internal class ZValue : ZToken /* IEquatable<ZValue>, IFormattable, IComparable, IComparable<ZValue>, IConvertible */
+    internal class ZValue : ZToken, IComparable /* IEquatable<ZValue>, IFormattable, IComparable<ZValue>, IConvertible */
     {
         private TokenType _valueType;
         private object _value;
@@ -582,12 +582,12 @@ namespace Difftaculous.ZModel
                 return TokenType.Integer;
             //            else if (value is Enum)
             //                return TokenType.Integer;
-            //#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            //            else if (value is BigInteger)
-            //                return TokenType.Integer;
-            //#endif
-            //            else if (value is double || value is float || value is decimal)
-            //                return TokenType.Float;
+#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
+            else if (value is BigInteger)
+                return TokenType.Integer;
+#endif
+            else if (value is double || value is float || value is decimal)
+                return TokenType.Float;
             //            else if (value is DateTime)
             //                return TokenType.Date;
             //#if !NET20
@@ -752,7 +752,6 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
@@ -767,6 +766,8 @@ namespace Difftaculous.ZModel
 
             return ValuesEquals(this, other);
         }
+
+
 
         /// <summary>
         /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
@@ -790,6 +791,7 @@ namespace Difftaculous.ZModel
             return base.Equals(obj);
         }
 
+
         /// <summary>
         /// Serves as a hash function for a particular type.
         /// </summary>
@@ -803,7 +805,8 @@ namespace Difftaculous.ZModel
 
             return _value.GetHashCode();
         }
-#endif
+
+
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
         /// </summary>
@@ -944,6 +947,8 @@ namespace Difftaculous.ZModel
             }
         }
 #endif
+#endif
+
 
         int IComparable.CompareTo(object obj)
         {
@@ -954,6 +959,7 @@ namespace Difftaculous.ZModel
 
             return Compare(_valueType, _value, otherValue);
         }
+
 
         /// <summary>
         /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
@@ -981,6 +987,8 @@ namespace Difftaculous.ZModel
             return Compare(_valueType, _value, obj._value);
         }
 
+
+#if false
 #if !(NETFX_CORE || PORTABLE)
         TypeCode IConvertible.GetTypeCode()
         {

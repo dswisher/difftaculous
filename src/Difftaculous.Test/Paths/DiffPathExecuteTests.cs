@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Difftaculous.Adapters;
 using Difftaculous.Paths;
 using Difftaculous.Test.Helpers;
@@ -547,7 +548,6 @@ namespace Difftaculous.Test.Paths
         }
 
 
-#if false
         [Test]
         public void EqualsQuery()
         {
@@ -555,11 +555,12 @@ namespace Difftaculous.Test.Paths
                 new ZObject(new ZProperty("hi", "ho")),
                 new ZObject(new ZProperty("hi", "ha")));
 
-            IList<ZToken> t = a.SelectTokens("[ ?( @.['hi'] == 'ha' ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[ ?( @.['hi'] == 'ha' ) ]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(1, t.Count);
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", "ha")), t[0]));
         }
+
 
         [Test]
         public void NotEqualsQuery()
@@ -568,23 +569,25 @@ namespace Difftaculous.Test.Paths
                 new ZArray(new ZObject(new ZProperty("hi", "ho"))),
                 new ZArray(new ZObject(new ZProperty("hi", "ha"))));
 
-            IList<ZToken> t = a.SelectTokens("[ ?( @..hi <> 'ha' ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[ ?( @..hi <> 'ha' ) ]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(1, t.Count);
             Assert.IsTrue(ZToken.DeepEquals(new ZArray(new ZObject(new ZProperty("hi", "ho"))), t[0]));
         }
+
 
         [Test]
         public void NoPathQuery()
         {
             ZArray a = new ZArray(1, 2, 3);
 
-            IList<ZToken> t = a.SelectTokens("[ ?( @ > 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[ ?( @ > 1 ) ]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.AreEqual(2, (int)t[0]);
             Assert.AreEqual(3, (int)t[1]);
         }
+
 
         [Test]
         public void MultipleQueries()
@@ -594,10 +597,11 @@ namespace Difftaculous.Test.Paths
             // json path does item based evaluation - http://www.sitepen.com/blog/2008/03/17/jsonpath-support/
             // first query resolves array to ints
             // int has no children to query
-            IList<ZToken> t = a.SelectTokens("[?(@ <> 1)][?(@ <> 4)][?(@ < 7)]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[?(@ <> 1)][?(@ <> 4)][?(@ < 7)]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(0, t.Count);
         }
+
 
         [Test]
         public void GreaterQuery()
@@ -607,12 +611,13 @@ namespace Difftaculous.Test.Paths
                 new ZObject(new ZProperty("hi", 2)),
                 new ZObject(new ZProperty("hi", 3)));
 
-            IList<ZToken> t = a.SelectTokens("[ ?( @.hi > 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[ ?( @.hi > 1 ) ]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 2)), t[0]));
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 3)), t[1]));
         }
+
 
 #if !(PORTABLE || PORTABLE40 || NET35 || NET20)
         [Test]
@@ -623,13 +628,14 @@ namespace Difftaculous.Test.Paths
                 new ZObject(new ZProperty("hi", new BigInteger(2))),
                 new ZObject(new ZProperty("hi", new BigInteger(3))));
 
-            IList<ZToken> t = a.SelectTokens("[ ?( @.hi > 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[ ?( @.hi > 1 ) ]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 2)), t[0]));
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 3)), t[1]));
         }
 #endif
+
 
         [Test]
         public void GreaterOrEqualQuery()
@@ -640,7 +646,7 @@ namespace Difftaculous.Test.Paths
                 new ZObject(new ZProperty("hi", 2.0)),
                 new ZObject(new ZProperty("hi", 3)));
 
-            IList<ZToken> t = a.SelectTokens("[ ?( @.hi >= 1 ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[ ?( @.hi >= 1 ) ]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(4, t.Count);
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 1)), t[0]));
@@ -648,6 +654,7 @@ namespace Difftaculous.Test.Paths
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 2.0)), t[2]));
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", 3)), t[3]));
         }
+
 
         [Test]
         public void NestedQuery()
@@ -667,46 +674,18 @@ namespace Difftaculous.Test.Paths
                         new ZObject(new ZProperty("name", "Nick Cage")))))
                 );
 
-            IList<ZToken> t = a.SelectTokens("[?(@.cast[?(@.name=='Will Smith')])].name").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[?(@.cast[?(@.name=='Will Smith')])].name")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(2, t.Count);
             Assert.AreEqual("Bad Boys", (string)t[0]);
             Assert.AreEqual("Independence Day", (string)t[1]);
         }
 
-        [Test]
-        public void PathWithConstructor()
-        {
-            ZArray a = ZArray.Parse(@"[
-  {
-    ""Property1"": [
-      1,
-      [
-        [
-          []
-        ]
-      ]
-    ]
-  },
-  {
-    ""Property2"": new Constructor1(
-      null,
-      [
-        1
-      ]
-    )
-  }
-]");
 
-            JValue v = (JValue)a.SelectToken("[1].Property2[1][0]");
-            Assert.AreEqual(1L, v.Value);
-        }
-
-
-        [Test]
+        [Test, Ignore("Get this working!")]
         public void Example()
         {
-            ZObject o = ZObject.Parse(@"{
+            ZObject o = ParseJson(@"{
         ""Stores"": [
           ""Lambton Quay"",
           ""Willis Street""
@@ -737,28 +716,28 @@ namespace Difftaculous.Test.Paths
         ]
       }");
 
-            string name = (string)o.SelectToken("Manufacturers[0].Name");
+            string name = (string)o.SelectToken(DiffPath.FromJsonPath("Manufacturers[0].Name"));
             // Acme Co
 
-            decimal productPrice = (decimal)o.SelectToken("Manufacturers[0].Products[0].Price");
+            decimal productPrice = (decimal)o.SelectToken(DiffPath.FromJsonPath("Manufacturers[0].Products[0].Price"));
             // 50
 
-            string productName = (string)o.SelectToken("Manufacturers[1].Products[0].Name");
+            string productName = (string)o.SelectToken(DiffPath.FromJsonPath("Manufacturers[1].Products[0].Name"));
             // Elbow Grease
 
             Assert.AreEqual("Acme Co", name);
             Assert.AreEqual(50m, productPrice);
             Assert.AreEqual("Elbow Grease", productName);
 
-            IList<string> storeNames = o.SelectToken("Stores").Select(s => (string)s).ToList();
+            IList<string> storeNames = o.SelectToken(DiffPath.FromJsonPath("Stores")).Select(s => (string)s).ToList();
             // Lambton Quay
             // Willis Street
 
-            IList<string> firstProductNames = o["Manufacturers"].Select(m => (string)m.SelectToken("Products[1].Name")).ToList();
+            IList<string> firstProductNames = o["Manufacturers"].Select(m => (string)m.SelectToken(DiffPath.FromJsonPath("Products[1].Name"))).ToList();
             // null
             // Headlight Fluid
 
-            decimal totalPrice = o["Manufacturers"].Sum(m => (decimal)m.SelectToken("Products[0].Price"));
+            decimal totalPrice = o["Manufacturers"].Sum(m => (decimal)m.SelectToken(DiffPath.FromJsonPath("Products[0].Price")));
             // 149.95
 
             Assert.AreEqual(2, storeNames.Count);
@@ -769,7 +748,7 @@ namespace Difftaculous.Test.Paths
             Assert.AreEqual("Headlight Fluid", firstProductNames[1]);
             Assert.AreEqual(149.95m, totalPrice);
         }
-#endif
+
 
 
         private static ZObject ParseJson(string json)
