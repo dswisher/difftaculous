@@ -13,14 +13,13 @@ namespace Difftaculous.Paths.Expressions
 
         public override bool IsMatch(ZToken t)
         {
-#if false
-            IEnumerable<JToken> pathResult = JPath.Evaluate(Path, t, false);
-
-            foreach (JToken r in pathResult)
+            IEnumerable<ZToken> pathResult = DiffPath.Evaluate(Path, t, false);
+            foreach (ZToken r in pathResult)
             {
-                JValue v = r as JValue;
+                ZValue v = r as ZValue;
                 switch (Operator)
                 {
+#if false
                     case QueryOperator.Equals:
                         if (v != null && v.Equals(Value))
                             return true;
@@ -45,17 +44,17 @@ namespace Difftaculous.Paths.Expressions
                         if (v != null && v.CompareTo(Value) <= 0)
                             return true;
                         break;
+#endif
+
                     case QueryOperator.Exists:
                         return true;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
 
             return false;
-#endif
-
-            throw new NotImplementedException();
         }
     }
 }

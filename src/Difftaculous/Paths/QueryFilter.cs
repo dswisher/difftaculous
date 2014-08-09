@@ -15,18 +15,14 @@ namespace Difftaculous.Paths
 
         public override IEnumerable<ZToken> ExecuteFilter(IEnumerable<ZToken> current, bool errorWhenNoMatch)
         {
-#if false
-            foreach (JToken t in current)
+            foreach (ZToken t in current)
             {
-                foreach (JToken v in t)
+                foreach (ZToken v in t)
                 {
                     if (Expression.IsMatch(v))
                         yield return v;
                 }
             }
-#endif
-
-            throw new NotImplementedException();
         }
 
 

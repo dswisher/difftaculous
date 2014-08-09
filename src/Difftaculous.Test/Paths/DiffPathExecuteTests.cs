@@ -535,18 +535,19 @@ namespace Difftaculous.Test.Paths
         }
 
 
-#if false
         [Test]
         public void ExistsQuery()
         {
             ZArray a = new ZArray(new ZObject(new ZProperty("hi", "ho")), new ZObject(new ZProperty("hi2", "ha")));
 
-            IList<ZToken> t = a.SelectTokens("[ ?( @.hi ) ]").ToList();
+            IList<ZToken> t = a.SelectTokens(DiffPath.FromJsonPath("[ ?( @.hi ) ]")).ToList();
             Assert.IsNotNull(t);
             Assert.AreEqual(1, t.Count);
             Assert.IsTrue(ZToken.DeepEquals(new ZObject(new ZProperty("hi", "ho")), t[0]));
         }
 
+
+#if false
         [Test]
         public void EqualsQuery()
         {
