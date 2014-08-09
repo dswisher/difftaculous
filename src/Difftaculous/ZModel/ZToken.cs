@@ -2012,7 +2012,7 @@ namespace Difftaculous.ZModel
             {
                 if (token != null)
                 {
-                    throw new JsonPathException("Path returned multiple tokens");
+                    throw new JsonPathException("Path returned multiple tokens.");
                 }
 
                 token = t;

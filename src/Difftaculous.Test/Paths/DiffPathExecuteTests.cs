@@ -14,34 +14,34 @@ namespace Difftaculous.Test.Paths
     [TestFixture]
     public class DiffPathExecuteTests
     {
-
-#if false
         [Test]
         public void SelectTokenAfterEmptyContainer()
         {
-            string json = @"{
+            const string json = @"{
     'cont': [],
     'test': 'no one will find me'
 }";
 
-            ZObject o = ZObject.Parse(json);
+            ZObject o = ParseJson(json);
 
-            IList<ZToken> results = o.SelectTokens("$..test").ToList();
+            IList<ZToken> results = o.SelectTokens(DiffPath.FromJsonPath("$..test")).ToList();
 
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("no one will find me", (string)results[0]);
         }
 
+
         [Test]
         public void EvaluatePropertyWithRequired()
         {
-            string json = "{\"bookId\":\"1000\"}";
-            ZObject o = ZObject.Parse(json);
+            const string json = "{\"bookId\":\"1000\"}";
+            ZObject o = ParseJson(json);
 
-            string bookId = (string)o.SelectToken("bookId", true);
+            string bookId = (string)o.SelectToken(DiffPath.FromJsonPath("bookId"), true);
 
             Assert.AreEqual("1000", bookId);
         }
+
 
         [Test]
         public void EvaluateEmptyPropertyIndexer()
@@ -49,9 +49,10 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("", 1));
 
-            ZToken t = o.SelectToken("['']");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("['']"));
             Assert.AreEqual(1, (int)t);
         }
+
 
         [Test]
         public void EvaluateEmptyString()
@@ -59,12 +60,13 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ZToken t = o.SelectToken("");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath(""));
             Assert.AreEqual(o, t);
 
-            t = o.SelectToken("['']");
+            t = o.SelectToken(DiffPath.FromJsonPath("['']"));
             Assert.AreEqual(null, t);
         }
+
 
         [Test]
         public void EvaluateEmptyStringWithMatchingEmptyProperty()
@@ -72,9 +74,10 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty(" ", 1));
 
-            ZToken t = o.SelectToken("[' ']");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("[' ']"));
             Assert.AreEqual(1, (int)t);
         }
+
 
         [Test]
         public void EvaluateWhitespaceString()
@@ -82,10 +85,9 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ZToken t = o.SelectToken(" ");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath(" "));
             Assert.AreEqual(o, t);
         }
-#endif
 
 
         [Test]
@@ -106,7 +108,6 @@ namespace Difftaculous.Test.Paths
             ZToken t = o.SelectToken(DiffPath.FromJsonPath("$values[1]"));
             ((int)t).ShouldBe(2);
         }
-
 
 
         [Test]
@@ -158,17 +159,16 @@ namespace Difftaculous.Test.Paths
         }
 
 
-
-#if false
         [Test]
         public void EvaluateIndexerOnObject()
         {
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ZToken t = o.SelectToken("[1]");
+            ZToken t = o.SelectToken(DiffPath.FromJsonPath("[1]"));
             Assert.IsNull(t);
         }
+
 
         [Test]
         public void EvaluateIndexerOnObjectWithError()
@@ -178,8 +178,9 @@ namespace Difftaculous.Test.Paths
 
             ExceptionAssert.Throws<JsonPathException>(
                 @"Index 1 not valid on ZObject.",
-                () => { o.SelectToken("[1]", true); });
+                () => o.SelectToken(DiffPath.FromJsonPath("[1]"), true));
         }
+
 
         [Test]
         public void EvaluateWildcardIndexOnObjectWithError()
@@ -189,8 +190,9 @@ namespace Difftaculous.Test.Paths
 
             ExceptionAssert.Throws<JsonPathException>(
                 @"Index * not valid on ZObject.",
-                () => { o.SelectToken("[*]", true); });
+                () => o.SelectToken(DiffPath.FromJsonPath("[*]"), true));
         }
+
 
         [Test]
         public void EvaluateSliceOnObjectWithError()
@@ -200,17 +202,19 @@ namespace Difftaculous.Test.Paths
 
             ExceptionAssert.Throws<JsonPathException>(
                 @"Array slice is not valid on ZObject.",
-                () => { o.SelectToken("[:]", true); });
+                () => o.SelectToken(DiffPath.FromJsonPath("[:]"), true));
         }
+
 
         [Test]
         public void EvaluatePropertyOnArray()
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ZToken t = a.SelectToken("BlahBlah");
+            ZToken t = a.SelectToken(DiffPath.FromJsonPath("BlahBlah"));
             Assert.IsNull(t);
         }
+
 
         [Test]
         public void EvaluateMultipleResultsError()
@@ -219,8 +223,9 @@ namespace Difftaculous.Test.Paths
 
             ExceptionAssert.Throws<JsonPathException>(
                 @"Path returned multiple tokens.",
-                () => { a.SelectToken("[0, 1]"); });
+                () => a.SelectToken(DiffPath.FromJsonPath("[0, 1]")));
         }
+
 
         [Test]
         public void EvaluatePropertyOnArrayWithError()
@@ -229,8 +234,9 @@ namespace Difftaculous.Test.Paths
 
             ExceptionAssert.Throws<JsonPathException>(
                 @"Property 'BlahBlah' not valid on ZArray.",
-                () => { a.SelectToken("BlahBlah", true); });
+                () => a.SelectToken(DiffPath.FromJsonPath("BlahBlah"), true));
         }
+
 
         [Test]
         public void EvaluateNoResultsWithMultipleArrayIndexes()
@@ -239,26 +245,9 @@ namespace Difftaculous.Test.Paths
 
             ExceptionAssert.Throws<JsonPathException>(
                 @"Index 9 outside the bounds of ZArray.",
-                () => { a.SelectToken("[9,10]", true); });
+                () => a.SelectToken(DiffPath.FromJsonPath("[9,10]"), true));
         }
 
-        [Test]
-        public void EvaluateConstructorOutOfBoundsIndxerWithError()
-        {
-            JConstructor c = new JConstructor("Blah");
-
-            ExceptionAssert.Throws<JsonPathException>(
-                @"Index 1 outside the bounds of JConstructor.",
-                () => { c.SelectToken("[1]", true); });
-        }
-
-        [Test]
-        public void EvaluateConstructorOutOfBoundsIndxer()
-        {
-            JConstructor c = new JConstructor("Blah");
-
-            Assert.IsNull(c.SelectToken("[1]"));
-        }
 
         [Test]
         public void EvaluateMissingPropertyWithError()
@@ -268,9 +257,8 @@ namespace Difftaculous.Test.Paths
 
             ExceptionAssert.Throws<JsonPathException>(
                 "Property 'Missing' does not exist on ZObject.",
-                () => { o.SelectToken("Missing", true); });
+                () => o.SelectToken(DiffPath.FromJsonPath("Missing"), true));
         }
-#endif
 
 
         [Test]
@@ -335,7 +323,6 @@ namespace Difftaculous.Test.Paths
         }
 
 
-
         [Test]
         public void EvaluateOutOfBoundsIndxer()
         {
@@ -344,7 +331,6 @@ namespace Difftaculous.Test.Paths
             ZToken t = a.SelectToken(DiffPath.FromJsonPath("[1000].Ha"));
             Assert.IsNull(t);
         }
-
 
 
         [Test]
@@ -434,7 +420,6 @@ namespace Difftaculous.Test.Paths
         }
 
 
-
         [Test]
         public void EvaluateArrayMultipleIndexes()
         {
@@ -500,7 +485,6 @@ namespace Difftaculous.Test.Paths
         }
 
 
-
         [Test]
         public void EvaluateWildcardScanNestResults()
         {
@@ -523,7 +507,6 @@ namespace Difftaculous.Test.Paths
             Assert.IsTrue(ZToken.DeepEquals(new ZArray(3), t[7]));
             Assert.AreEqual(3, (int)t[8]);
         }
-
 
 
         [Test]
@@ -792,7 +775,5 @@ namespace Difftaculous.Test.Paths
         {
             return (ZObject)new JsonAdapter(json).Content.Content;
         }
-
-
     }
 }

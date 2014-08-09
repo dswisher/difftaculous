@@ -33,6 +33,13 @@ namespace Difftaculous.Paths
                             yield return v;
                         }
                     }
+                    else
+                    {
+                        if (errorWhenNoMatch)
+                        {
+                            throw new JsonPathException(string.Format("Index * not valid on {0}.", t.GetType().Name));
+                        }
+                    }
                 }
             }
         }
