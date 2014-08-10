@@ -13,7 +13,9 @@ properties {
 $framework = '4.0x86'
 FormatTaskName (("-"*25) + "[{0}]" + ("-"*25))
 
+
 Task Default -Depends Test
+
 
 Task Build -Depends Clean {
     Write-Host -ForegroundColor Green "Updating CommonAssemblyInfo"
@@ -21,8 +23,9 @@ Task Build -Depends Clean {
     Write-CommonAssembluInfo $srcDir ($majorVersion + '.0.0') $version
 
     Write-Host "Building solution, version $version" -ForegroundColor Green
-    # Exec { msbuild "$srcDir\difftaculous.sln" /t:Build /p:Configuration=Release /v:quiet /p:OutDir=$artifactsDir } 
+    Exec { msbuild "$srcDir\difftaculous.sln" /t:Build /p:Configuration=Release /v:quiet /p:OutDir=$artifactsDir } 
 }
+
 
 Task Clean {
     Write-Host "Creating empty artifacts directory" -ForegroundColor Green
@@ -39,6 +42,9 @@ Task Clean {
 
 
 Task Test -Depends Build {
+    Write-Host -ForegroundColor Green "Running tests " $name
+    Write-Host
+    Exec { ..\Tools\NUnit\nunit-console.exe "$artifactsDir\Difftaculous.Test.dll" /framework=net-4.0 /xml:$artifactsDir\tests.xml | Out-Default }
 }
 
 
