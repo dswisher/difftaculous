@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Difftaculous.Adapters;
 using Difftaculous.ZModel;
 using NUnit.Framework;
@@ -14,10 +15,10 @@ namespace Difftaculous.Test.Adapters
         [Test]
         public void EmptyElement()
         {
-            var actual = Adapt("<thing></thing>");
+            const string xml = "<thing></thing>";
             var expected = new ZObject();
 
-            actual.ShouldBe(expected);
+            RunTest(expected, xml);
         }
 
 
@@ -25,10 +26,10 @@ namespace Difftaculous.Test.Adapters
         [Test, Ignore("Get this working!")]
         public void OneProp()
         {
-            var actual = Adapt("<thing><name>Fred</name></thing>");
+            const string xml = "<thing><name>Fred</name></thing>";
             var expected = new ZObject(new ZProperty("name", "Fred"));
 
-            actual.ShouldBe(expected);
+            RunTest(expected, xml);
         }
 
 
@@ -36,23 +37,27 @@ namespace Difftaculous.Test.Adapters
         [Test, Ignore("Get this working!")]
         public void TwoProps()
         {
-            var actual = Adapt("<thing><name>Fred</name><age>44</age></thing>");
+            const string xml = "<thing><name>Fred</name><age>44</age></thing>";
             var expected = new ZObject(new ZProperty("name", "Fred"), new ZProperty("age", 44));
+
+            RunTest(expected, xml);
+        }
+
+
+
+        private void RunTest(ZObject expected, string xml)
+        {
+            ZToken actual = (ZToken)new XmlAdapter(xml).Content.Content;
+
+            Console.WriteLine("Expected:");
+            Console.WriteLine(expected.AsJson());
+
+            Console.WriteLine();
+
+            Console.WriteLine("Actual:");
+            Console.WriteLine(actual.AsJson());
 
             actual.ShouldBe(expected);
         }
-
-
-
-
-        private ZToken Adapt(string content)
-        {
-            var a = new XmlAdapter(content);
-
-            // TODO - spew output?
-
-            return (ZToken)a.Content.Content;
-        }
-
     }
 }
