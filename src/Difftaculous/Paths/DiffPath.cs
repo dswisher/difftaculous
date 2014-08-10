@@ -6,6 +6,9 @@ using Difftaculous.ZModel;
 
 namespace Difftaculous.Paths
 {
+    /// <summary>
+    /// A path to one or more items within the abstract difference model.
+    /// </summary>
     public class DiffPath
     {
 
@@ -19,6 +22,11 @@ namespace Difftaculous.Paths
 
 
 
+        /// <summary>
+        /// Construct a path from a JsonPath string.
+        /// </summary>
+        /// <param name="path">The JsonPath string.</param>
+        /// <returns>A DiffPath for the string.</returns>
         public static DiffPath FromJsonPath(string path)
         {
             return new DiffPath
@@ -35,6 +43,9 @@ namespace Difftaculous.Paths
 
 
 
+        /// <summary>
+        /// Return a string representation of the DiffPath using JsonPath notation.
+        /// </summary>
         public string AsJsonPath
         {
             get
@@ -49,26 +60,11 @@ namespace Difftaculous.Paths
         }
 
 
-        // TODO - remove this?  Where is it used?
-        public override bool Equals(object obj)
-        {
-            DiffPath other = obj as DiffPath;
 
-            if (other == null)
-            {
-                return false;
-            }
-
-            return AsJsonPath == other.AsJsonPath;
-        }
-
-
-        public override int GetHashCode()
-        {
-            return AsJsonPath.GetHashCode();
-        }
-
-
+        /// <summary>
+        /// Return a string representation of this DiffPath.
+        /// </summary>
+        /// <returns>The string representation.</returns>
         public override string ToString()
         {
             return AsJsonPath;

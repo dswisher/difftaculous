@@ -2,7 +2,7 @@
 
 namespace Difftaculous.ZModel
 {
-    public enum TokenType
+    internal enum TokenType
     {
         Object,
         Property,

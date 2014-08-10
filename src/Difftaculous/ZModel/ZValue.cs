@@ -65,7 +65,6 @@ namespace Difftaculous.ZModel
         /// Initializes a new instance of the <see cref="ZValue"/> class with the given value.
         /// </summary>
         /// <param name="value">The value.</param>
-        [CLSCompliant(false)]
         public ZValue(ulong value)
             : this(value, TokenType.Integer)
         {

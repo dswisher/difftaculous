@@ -80,7 +80,7 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.name")));
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "name");
         }
 
 
@@ -100,8 +100,7 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            // TODO - the annotation should have BOTH paths - assert it!
-            // result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.name")));
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "");     // Root path
         }
 
 
@@ -131,7 +130,7 @@ namespace Difftaculous.Test
             result.AreSame.ShouldBe(false);
 
             // TODO - verify annotation!
-            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$[1]")));
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "[1]");
         }
 
 
@@ -154,7 +153,7 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.thing.name")));
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "thing.name");
         }
 
 
@@ -277,7 +276,7 @@ namespace Difftaculous.Test
 
             result.AreSame.ShouldBe(false);
             // TODO - need both paths in this annotation
-            result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$[1].age")));
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "[1].age");
         }
 
 

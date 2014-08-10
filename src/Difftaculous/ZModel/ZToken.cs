@@ -1351,7 +1351,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(sbyte value)
         {
             return new ZValue(value);
@@ -1362,7 +1361,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(sbyte? value)
         {
             return new ZValue(value);
@@ -1435,7 +1433,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(short value)
         {
             return new ZValue(value);
@@ -1446,7 +1443,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(ushort value)
         {
             return new ZValue(value);
@@ -1519,7 +1515,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(short? value)
         {
             return new ZValue(value);
@@ -1530,7 +1525,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(ushort? value)
         {
             return new ZValue(value);
@@ -1541,7 +1535,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(uint? value)
         {
             return new ZValue(value);
@@ -1552,7 +1545,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(ulong? value)
         {
             return new ZValue(value);
@@ -1593,7 +1585,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(uint value)
         {
             return new ZValue(value);
@@ -1604,7 +1595,6 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="value">The value to create a <see cref="ZValue"/> from.</param>
         /// <returns>The <see cref="ZValue"/> initialized with the specified value.</returns>
-        [CLSCompliant(false)]
         public static implicit operator ZToken(ulong value)
         {
             return new ZValue(value);

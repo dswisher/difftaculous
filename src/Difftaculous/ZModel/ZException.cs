@@ -4,11 +4,15 @@ using System;
 
 namespace Difftaculous.ZModel
 {
-    // TODO - give this a better name!
+    /// <summary>
+    /// An exception from the internal Diff model.
+    /// </summary>
     public class ZException : Exception
     {
+        // TODO - give this a better name!
 
-        public ZException(string message) : base(message)
+        internal ZException(string message)
+            : base(message)
         {
         }
 
