@@ -61,6 +61,10 @@ function Write-CommonAssembluInfo ([string] $sourceDir, [string] $assemblyVersio
     $content += 'using System;' + [Environment]::NewLine
     $content += 'using System.Reflection;' + [Environment]::NewLine
     $content += [Environment]::NewLine
+    $content += '[assembly: AssemblyCopyright("Copyright © Doug Swisher 2014")]' + [Environment]::NewLine
+    $content += '[assembly: AssemblyCompany("difftaculous.net")]' + [Environment]::NewLine
+    $content += '[assembly: AssemblyProduct("Difftaculous")]' + [Environment]::NewLine
+    $content += [Environment]::NewLine
     $content += '[assembly: AssemblyVersionAttribute("' + $assemblyVersionNumber + '")]' + [Environment]::NewLine
     $content += '[assembly: AssemblyFileVersionAttribute("' + $fileVersionNumber + '")]' + [Environment]::NewLine
 

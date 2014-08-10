@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +9,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Difftaculous")]
 [assembly: AssemblyDescription("Library for computing differences between JSON and/or XML")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("difftaculous.net")]
-[assembly: AssemblyProduct("Difftaculous")]
-[assembly: AssemblyCopyright("Copyright © 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -23,4 +21,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("a4adbb4a-bf56-4491-96b1-3f01a8dda960")]
-
