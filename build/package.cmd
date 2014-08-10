@@ -1,0 +1,1 @@
+..\tools\nuget\nuget.exe pack -OutputDirectory d:\nuget -Verbosity detailed ..\src\Difftaculous\Difftaculous.nuspec
