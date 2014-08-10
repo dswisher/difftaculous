@@ -13,12 +13,12 @@ properties {
 $framework = '4.0x86'
 FormatTaskName (("-"*25) + "[{0}]" + ("-"*25))
 
-Task Default -Depends Clean, Build
+Task Default -Depends Test
 
 Task Build -Depends Clean {
-    Write-Host -ForegroundColor Green "Updating assembly version"
+    Write-Host -ForegroundColor Green "Updating CommonAssemblyInfo"
     Write-Host
-    # Update-AssemblyInfoFiles $srcDir ($majorVersion + '.0.0') $version
+    Write-CommonAssembluInfo $srcDir ($majorVersion + '.0.0') $version
 
     Write-Host "Building solution, version $version" -ForegroundColor Green
     # Exec { msbuild "$srcDir\difftaculous.sln" /t:Build /p:Configuration=Release /v:quiet /p:OutDir=$artifactsDir } 
@@ -38,33 +38,35 @@ Task Clean {
 }
 
 
+Task Test -Depends Build {
+}
+
+
 function GetVersion($majorVersion)
 {
     $now = [DateTime]::Now
     
     $months = (($now.Year - 2014) * 12) + $now.Month
-    $build = "{0}{1:00}{2:00}" -f $months, $now.Day, $now.Hour
+    $build = "{0}{1:00}" -f $months, $now.Day
 
     return $majorVersion + "." + $build
 }
 
 
-function Update-AssemblyInfoFiles ([string] $sourceDir, [string] $assemblyVersionNumber, [string] $fileVersionNumber)
+function Write-CommonAssembluInfo ([string] $sourceDir, [string] $assemblyVersionNumber, [string] $fileVersionNumber)
 {
-    $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-    $fileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-    $assemblyVersion = 'AssemblyVersion("' + $assemblyVersionNumber + '")';
-    $fileVersion = 'AssemblyFileVersion("' + $fileVersionNumber + '")';
+    $content = [Environment]::NewLine
+    $content += '// Auto-generated content' + [Environment]::NewLine
+    $content += [Environment]::NewLine
+    $content += 'using System;' + [Environment]::NewLine
+    $content += 'using System.Reflection;' + [Environment]::NewLine
+    $content += [Environment]::NewLine
+    $content += '[assembly: AssemblyVersionAttribute("' + $assemblyVersionNumber + '")]' + [Environment]::NewLine
+    $content += '[assembly: AssemblyFileVersionAttribute("' + $fileVersionNumber + '")]' + [Environment]::NewLine
 
-    Get-ChildItem -Path $sourceDir -r -filter AssemblyInfo.cs | ForEach-Object {
+    $file = $sourceDir + '\CommonAssemblyInfo.cs'
 
-        $filename = $_.Directory.ToString() + '\' + $_.Name
-        Write-Host $filename
-        $filename + ' -> ' + $version
+    Write-Host $file
 
-        (Get-Content $filename) | ForEach-Object {
-            % {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
-            % {$_ -replace $fileVersionPattern, $fileVersion }
-        } | Set-Content $filename
-    }
+    $content | Set-Content $file
 }

@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Adapters\IAdaptedContent.cs" />
     <Compile Include="Adapters\IAdapter.cs" />
     <Compile Include="Paths\ArrayIndexFilter.cs" />
