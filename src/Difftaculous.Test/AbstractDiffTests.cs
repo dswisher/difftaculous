@@ -85,6 +85,27 @@ namespace Difftaculous.Test
 
 
 
+        public class AnotherSimpleObject
+        {
+            public string Address { get; set; }
+        }
+
+
+        [Test]
+        public void MismatchedPropertiesAreDifferent()
+        {
+            SimpleObject a = new SimpleObject { Name = "One" };
+            AnotherSimpleObject b = new AnotherSimpleObject { Address = "1 Main St." };
+
+            var result = DoCompare(a, b);
+
+            result.AreSame.ShouldBe(false);
+            // TODO - the annotation should have BOTH paths - assert it!
+            // result.Annotations.ShouldContain(x => x.Path.Equals(DiffPath.FromJsonPath("$.name")));
+        }
+
+
+
         [Test]
         public void SimpleArrayComparedWithItselfHasNoDifferences()
         {

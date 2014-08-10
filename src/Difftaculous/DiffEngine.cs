@@ -121,10 +121,16 @@ namespace Difftaculous
 
             foreach (var pair in objA.Properties().FullOuterJoin(objB.Properties(), x => x.Name, x => x.Name, (p1, p2, n) => new { PropA = p1, PropB = p2, Name = n }))
             {
-                if ((pair.PropA == null) || (pair.PropB == null))
+                if (pair.PropA == null)
                 {
-                    // TODO - handle missing items!
-                    throw new NotImplementedException("Handle missing items!");
+                    result = result.Merge(new DiffResult(objA.Path, "Property " + pair.Name + " is missing."));
+                    continue;
+                }
+
+                if (pair.PropB == null)
+                {
+                    result = result.Merge(new DiffResult(objB.Path, "Property " + pair.Name + " is missing."));
+                    continue;
                 }
 
                 result = result.Merge(Diff(pair.PropA.Value, pair.PropB.Value));
@@ -151,14 +157,14 @@ namespace Difftaculous
                 return new DiffResult(valA.Path, string.Format("values differ: '{0}' vs. '{1}'", valA.Value, valB.Value));
             }
 
-            string a = valA.Value.ToString();
-            string b = valB.Value.ToString();
-
             // If things are equal, we're done...
-            if (a == b)
+            if (valA.Equals(valB))
             {
                 return DiffResult.Same;
             }
+
+            string a = valA.Value.ToString();
+            string b = valB.Value.ToString();
 
             // TODO - this should return something other than Same, because they are NOT
             // the same.  But, returning something like "WithinTolerance" makes the DiffResult
