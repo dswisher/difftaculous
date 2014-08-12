@@ -57,7 +57,7 @@
     <Compile Include="Paths\Expressions\CompositeExpression.cs" />
     <Compile Include="Paths\FieldFilter.cs" />
     <Compile Include="Paths\FieldMultipleFilter.cs" />
-    <Compile Include="Paths\JsonPathException.cs" />
+    <Compile Include="Paths\PathException.cs" />
     <Compile Include="Paths\JsonPathParser.cs" />
     <Compile Include="Paths\PathFilter.cs" />
     <Compile Include="Paths\Expressions\QueryExpression.cs" />

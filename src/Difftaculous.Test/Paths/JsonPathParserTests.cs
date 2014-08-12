@@ -91,7 +91,7 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void RootWithBadWhitespace()
         {
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Unexpected character while parsing path:  ",
                 () => JsonPathParser.Parse("$ .Blah"));
         }
@@ -101,7 +101,7 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void NoFieldNameAfterDot()
         {
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Unexpected end while parsing path.",
                 () => JsonPathParser.Parse("$.Blah."));
         }
@@ -111,7 +111,7 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void RootWithBadWhitespace2()
         {
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Unexpected character while parsing path:  ",
                 () => JsonPathParser.Parse("$. Blah"));
         }

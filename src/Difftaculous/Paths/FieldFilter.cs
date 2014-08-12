@@ -28,7 +28,7 @@ namespace Difftaculous.Paths
                         }
                         else if (errorWhenNoMatch)
                         {
-                            throw new JsonPathException(string.Format("Property '{0}' does not exist on ZObject.", Name));
+                            throw new PathException(string.Format("Property '{0}' does not exist on ZObject.", Name));
                         }
                     }
                     else
@@ -43,7 +43,7 @@ namespace Difftaculous.Paths
                 {
                     if (errorWhenNoMatch)
                     {
-                        throw new JsonPathException(string.Format("Property '{0}' not valid on {1}.", Name ?? "*", t.GetType().Name));
+                        throw new PathException(string.Format("Property '{0}' not valid on {1}.", Name ?? "*", t.GetType().Name));
                     }
                 }
             }

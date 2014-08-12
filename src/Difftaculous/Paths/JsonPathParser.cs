@@ -73,7 +73,7 @@ namespace Difftaculous.Paths
 
                 if (_currentIndex < _expression.Length)
                 {
-                    throw new JsonPathException("Unexpected character while parsing path: " + _expression[lastCharacterIndex]);                
+                    throw new PathException("Unexpected character while parsing path: " + _expression[lastCharacterIndex]);                
                 }
             }
         }
@@ -152,7 +152,7 @@ namespace Difftaculous.Paths
                         {
                             if (followingIndexer)
                             {
-                                throw new JsonPathException("Unexpected character following indexer: " + currentChar);
+                                throw new PathException("Unexpected character following indexer: " + currentChar);
                             }
 
                             _currentIndex++;
@@ -179,7 +179,7 @@ namespace Difftaculous.Paths
                 // no field name following dot in path and at end of base path/query
                 if (followingDot && (atPathEnd || query))
                 {
-                    throw new JsonPathException("Unexpected end while parsing path.");
+                    throw new PathException("Unexpected end while parsing path.");
                 }
             }
 
@@ -256,7 +256,7 @@ namespace Difftaculous.Paths
                     {
                         if (length == 0)
                         {
-                            throw new JsonPathException("Array index expected.");
+                            throw new PathException("Array index expected.");
                         }
 
                         string indexer = _expression.Substring(start, length);
@@ -284,7 +284,7 @@ namespace Difftaculous.Paths
                     {
                         if (length == 0)
                         {
-                            throw new JsonPathException("Array index expected.");
+                            throw new PathException("Array index expected.");
                         }
 
                         string indexer = _expression.Substring(start, length);
@@ -299,7 +299,7 @@ namespace Difftaculous.Paths
 
                     if (length == 0)
                     {
-                        throw new JsonPathException("Array index expected.");
+                        throw new PathException("Array index expected.");
                     }
 
                     if (indexes == null)
@@ -325,7 +325,7 @@ namespace Difftaculous.Paths
 
                     if (_expression[_currentIndex] != indexerCloseChar)
                     {
-                        throw new JsonPathException("Unexpected character while parsing path indexer: " + currentCharacter);
+                        throw new PathException("Unexpected character while parsing path indexer: " + currentCharacter);
                     }
 
                     return new ArrayIndexFilter();
@@ -358,20 +358,20 @@ namespace Difftaculous.Paths
                 }
                 else if (!char.IsDigit(currentCharacter) && currentCharacter != '-')
                 {
-                    throw new JsonPathException("Unexpected character while parsing path indexer: " + currentCharacter);
+                    throw new PathException("Unexpected character while parsing path indexer: " + currentCharacter);
                 }
                 else
                 {
                     if (end != null)
                     {
-                        throw new JsonPathException("Unexpected character while parsing path indexer: " + currentCharacter);
+                        throw new PathException("Unexpected character while parsing path indexer: " + currentCharacter);
                     }
 
                     _currentIndex++;
                 }
             }
 
-            throw new JsonPathException("Path ended with open indexer.");
+            throw new PathException("Path ended with open indexer.");
         }
 
 
@@ -383,7 +383,7 @@ namespace Difftaculous.Paths
 
             if (_expression[_currentIndex] != '(')
             {
-                throw new JsonPathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+                throw new PathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
             }
 
             _currentIndex++;
@@ -396,7 +396,7 @@ namespace Difftaculous.Paths
 
             if (_expression[_currentIndex] != indexerCloseChar)
             {
-                throw new JsonPathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+                throw new PathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
             }
 
             return new QueryFilter
@@ -417,7 +417,7 @@ namespace Difftaculous.Paths
                 EatWhitespace();
 
                 if (_expression[_currentIndex] != '@')
-                    throw new JsonPathException("Unexpected character while parsing path query: " + _expression[_currentIndex]);
+                    throw new PathException("Unexpected character while parsing path query: " + _expression[_currentIndex]);
 
                 _currentIndex++;
 
@@ -425,7 +425,7 @@ namespace Difftaculous.Paths
 
                 if (ParsePath(expressionPath, _currentIndex, true))
                 {
-                    throw new JsonPathException("Path ended with open query.");
+                    throw new PathException("Path ended with open query.");
                 }
 
                 EatWhitespace();
@@ -511,7 +511,7 @@ namespace Difftaculous.Paths
                 }
             }
 
-            throw new JsonPathException("Path ended with open query.");
+            throw new PathException("Path ended with open query.");
         }
 
 
@@ -541,7 +541,7 @@ namespace Difftaculous.Paths
                             if (double.TryParse(numberText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out d))
                                 return d;
                             else
-                                throw new JsonPathException("Could not read query value.");
+                                throw new PathException("Could not read query value.");
                         }
                         else
                         {
@@ -549,7 +549,7 @@ namespace Difftaculous.Paths
                             if (long.TryParse(numberText, NumberStyles.Integer, CultureInfo.InvariantCulture, out l))
                                 return l;
                             else
-                                throw new JsonPathException("Could not read query value.");
+                                throw new PathException("Could not read query value.");
                         }
                     }
                     else
@@ -581,7 +581,7 @@ namespace Difftaculous.Paths
                 }
             }
 
-            throw new JsonPathException("Could not read query value.");
+            throw new PathException("Could not read query value.");
         }
 
 
@@ -589,7 +589,7 @@ namespace Difftaculous.Paths
         {
             if (_currentIndex + 1 >= _expression.Length)
             {
-                throw new JsonPathException("Path ended with open query.");
+                throw new PathException("Path ended with open query.");
             }
 
             if (Match("=="))
@@ -606,7 +606,7 @@ namespace Difftaculous.Paths
                 return QueryOperator.GreaterThan;
 
             {
-                throw new JsonPathException("Could not read query operator.");
+                throw new PathException("Could not read query operator.");
             }
         }
 
@@ -649,11 +649,11 @@ namespace Difftaculous.Paths
                 }
                 else
                 {
-                    throw new JsonPathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
+                    throw new PathException("Unexpected character while parsing path indexer: " + _expression[_currentIndex]);
                 }
             }
 
-            throw new JsonPathException("Path ended with open indexer.");
+            throw new PathException("Path ended with open indexer.");
         }
 
 
@@ -675,7 +675,7 @@ namespace Difftaculous.Paths
                     else if (_expression[_currentIndex] == '\\')
                         sb.Append('\\');
                     else
-                        throw new JsonPathException(@"Unknown escape chracter: \" + _expression[_currentIndex]);
+                        throw new PathException(@"Unknown escape chracter: \" + _expression[_currentIndex]);
 
                     _currentIndex++;
                 }
@@ -693,7 +693,7 @@ namespace Difftaculous.Paths
                 }
             }
 
-            throw new JsonPathException("Path ended with an open string.");
+            throw new PathException("Path ended with an open string.");
         }
 
 
@@ -702,7 +702,7 @@ namespace Difftaculous.Paths
         {
             if (_currentIndex >= _expression.Length)
             {
-                throw new JsonPathException(message);
+                throw new PathException(message);
             }
         }
 

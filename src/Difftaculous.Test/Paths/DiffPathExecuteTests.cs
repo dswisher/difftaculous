@@ -177,7 +177,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Index 1 not valid on ZObject.",
                 () => o.SelectToken(DiffPath.FromJsonPath("[1]"), true));
         }
@@ -189,7 +189,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Index * not valid on ZObject.",
                 () => o.SelectToken(DiffPath.FromJsonPath("[*]"), true));
         }
@@ -201,7 +201,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Array slice is not valid on ZObject.",
                 () => o.SelectToken(DiffPath.FromJsonPath("[:]"), true));
         }
@@ -222,7 +222,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Path returned multiple tokens.",
                 () => a.SelectToken(DiffPath.FromJsonPath("[0, 1]")));
         }
@@ -233,7 +233,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Property 'BlahBlah' not valid on ZArray.",
                 () => a.SelectToken(DiffPath.FromJsonPath("BlahBlah"), true));
         }
@@ -244,7 +244,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 @"Index 9 outside the bounds of ZArray.",
                 () => a.SelectToken(DiffPath.FromJsonPath("[9,10]"), true));
         }
@@ -256,7 +256,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Property 'Missing' does not exist on ZObject.",
                 () => o.SelectToken(DiffPath.FromJsonPath("Missing"), true));
         }
@@ -278,7 +278,7 @@ namespace Difftaculous.Test.Paths
             ZObject o = new ZObject(
                 new ZProperty("Blah", 1));
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Property 'Missing' does not exist on ZObject.",
                 () => o.SelectToken(DiffPath.FromJsonPath("['Missing','Missing2']"), true));
         }
@@ -289,7 +289,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Properties 'Missing', 'Missing2' not valid on ZArray.",
                 () => a.SelectToken(DiffPath.FromJsonPath("['Missing','Missing2']"), true));
         }
@@ -302,21 +302,21 @@ namespace Difftaculous.Test.Paths
 
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Array slice of 99 to * returned no results.",
                 () => a.SelectToken(DiffPath.FromJsonPath("[99:]"), true));
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Array slice of 1 to -19 returned no results.",
                 () => a.SelectToken(DiffPath.FromJsonPath("[1:-19]"), true));
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Array slice of * to -19 returned no results.",
                 () => a.SelectToken(DiffPath.FromJsonPath("[:-19]"), true));
 
             a = new ZArray();
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Array slice of * to * returned no results.",
                 () => a.SelectToken(DiffPath.FromJsonPath("[:]"), true));
 
@@ -339,7 +339,7 @@ namespace Difftaculous.Test.Paths
         {
             ZArray a = new ZArray(1, 2, 3, 4, 5);
 
-            ExceptionAssert.Throws<JsonPathException>(
+            ExceptionAssert.Throws<PathException>(
                 "Index 1000 outside the bounds of ZArray.",
                 () => { a.SelectToken(DiffPath.FromJsonPath("[1000].Ha"), true); });
         }

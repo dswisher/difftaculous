@@ -19,7 +19,7 @@ namespace Difftaculous.Paths
         {
             if (Step == 0)
             {
-                throw new JsonPathException("Step cannot be zero.");
+                throw new PathException("Step cannot be zero.");
             }
 
             foreach (ZToken t in current)
@@ -57,7 +57,7 @@ namespace Difftaculous.Paths
                     {
                         if (errorWhenNoMatch)
                         {
-                            throw new JsonPathException(string.Format("Array slice of {0} to {1} returned no results.",
+                            throw new PathException(string.Format("Array slice of {0} to {1} returned no results.",
                                 Start != null ? Start.Value.ToString(CultureInfo.InvariantCulture) : "*",
                                 End != null ? End.Value.ToString(CultureInfo.InvariantCulture) : "*"));
                         }
@@ -67,7 +67,7 @@ namespace Difftaculous.Paths
                 {
                     if (errorWhenNoMatch)
                     {
-                        throw new JsonPathException(string.Format("Array slice is not valid on {0}.", t.GetType().Name));
+                        throw new PathException(string.Format("Array slice is not valid on {0}.", t.GetType().Name));
                     }
                 }
 

@@ -27,13 +27,13 @@ namespace Difftaculous.Paths
                             yield return v;
 
                         if (errorWhenNoMatch)
-                            throw new JsonPathException(string.Format("Property '{0}' does not exist on ZObject.", name));
+                            throw new PathException(string.Format("Property '{0}' does not exist on ZObject.", name));
                     }
                 }
                 else
                 {
                     if (errorWhenNoMatch)
-                        throw new JsonPathException(string.Format("Properties {0} not valid on {1}.", string.Join(", ", Names.Select(n => "'" + n + "'").ToArray()), t.GetType().Name));
+                        throw new PathException(string.Format("Properties {0} not valid on {1}.", string.Join(", ", Names.Select(n => "'" + n + "'").ToArray()), t.GetType().Name));
                 }
             }
         }

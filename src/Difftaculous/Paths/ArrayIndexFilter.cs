@@ -37,7 +37,7 @@ namespace Difftaculous.Paths
                     {
                         if (errorWhenNoMatch)
                         {
-                            throw new JsonPathException(string.Format("Index * not valid on {0}.", t.GetType().Name));
+                            throw new PathException(string.Format("Index * not valid on {0}.", t.GetType().Name));
                         }
                     }
                 }

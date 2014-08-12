@@ -20,7 +20,7 @@ namespace Difftaculous.Paths
                 {
                     if (errorWhenNoMatch)
                     {
-                        throw new JsonPathException(string.Format("Index {0} outside the bounds of ZArray.", index));
+                        throw new PathException(string.Format("Index {0} outside the bounds of ZArray.", index));
                     }
 
                     return null;
@@ -31,7 +31,7 @@ namespace Difftaculous.Paths
 
             if (errorWhenNoMatch)
             {
-                throw new JsonPathException(string.Format("Index {0} not valid on {1}.", index, t.GetType().Name));
+                throw new PathException(string.Format("Index {0} not valid on {1}.", index, t.GetType().Name));
             }
 
             return null;
