@@ -24,7 +24,7 @@ namespace Difftaculous.Test
 
             Console.WriteLine("Z-JSON, A:\n{0}", adapterA.Content.AsJson());
             Console.WriteLine();
-            Console.WriteLine("Z-JSON, A:\n{0}", adapterB.Content.AsJson());
+            Console.WriteLine("Z-JSON, B:\n{0}", adapterB.Content.AsJson());
             Console.WriteLine();
 
             var result = DiffEngine.Compare(adapterA, adapterB, settings);

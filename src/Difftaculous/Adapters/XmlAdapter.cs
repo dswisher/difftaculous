@@ -43,9 +43,39 @@ namespace Difftaculous.Adapters
                 return AdaptObject(node, counts);
             }
 
+            // If we only have one item in the counts, we have an array...
+            if (counts.Count == 1)
+            {
+                return AdaptArray(node);
+            }
+
             // TODO - arrays and other cases
 
             throw new NotImplementedException("Boom");
+        }
+
+
+
+        private ZArray AdaptArray(XmlNode node)
+        {
+            // TODO - what about the parent element name and each child element name?
+
+            ZArray array = new ZArray();
+
+            foreach (XmlNode child in node.ChildNodes)
+            {
+                if ((child.FirstChild == child.LastChild) && (child.FirstChild is XmlText))
+                {
+                    // TODO - how to know what type to use for the property?
+                    array.Add(new ZValue(child.FirstChild.Value));
+                }
+                else
+                {
+                    throw new NotImplementedException("Complex types within arrays are not yet handled.");
+                }
+            }
+
+            return array;
         }
 
 

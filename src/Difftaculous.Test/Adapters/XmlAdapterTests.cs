@@ -45,7 +45,18 @@ namespace Difftaculous.Test.Adapters
 
 
 
-        private void RunTest(ZObject expected, string xml)
+        [Test]
+        public void SimpleArray()
+        {
+            const string xml = "<team><player>Walt</player><player>Joe</player><player>Fred</player></team>";
+            var expected = new ZArray("Walt", "Joe", "Fred");
+
+            RunTest(expected, xml);
+        }
+
+
+
+        private void RunTest(ZToken expected, string xml)
         {
             ZToken actual = new XmlAdapter(xml).Content;
 

@@ -2,7 +2,7 @@
 using System;
 using Difftaculous.Adapters;
 using Difftaculous.Results;
-
+using Difftaculous.ZModel;
 using NUnit.Framework;
 
 
@@ -20,10 +20,18 @@ namespace Difftaculous.Test
             Console.WriteLine("XML, A:\n{0}", xmlA);
             Console.WriteLine();
             Console.WriteLine("XML, B:\n{0}", xmlB);
-
-            var result = DiffEngine.Compare(new XmlAdapter(xmlA), new XmlAdapter(xmlB), settings);
-
             Console.WriteLine();
+
+            var adapterA = new XmlAdapter(xmlA);
+            var adapterB = new XmlAdapter(xmlB);
+
+            Console.WriteLine("Z-JSON, A:\n{0}", adapterA.Content.AsJson());
+            Console.WriteLine();
+            Console.WriteLine("Z-JSON, B:\n{0}", adapterB.Content.AsJson());
+            Console.WriteLine();
+
+            var result = DiffEngine.Compare(adapterA, adapterB, settings);
+
             Console.WriteLine("Result:\n{0}", result);
 
             return result;
