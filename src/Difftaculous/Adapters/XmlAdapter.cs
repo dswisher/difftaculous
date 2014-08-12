@@ -63,7 +63,15 @@ namespace Difftaculous.Adapters
 
                     if (counts.ContainsKey(name))
                     {
-                        obj.Add(name, Adapt(child));
+                        if ((child.FirstChild == child.LastChild) && (child.FirstChild is XmlText))
+                        {
+                            // TODO - how to know what type to use for the property?
+                            obj.Add(name, new ZValue(child.FirstChild.Value));
+                        }
+                        else
+                        {
+                            obj.Add(name, Adapt(child));                            
+                        }
                     }
                 }
                 else if (child is XmlAttribute)

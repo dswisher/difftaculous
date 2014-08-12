@@ -23,7 +23,7 @@ namespace Difftaculous.Test.Adapters
 
 
 
-        [Test, Ignore("Get this working!")]
+        [Test]
         public void OneProp()
         {
             const string xml = "<thing><name>Fred</name></thing>";
@@ -34,7 +34,7 @@ namespace Difftaculous.Test.Adapters
 
 
 
-        [Test, Ignore("Get this working!")]
+        [Test]
         public void TwoProps()
         {
             const string xml = "<thing><name>Fred</name><age>44</age></thing>";
