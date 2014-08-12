@@ -3,7 +3,7 @@ using Difftaculous.Paths;
 
 namespace Difftaculous.Caveats
 {
-    public interface ICaveat
+    internal interface ICaveat
     {
         DiffPath Path { get; }
 

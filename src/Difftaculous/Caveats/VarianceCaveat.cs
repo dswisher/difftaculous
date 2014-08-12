@@ -5,7 +5,7 @@ using Difftaculous.Paths;
 
 namespace Difftaculous.Caveats
 {
-    public class VarianceCaveat : ICaveat
+    internal class VarianceCaveat : ICaveat
     {
         private readonly double _allowance;
 

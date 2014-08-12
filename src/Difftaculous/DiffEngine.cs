@@ -12,6 +12,9 @@ using Difftaculous.ZModel;
 
 namespace Difftaculous
 {
+    /// <summary>
+    /// The engine used to compare things.
+    /// </summary>
     public class DiffEngine
     {
         private DiffEngine()
@@ -20,25 +23,26 @@ namespace Difftaculous
 
 
 
-        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB)
+        /// <summary>
+        /// Compare two adapted things, using the specified (optional) settings.
+        /// </summary>
+        /// <param name="adapterA">The first thing to compare.</param>
+        /// <param name="adapterB">The second thing to compare.</param>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, DiffSettings settings = null)
         {
-            return Compare(adapterA, adapterB, null, null);
+            if (settings == null)
+            {
+                settings = new DiffSettings();
+            }
+
+            return Compare(adapterA, adapterB, settings.Caveats, settings.Hints);
         }
 
 
-        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<ICaveat> caveats)
-        {
-            return Compare(adapterA, adapterB, caveats, null);
-        }
-
-
-        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<IHint> hints)
-        {
-            return Compare(adapterA, adapterB, null, hints);
-        }
-
-
-        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
+        // TODO - combine this routine into the one above
+        internal static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
         {
             var a = (ZToken)adapterA.Content.Content;
             var b = (ZToken)adapterB.Content.Content;

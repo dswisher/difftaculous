@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Adapters\IAdaptedContent.cs" />
     <Compile Include="Adapters\IAdapter.cs" />
+    <Compile Include="DiffSettings.cs" />
     <Compile Include="Paths\ArrayIndexFilter.cs" />
     <Compile Include="Paths\ArrayMultipleIndexFilter.cs" />
     <Compile Include="Paths\ArraySliceFilter.cs" />

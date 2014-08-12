@@ -8,9 +8,15 @@ using Difftaculous.ZModel;
 
 namespace Difftaculous.Adapters
 {
+    /// <summary>
+    /// Adapt XML content so it can be run through the difference engine.
+    /// </summary>
     public class XmlAdapter : IAdapter
     {
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="content">The content to be adapted.</param>
         public XmlAdapter(string content)
         {
             XmlDocument doc = new XmlDocument();

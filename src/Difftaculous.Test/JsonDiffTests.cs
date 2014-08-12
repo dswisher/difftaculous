@@ -1,9 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using Difftaculous.Adapters;
-using Difftaculous.Caveats;
-using Difftaculous.Hints;
 using Difftaculous.Results;
 using Difftaculous.ZModel;
 
@@ -12,7 +9,7 @@ namespace Difftaculous.Test
 {
     public class JsonDiffTests : AbstractDiffTests
     {
-        protected override IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
+        protected override IDiffResult DoCompare(object a, object b, DiffSettings settings = null)
         {
             var jsonA = AsJson(a);
             var jsonB = AsJson(b);
@@ -30,7 +27,7 @@ namespace Difftaculous.Test
             Console.WriteLine("Z-JSON, A:\n{0}", ((ZToken)adapterB.Content.Content).AsJson());
             Console.WriteLine();
 
-            var result = DiffEngine.Compare(adapterA, adapterB, caveats, hints);
+            var result = DiffEngine.Compare(adapterA, adapterB, settings);
 
             Console.WriteLine("Result:\n{0}", result);
 

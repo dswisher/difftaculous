@@ -3,7 +3,7 @@ using Difftaculous.Paths;
 
 namespace Difftaculous.Hints
 {
-    public class ArrayDiffHint : IHint
+    internal class ArrayDiffHint : IHint
     {
         public enum DiffStrategy
         {

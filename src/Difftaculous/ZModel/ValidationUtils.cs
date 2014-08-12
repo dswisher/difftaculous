@@ -4,7 +4,7 @@ using System;
 
 namespace Difftaculous.ZModel
 {
-    public static class ValidationUtils
+    internal static class ValidationUtils
     {
 
         public static void ArgumentNotNullOrEmpty(string value, string parameterName)
@@ -27,7 +27,7 @@ namespace Difftaculous.ZModel
         }
 #endif
 
-        public static void ArgumentNotNull(object value, string parameterName)
+        internal static void ArgumentNotNull(object value, string parameterName)
         {
             if (value == null)
                 throw new ArgumentNullException(parameterName);

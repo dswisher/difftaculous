@@ -1,9 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using Difftaculous.Adapters;
-using Difftaculous.Caveats;
-using Difftaculous.Hints;
 using Difftaculous.Results;
 
 using NUnit.Framework;
@@ -13,7 +10,7 @@ namespace Difftaculous.Test
 {
     public class XmlDiffTests : AbstractDiffTests
     {
-        protected override IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
+        protected override IDiffResult DoCompare(object a, object b, DiffSettings settings)
         {
             Assert.Ignore("TBD");
 
@@ -24,7 +21,7 @@ namespace Difftaculous.Test
             Console.WriteLine();
             Console.WriteLine("XML, B:\n{0}", xmlB);
 
-            var result = DiffEngine.Compare(new XmlAdapter(xmlA), new XmlAdapter(xmlB), caveats, hints);
+            var result = DiffEngine.Compare(new XmlAdapter(xmlA), new XmlAdapter(xmlB), settings);
 
             Console.WriteLine();
             Console.WriteLine("Result:\n{0}", result);

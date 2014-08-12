@@ -1,10 +1,7 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-using Difftaculous.Caveats;
-using Difftaculous.Hints;
 using Difftaculous.Paths;
 using Difftaculous.Results;
 using Newtonsoft.Json;
@@ -18,7 +15,7 @@ namespace Difftaculous.Test
     [TestFixture]
     public abstract class AbstractDiffTests
     {
-        protected abstract IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints);
+        protected abstract IDiffResult DoCompare(object a, object b, DiffSettings settings = null);
 
 
         public class EmptyObject 
@@ -201,10 +198,9 @@ namespace Difftaculous.Test
             var a = new ScoreClass { Score = 100 };
             var b = new ScoreClass { Score = 99 };
 
-            // TODO - should have a nice, fluent interface to build caveats
-            var caveats = new[] { new VarianceCaveat(DiffPath.FromJsonPath("$.score"), 2) };
+            var settings = DiffSettings.Item(DiffPath.FromJsonPath("$.score")).CanVaryBy(2);
 
-            var result = DoCompare(a, b, caveats);
+            var result = DoCompare(a, b, settings);
 
             result.AreSame.ShouldBe(true);
         }
@@ -217,9 +213,9 @@ namespace Difftaculous.Test
             var a = new ScoreClass { Score = 100 };
             var b = new ScoreClass { Score = 110 };
 
-            var caveats = new[] { new VarianceCaveat(DiffPath.FromJsonPath("$.score"), 2) };
+            var settings = DiffSettings.Item(DiffPath.FromJsonPath("$.score")).CanVaryBy(2);
 
-            var result = DoCompare(a, b, caveats);
+            var result = DoCompare(a, b, settings);
 
             result.AreSame.ShouldBe(false);
         }
@@ -253,11 +249,10 @@ namespace Difftaculous.Test
             var a = new[] { new Person { Name = "Fred", Age = 44 }, new Person { Name = "Barney", Age = 23 } };
             var b = new[] { new Person { Name = "Barney", Age = 23 }, new Person { Name = "Fred", Age = 44 } };
 
-            // TODO - is $ the right JsonPath for this??
-            // TODO - should the key be a Path as well?
-            var hints = new[] { new ArrayDiffHint(DiffPath.FromJsonPath("$"), "name") };
 
-            var result = DoCompare(a, b, hints);
+            var settings = DiffSettings.Array(DiffPath.FromJsonPath("$")).KeyedBy("name");
+
+            var result = DoCompare(a, b, settings);
 
             result.AreSame.ShouldBe(true);
         }
@@ -270,9 +265,9 @@ namespace Difftaculous.Test
             var a = new[] { new Person { Name = "Fred", Age = 44 }, new Person { Name = "Barney", Age = 23 } };
             var b = new[] { new Person { Name = "Barney", Age = 33 }, new Person { Name = "Fred", Age = 44 } };
 
-            var hints = new[] { new ArrayDiffHint(DiffPath.FromJsonPath("$"), "name") };
+            var settings = DiffSettings.Array(DiffPath.FromJsonPath("$")).KeyedBy("name");
 
-            var result = DoCompare(a, b, hints);
+            var result = DoCompare(a, b, settings);
 
             result.AreSame.ShouldBe(false);
             // TODO - need both paths in this annotation
@@ -304,26 +299,6 @@ namespace Difftaculous.Test
 
                 return writer.ToString();
             }
-        }
-
-
-
-        private IDiffResult DoCompare(object a, object b)
-        {
-            return DoCompare(a, b, null, null);
-        }
-
-
-
-        private IDiffResult DoCompare(object a, object b, IEnumerable<IHint> hints)
-        {
-            return DoCompare(a, b, null, hints);
-        }
-
-
-        private IDiffResult DoCompare(object a, object b, IEnumerable<ICaveat> caveats)
-        {
-            return DoCompare(a, b, caveats, null);
         }
 
         #endregion
