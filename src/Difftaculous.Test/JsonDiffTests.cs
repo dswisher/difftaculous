@@ -22,9 +22,9 @@ namespace Difftaculous.Test
             var adapterA = new JsonAdapter(jsonA);
             var adapterB = new JsonAdapter(jsonB);
 
-            Console.WriteLine("Z-JSON, A:\n{0}", ((ZToken)adapterA.Content.Content).AsJson());
+            Console.WriteLine("Z-JSON, A:\n{0}", adapterA.Content.AsJson());
             Console.WriteLine();
-            Console.WriteLine("Z-JSON, A:\n{0}", ((ZToken)adapterB.Content.Content).AsJson());
+            Console.WriteLine("Z-JSON, A:\n{0}", adapterB.Content.AsJson());
             Console.WriteLine();
 
             var result = DiffEngine.Compare(adapterA, adapterB, settings);

@@ -47,7 +47,7 @@ namespace Difftaculous.Test.Adapters
 
         private void RunTest(ZObject expected, string xml)
         {
-            ZToken actual = (ZToken)new XmlAdapter(xml).Content.Content;
+            ZToken actual = new XmlAdapter(xml).Content;
 
             Console.WriteLine("Expected:");
             Console.WriteLine(expected.AsJson());

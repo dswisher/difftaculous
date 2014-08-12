@@ -6,17 +6,22 @@ using Newtonsoft.Json.Linq;
 
 namespace Difftaculous.Adapters
 {
-    public class JsonAdapter : IAdapter
+    /// <summary>
+    /// Adapt JSON content so it can be run through the difference engine.
+    /// </summary>
+    public class JsonAdapter : AbstractAdapter
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="content">The content to be adapted.</param>
         public JsonAdapter(string content)
         {
             var top = JToken.Parse(content);
 
-            Content = new AdaptedContent(Adapt(top));
+            Content = Adapt(top);
         }
 
-
-        public IAdaptedContent Content { get; private set; }
 
 
         private ZToken Adapt(JToken jtoken)

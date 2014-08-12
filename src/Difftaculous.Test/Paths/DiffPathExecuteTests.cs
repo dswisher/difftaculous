@@ -23,7 +23,7 @@ namespace Difftaculous.Test.Paths
     'test': 'no one will find me'
 }";
 
-            ZObject o = ParseJson(json);
+            ZToken o = ParseJson(json);
 
             IList<ZToken> results = o.SelectTokens(DiffPath.FromJsonPath("$..test")).ToList();
 
@@ -36,7 +36,7 @@ namespace Difftaculous.Test.Paths
         public void EvaluatePropertyWithRequired()
         {
             const string json = "{\"bookId\":\"1000\"}";
-            ZObject o = ParseJson(json);
+            ZToken o = ParseJson(json);
 
             string bookId = (string)o.SelectToken(DiffPath.FromJsonPath("bookId"), true);
 
@@ -529,7 +529,7 @@ namespace Difftaculous.Test.Paths
         [Test]
         public void EvaluateLastSingleCharacterProperty()
         {
-            ZObject o2 = ParseJson("{'People':[{'N':'Jeff'}]}");
+            ZToken o2 = ParseJson("{'People':[{'N':'Jeff'}]}");
             string a2 = (string)o2.SelectToken(DiffPath.FromJsonPath("People[0].N"));
 
             Assert.AreEqual("Jeff", a2);
@@ -685,7 +685,7 @@ namespace Difftaculous.Test.Paths
         [Test, Ignore("Get this working!")]
         public void Example()
         {
-            ZObject o = ParseJson(@"{
+            ZToken o = ParseJson(@"{
         ""Stores"": [
           ""Lambton Quay"",
           ""Willis Street""
@@ -751,9 +751,9 @@ namespace Difftaculous.Test.Paths
 
 
 
-        private static ZObject ParseJson(string json)
+        private static ZToken ParseJson(string json)
         {
-            return (ZObject)new JsonAdapter(json).Content.Content;
+            return new JsonAdapter(json).Content;
         }
     }
 }

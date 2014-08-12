@@ -1,9 +1,7 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Difftaculous.Adapters;
-using Difftaculous.Caveats;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
 using Difftaculous.Results;
@@ -30,27 +28,20 @@ namespace Difftaculous
         /// <param name="adapterB">The second thing to compare.</param>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        public static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, DiffSettings settings = null)
+        public static IDiffResult Compare(AbstractAdapter adapterA, AbstractAdapter adapterB, DiffSettings settings = null)
         {
             if (settings == null)
             {
                 settings = new DiffSettings();
             }
 
-            return Compare(adapterA, adapterB, settings.Caveats, settings.Hints);
-        }
-
-
-        // TODO - combine this routine into the one above
-        internal static IDiffResult Compare(IAdapter adapterA, IAdapter adapterB, IEnumerable<ICaveat> caveats, IEnumerable<IHint> hints)
-        {
-            var a = (ZToken)adapterA.Content.Content;
-            var b = (ZToken)adapterB.Content.Content;
+            var a = adapterA.Content;
+            var b = adapterB.Content;
 
             // Push the hints and caveats onto the models
-            if (hints != null)
+            if (settings.Hints != null)
             {
-                foreach (var hint in hints)
+                foreach (var hint in settings.Hints)
                 {
                     foreach (var token in a.SelectTokens(hint.Path))
                     {
@@ -64,9 +55,9 @@ namespace Difftaculous
                 }
             }
 
-            if (caveats != null)
+            if (settings.Caveats != null)
             {
-                foreach (var caveat in caveats)
+                foreach (var caveat in settings.Caveats)
                 {
                     foreach (var token in a.SelectTokens(caveat.Path))
                     {

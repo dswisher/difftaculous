@@ -11,7 +11,7 @@ namespace Difftaculous.Adapters
     /// <summary>
     /// Adapt XML content so it can be run through the difference engine.
     /// </summary>
-    public class XmlAdapter : IAdapter
+    public class XmlAdapter : AbstractAdapter
     {
         /// <summary>
         /// Constructor
@@ -22,12 +22,8 @@ namespace Difftaculous.Adapters
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(content);
 
-            Content = new AdaptedContent(Adapt(doc.DocumentElement));
+            Content = Adapt(doc.DocumentElement);
         }
-
-
-        public IAdaptedContent Content { get; private set; }
-
 
 
 
