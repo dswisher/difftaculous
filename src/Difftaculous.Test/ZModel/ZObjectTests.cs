@@ -1,7 +1,13 @@
 ﻿
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Difftaculous.Test.Helpers;
 using Difftaculous.ZModel;
 using NUnit.Framework;
 using Shouldly;
+
+// ReSharper disable InconsistentNaming
 
 
 namespace Difftaculous.Test.ZModel
@@ -26,11 +32,11 @@ namespace Difftaculous.Test.ZModel
 #if false
 #if !(NET35 || NET20 || PORTABLE40)
         [Test]
-        public void EmbedJValueStringInNewJObject()
+        public void EmbedZValueStringInNewZObject()
         {
             string s = null;
-            var v = new JValue(s);
-            dynamic o = JObject.FromObject(new { title = v });
+            var v = new ZValue(s);
+            dynamic o = ZObject.FromObject(new { title = v });
 
             string output = o.ToString();
 
@@ -44,7 +50,7 @@ namespace Difftaculous.Test.ZModel
 #endif
 
         [Test]
-        public void JObjectWithComments()
+        public void ZObjectWithComments()
         {
             string json = @"{ /*comment2*/
         ""Name"": /*comment3*/ ""Apple"" /*comment4*/, /*comment5*/
@@ -57,7 +63,7 @@ namespace Difftaculous.Test.ZModel
         /*comment11*/ ] /*comment12*/
       } /*comment13*/";
 
-            JToken o = JToken.Parse(json);
+            ZToken o = ZToken.Parse(json);
 
             Assert.AreEqual("Apple", (string) o["Name"]);
         }
@@ -65,8 +71,8 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void WritePropertyWithNoValue()
         {
-            var o = new JObject();
-            o.Add(new JProperty("novalue"));
+            var o = new ZObject();
+            o.Add(new ZProperty("novalue"));
 
             Assert.AreEqual(@"{
   ""novalue"": null
@@ -76,8 +82,8 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void Keys()
         {
-            var o = new JObject();
-            var d = (IDictionary<string, JToken>)o;
+            var o = new ZObject();
+            var d = (IDictionary<string, ZToken>)o;
 
             Assert.AreEqual(0, d.Keys.Count);
 
@@ -89,11 +95,11 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void TryGetValue()
         {
-            JObject o = new JObject();
-            o.Add("PropertyNameValue", new JValue(1));
+            ZObject o = new ZObject();
+            o.Add("PropertyNameValue", new ZValue(1));
             Assert.AreEqual(1, o.Children().Count());
 
-            JToken t;
+            ZToken t;
             Assert.AreEqual(false, o.TryGetValue("sdf", out t));
             Assert.AreEqual(null, t);
 
@@ -101,38 +107,38 @@ namespace Difftaculous.Test.ZModel
             Assert.AreEqual(null, t);
 
             Assert.AreEqual(true, o.TryGetValue("PropertyNameValue", out t));
-            Assert.AreEqual(true, JToken.DeepEquals(new JValue(1), t));
+            Assert.AreEqual(true, ZToken.DeepEquals(new ZValue(1), t));
         }
 
         [Test]
         public void DictionaryItemShouldSet()
         {
-            JObject o = new JObject();
-            o["PropertyNameValue"] = new JValue(1);
+            ZObject o = new ZObject();
+            o["PropertyNameValue"] = new ZValue(1);
             Assert.AreEqual(1, o.Children().Count());
 
-            JToken t;
+            ZToken t;
             Assert.AreEqual(true, o.TryGetValue("PropertyNameValue", out t));
-            Assert.AreEqual(true, JToken.DeepEquals(new JValue(1), t));
+            Assert.AreEqual(true, ZToken.DeepEquals(new ZValue(1), t));
 
-            o["PropertyNameValue"] = new JValue(2);
+            o["PropertyNameValue"] = new ZValue(2);
             Assert.AreEqual(1, o.Children().Count());
 
             Assert.AreEqual(true, o.TryGetValue("PropertyNameValue", out t));
-            Assert.AreEqual(true, JToken.DeepEquals(new JValue(2), t));
+            Assert.AreEqual(true, ZToken.DeepEquals(new ZValue(2), t));
 
             o["PropertyNameValue"] = null;
             Assert.AreEqual(1, o.Children().Count());
 
             Assert.AreEqual(true, o.TryGetValue("PropertyNameValue", out t));
-            Assert.AreEqual(true, JToken.DeepEquals(JValue.CreateNull(), t));
+            Assert.AreEqual(true, ZToken.DeepEquals(ZValue.CreateNull(), t));
         }
 
         [Test]
         public void Remove()
         {
-            JObject o = new JObject();
-            o.Add("PropertyNameValue", new JValue(1));
+            ZObject o = new ZObject();
+            o.Add("PropertyNameValue", new ZValue(1));
             Assert.AreEqual(1, o.Children().Count());
 
             Assert.AreEqual(false, o.Remove("sdf"));
@@ -145,15 +151,15 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void GenericCollectionRemove()
         {
-            JValue v = new JValue(1);
-            JObject o = new JObject();
+            ZValue v = new ZValue(1);
+            ZObject o = new ZObject();
             o.Add("PropertyNameValue", v);
             Assert.AreEqual(1, o.Children().Count());
 
-            Assert.AreEqual(false, ((ICollection<KeyValuePair<string, JToken>>)o).Remove(new KeyValuePair<string, JToken>("PropertyNameValue1", new JValue(1))));
-            Assert.AreEqual(false, ((ICollection<KeyValuePair<string, JToken>>)o).Remove(new KeyValuePair<string, JToken>("PropertyNameValue", new JValue(2))));
-            Assert.AreEqual(false, ((ICollection<KeyValuePair<string, JToken>>)o).Remove(new KeyValuePair<string, JToken>("PropertyNameValue", new JValue(1))));
-            Assert.AreEqual(true, ((ICollection<KeyValuePair<string, JToken>>)o).Remove(new KeyValuePair<string, JToken>("PropertyNameValue", v)));
+            Assert.AreEqual(false, ((ICollection<KeyValuePair<string, ZToken>>)o).Remove(new KeyValuePair<string, ZToken>("PropertyNameValue1", new ZValue(1))));
+            Assert.AreEqual(false, ((ICollection<KeyValuePair<string, ZToken>>)o).Remove(new KeyValuePair<string, ZToken>("PropertyNameValue", new ZValue(2))));
+            Assert.AreEqual(false, ((ICollection<KeyValuePair<string, ZToken>>)o).Remove(new KeyValuePair<string, ZToken>("PropertyNameValue", new ZValue(1))));
+            Assert.AreEqual(true, ((ICollection<KeyValuePair<string, ZToken>>)o).Remove(new KeyValuePair<string, ZToken>("PropertyNameValue", v)));
 
             Assert.AreEqual(0, o.Children().Count());
         }
@@ -162,10 +168,10 @@ namespace Difftaculous.Test.ZModel
         public void DuplicatePropertyNameShouldThrow()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                "Can not add property PropertyNameValue to Newtonsoft.Json.Linq.JObject. Property with the same name already exists on object.",
+                "Can not add property PropertyNameValue to Newtonsoft.Json.Linq.ZObject. Property with the same name already exists on object.",
                 () =>
                 {
-                    JObject o = new JObject();
+                    ZObject o = new ZObject();
                     o.Add("PropertyNameValue", null);
                     o.Add("PropertyNameValue", null);
                 });
@@ -174,13 +180,13 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void GenericDictionaryAdd()
         {
-            JObject o = new JObject();
+            ZObject o = new ZObject();
 
-            o.Add("PropertyNameValue", new JValue(1));
+            o.Add("PropertyNameValue", new ZValue(1));
             Assert.AreEqual(1, (int)o["PropertyNameValue"]);
 
             o.Add("PropertyNameValue1", null);
-            Assert.AreEqual(null, ((JValue)o["PropertyNameValue1"]).Value);
+            Assert.AreEqual(null, ((ZValue)o["PropertyNameValue1"]).Value);
 
             Assert.AreEqual(2, o.Children().Count());
         }
@@ -188,8 +194,8 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void GenericCollectionAdd()
         {
-            JObject o = new JObject();
-            ((ICollection<KeyValuePair<string, JToken>>)o).Add(new KeyValuePair<string, JToken>("PropertyNameValue", new JValue(1)));
+            ZObject o = new ZObject();
+            ((ICollection<KeyValuePair<string, ZToken>>)o).Add(new KeyValuePair<string, ZToken>("PropertyNameValue", new ZValue(1)));
 
             Assert.AreEqual(1, (int)o["PropertyNameValue"]);
             Assert.AreEqual(1, o.Children().Count());
@@ -198,13 +204,13 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void GenericCollectionClear()
         {
-            JObject o = new JObject();
-            o.Add("PropertyNameValue", new JValue(1));
+            ZObject o = new ZObject();
+            o.Add("PropertyNameValue", new ZValue(1));
             Assert.AreEqual(1, o.Children().Count());
 
-            JProperty p = (JProperty)o.Children().ElementAt(0);
+            ZProperty p = (ZProperty)o.Children().ElementAt(0);
 
-            ((ICollection<KeyValuePair<string, JToken>>)o).Clear();
+            ((ICollection<KeyValuePair<string, ZToken>>)o).Clear();
             Assert.AreEqual(0, o.Children().Count());
 
             Assert.AreEqual(null, p.Parent);
@@ -213,52 +219,52 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void GenericCollectionContains()
         {
-            JValue v = new JValue(1);
-            JObject o = new JObject();
+            ZValue v = new ZValue(1);
+            ZObject o = new ZObject();
             o.Add("PropertyNameValue", v);
             Assert.AreEqual(1, o.Children().Count());
 
-            bool contains = ((ICollection<KeyValuePair<string, JToken>>)o).Contains(new KeyValuePair<string, JToken>("PropertyNameValue", new JValue(1)));
+            bool contains = ((ICollection<KeyValuePair<string, ZToken>>)o).Contains(new KeyValuePair<string, ZToken>("PropertyNameValue", new ZValue(1)));
             Assert.AreEqual(false, contains);
 
-            contains = ((ICollection<KeyValuePair<string, JToken>>)o).Contains(new KeyValuePair<string, JToken>("PropertyNameValue", v));
+            contains = ((ICollection<KeyValuePair<string, ZToken>>)o).Contains(new KeyValuePair<string, ZToken>("PropertyNameValue", v));
             Assert.AreEqual(true, contains);
 
-            contains = ((ICollection<KeyValuePair<string, JToken>>)o).Contains(new KeyValuePair<string, JToken>("PropertyNameValue", new JValue(2)));
+            contains = ((ICollection<KeyValuePair<string, ZToken>>)o).Contains(new KeyValuePair<string, ZToken>("PropertyNameValue", new ZValue(2)));
             Assert.AreEqual(false, contains);
 
-            contains = ((ICollection<KeyValuePair<string, JToken>>)o).Contains(new KeyValuePair<string, JToken>("PropertyNameValue1", new JValue(1)));
+            contains = ((ICollection<KeyValuePair<string, ZToken>>)o).Contains(new KeyValuePair<string, ZToken>("PropertyNameValue1", new ZValue(1)));
             Assert.AreEqual(false, contains);
 
-            contains = ((ICollection<KeyValuePair<string, JToken>>)o).Contains(default(KeyValuePair<string, JToken>));
+            contains = ((ICollection<KeyValuePair<string, ZToken>>)o).Contains(default(KeyValuePair<string, ZToken>));
             Assert.AreEqual(false, contains);
         }
 
         [Test]
         public void GenericDictionaryContains()
         {
-            JObject o = new JObject();
-            o.Add("PropertyNameValue", new JValue(1));
+            ZObject o = new ZObject();
+            o.Add("PropertyNameValue", new ZValue(1));
             Assert.AreEqual(1, o.Children().Count());
 
-            bool contains = ((IDictionary<string, JToken>)o).ContainsKey("PropertyNameValue");
+            bool contains = ((IDictionary<string, ZToken>)o).ContainsKey("PropertyNameValue");
             Assert.AreEqual(true, contains);
         }
 
         [Test]
         public void GenericCollectionCopyTo()
         {
-            JObject o = new JObject();
-            o.Add("PropertyNameValue", new JValue(1));
-            o.Add("PropertyNameValue2", new JValue(2));
-            o.Add("PropertyNameValue3", new JValue(3));
+            ZObject o = new ZObject();
+            o.Add("PropertyNameValue", new ZValue(1));
+            o.Add("PropertyNameValue2", new ZValue(2));
+            o.Add("PropertyNameValue3", new ZValue(3));
             Assert.AreEqual(3, o.Children().Count());
 
-            KeyValuePair<string, JToken>[] a = new KeyValuePair<string, JToken>[5];
+            KeyValuePair<string, ZToken>[] a = new KeyValuePair<string, ZToken>[5];
 
-            ((ICollection<KeyValuePair<string, JToken>>)o).CopyTo(a, 1);
+            ((ICollection<KeyValuePair<string, ZToken>>)o).CopyTo(a, 1);
 
-            Assert.AreEqual(default(KeyValuePair<string, JToken>), a[0]);
+            Assert.AreEqual(default(KeyValuePair<string, ZToken>), a[0]);
 
             Assert.AreEqual("PropertyNameValue", a[1].Key);
             Assert.AreEqual(1, (int)a[1].Value);
@@ -269,7 +275,7 @@ namespace Difftaculous.Test.ZModel
             Assert.AreEqual("PropertyNameValue3", a[3].Key);
             Assert.AreEqual(3, (int)a[3].Value);
 
-            Assert.AreEqual(default(KeyValuePair<string, JToken>), a[4]);
+            Assert.AreEqual(default(KeyValuePair<string, ZToken>), a[4]);
         }
 
         [Test]
@@ -280,8 +286,8 @@ namespace Difftaculous.Test.ZModel
 Parameter name: array",
                 () =>
                 {
-                    JObject o = new JObject();
-                    ((ICollection<KeyValuePair<string, JToken>>)o).CopyTo(null, 0);
+                    ZObject o = new ZObject();
+                    ((ICollection<KeyValuePair<string, ZToken>>)o).CopyTo(null, 0);
                 });
         }
 
@@ -293,8 +299,8 @@ Parameter name: array",
 Parameter name: arrayIndex",
                 () =>
                 {
-                    JObject o = new JObject();
-                    ((ICollection<KeyValuePair<string, JToken>>)o).CopyTo(new KeyValuePair<string, JToken>[1], -1);
+                    ZObject o = new ZObject();
+                    ((ICollection<KeyValuePair<string, ZToken>>)o).CopyTo(new KeyValuePair<string, ZToken>[1], -1);
                 });
         }
 
@@ -305,8 +311,8 @@ Parameter name: arrayIndex",
                 @"arrayIndex is equal to or greater than the length of array.",
                 () =>
                 {
-                    JObject o = new JObject();
-                    ((ICollection<KeyValuePair<string, JToken>>)o).CopyTo(new KeyValuePair<string, JToken>[1], 1);
+                    ZObject o = new ZObject();
+                    ((ICollection<KeyValuePair<string, ZToken>>)o).CopyTo(new KeyValuePair<string, ZToken>[1], 1);
                 });
         }
 
@@ -314,15 +320,15 @@ Parameter name: arrayIndex",
         public void GenericCollectionCopyToInsufficientArrayCapacity()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                @"The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.",
+                @"The number of elements in the source ZObject is greater than the available space from arrayIndex to the end of the destination array.",
                 () =>
                 {
-                    JObject o = new JObject();
-                    o.Add("PropertyNameValue", new JValue(1));
-                    o.Add("PropertyNameValue2", new JValue(2));
-                    o.Add("PropertyNameValue3", new JValue(3));
+                    ZObject o = new ZObject();
+                    o.Add("PropertyNameValue", new ZValue(1));
+                    o.Add("PropertyNameValue2", new ZValue(2));
+                    o.Add("PropertyNameValue3", new ZValue(3));
 
-                    ((ICollection<KeyValuePair<string, JToken>>)o).CopyTo(new KeyValuePair<string, JToken>[3], 1);
+                    ((ICollection<KeyValuePair<string, ZToken>>)o).CopyTo(new KeyValuePair<string, ZToken>[3], 1);
                 });
         }
 
@@ -336,16 +342,16 @@ Parameter name: arrayIndex",
                 LastName = "LastNameValue"
             };
 
-            JObject o = JObject.FromObject(raw);
+            ZObject o = ZObject.FromObject(raw);
 
             Assert.AreEqual("FirstNameValue", (string)o["first_name"]);
-            Assert.AreEqual(JTokenType.Raw, ((JValue)o["RawContent"]).Type);
+            Assert.AreEqual(ZTokenType.Raw, ((ZValue)o["RawContent"]).Type);
             Assert.AreEqual("[1,2,3,4,5]", (string)o["RawContent"]);
             Assert.AreEqual("LastNameValue", (string)o["last_name"]);
         }
 
         [Test]
-        public void JTokenReader()
+        public void ZTokenReader()
         {
             PersonRaw raw = new PersonRaw
             {
@@ -354,9 +360,9 @@ Parameter name: arrayIndex",
                 LastName = "LastNameValue"
             };
 
-            JObject o = JObject.FromObject(raw);
+            ZObject o = ZObject.FromObject(raw);
 
-            JsonReader reader = new JTokenReader(o);
+            JsonReader reader = new ZTokenReader(o);
 
             Assert.IsTrue(reader.Read());
             Assert.AreEqual(JsonToken.StartObject, reader.TokenType);
@@ -395,9 +401,9 @@ Parameter name: arrayIndex",
                 LastName = "LastNameValue"
             };
 
-            JObject o = JObject.FromObject(raw);
+            ZObject o = ZObject.FromObject(raw);
 
-            JsonReader reader = new JTokenReader(o);
+            JsonReader reader = new ZTokenReader(o);
             JsonSerializer serializer = new JsonSerializer();
             raw = (PersonRaw)serializer.Deserialize(reader, typeof(PersonRaw));
 
@@ -409,11 +415,11 @@ Parameter name: arrayIndex",
         [Test]
         public void Parse_ShouldThrowOnUnexpectedToken()
         {
-            ExceptionAssert.Throws<JsonReaderException>("Error reading JObject from JsonReader. Current JsonReader item is not an object: StartArray. Path '', line 1, position 1.",
+            ExceptionAssert.Throws<JsonReaderException>("Error reading ZObject from JsonReader. Current JsonReader item is not an object: StartArray. Path '', line 1, position 1.",
                 () =>
                 {
                     string json = @"[""prop""]";
-                    JObject.Parse(json);
+                    ZObject.Parse(json);
                 });
         }
 
@@ -423,7 +429,7 @@ Parameter name: arrayIndex",
             string json = @"[new Date(1207285200000)]";
 
             JArray a = (JArray)JsonConvert.DeserializeObject(json);
-            JValue v = (JValue)a[0];
+            ZValue v = (ZValue)a[0];
 
             Assert.AreEqual(DateTimeUtils.ConvertJavaScriptTicksToDateTime(1207285200000), (DateTime)v);
         }
@@ -432,12 +438,12 @@ Parameter name: arrayIndex",
         public void GenericValueCast()
         {
             string json = @"{""foo"":true}";
-            JObject o = (JObject)JsonConvert.DeserializeObject(json);
+            ZObject o = (ZObject)JsonConvert.DeserializeObject(json);
             bool? value = o.Value<bool?>("foo");
             Assert.AreEqual(true, value);
 
             json = @"{""foo"":null}";
-            o = (JObject)JsonConvert.DeserializeObject(json);
+            o = (ZObject)JsonConvert.DeserializeObject(json);
             value = o.Value<bool?>("foo");
             Assert.AreEqual(null, value);
         }
@@ -447,7 +453,7 @@ Parameter name: arrayIndex",
         {
             ExceptionAssert.Throws<JsonReaderException>(
                 "Invalid property identifier character: ]. Path 'name', line 3, position 5.",
-                () => { JObject.Parse(@"{
+                () => { ZObject.Parse(@"{
     ""name"": ""James"",
     ]!#$THIS IS: BAD JSON![{}}}}]
   }"); });
@@ -456,7 +462,7 @@ Parameter name: arrayIndex",
         [Test]
         public void RawChildValues()
         {
-            JObject o = new JObject();
+            ZObject o = new ZObject();
             o["val1"] = new JRaw("1");
             o["val2"] = new JRaw("1");
 
@@ -467,19 +473,25 @@ Parameter name: arrayIndex",
   ""val2"": 1
 }", json);
         }
+#endif
+
 
         [Test]
         public void Iterate()
         {
-            JObject o = new JObject();
-            o.Add("PropertyNameValue1", new JValue(1));
-            o.Add("PropertyNameValue2", new JValue(2));
+            ZObject o = new ZObject
+            {
+                { "PropertyNameValue1", new ZValue(1) },
+                { "PropertyNameValue2", new ZValue(2) }
+            };
 
-            JToken t = o;
+            ZToken t = o;
 
             int i = 1;
-            foreach (JProperty property in t)
+            foreach (var zToken in t)
             {
+                var property = (ZProperty) zToken;
+
                 Assert.AreEqual("PropertyNameValue" + i, property.Name);
                 Assert.AreEqual(i, (int)property.Value);
 
@@ -487,15 +499,16 @@ Parameter name: arrayIndex",
             }
         }
 
+
         [Test]
         public void KeyValuePairIterate()
         {
-            JObject o = new JObject();
-            o.Add("PropertyNameValue1", new JValue(1));
-            o.Add("PropertyNameValue2", new JValue(2));
+            ZObject o = new ZObject();
+            o.Add("PropertyNameValue1", new ZValue(1));
+            o.Add("PropertyNameValue2", new ZValue(2));
 
             int i = 1;
-            foreach (KeyValuePair<string, JToken> pair in o)
+            foreach (KeyValuePair<string, ZToken> pair in o)
             {
                 Assert.AreEqual("PropertyNameValue" + i, pair.Key);
                 Assert.AreEqual(i, (int)pair.Value);
@@ -504,15 +517,17 @@ Parameter name: arrayIndex",
             }
         }
 
+
+#if false
         [Test]
         public void WriteObjectNullStringValue()
         {
             string s = null;
-            JValue v = new JValue(s);
+            ZValue v = new ZValue(s);
             Assert.AreEqual(null, v.Value);
-            Assert.AreEqual(JTokenType.String, v.Type);
+            Assert.AreEqual(ZTokenType.String, v.Type);
 
-            JObject o = new JObject();
+            ZObject o = new ZObject();
             o["title"] = v;
 
             string output = o.ToString();
@@ -536,7 +551,7 @@ Parameter name: arrayIndex",
         ]
       }";
 
-            JObject o = JObject.Parse(json);
+            ZObject o = ZObject.Parse(json);
 
             string name = (string)o["Name"];
             // Apple
@@ -566,7 +581,7 @@ Parameter name: arrayIndex",
   }
 }";
 
-            JObject json = JObject.Parse(jsonText);
+            ZObject json = ZObject.Parse(jsonText);
 
             Shortie shortie = new Shortie
             {
@@ -593,12 +608,12 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void JObjectContainingHtml()
+        public void ZObjectContainingHtml()
         {
-            JObject o = new JObject();
-            o["rc"] = new JValue(200);
-            o["m"] = new JValue("");
-            o["o"] = new JValue(@"<div class='s1'>
+            ZObject o = new ZObject();
+            o["rc"] = new ZValue(200);
+            o["m"] = new ZValue("");
+            o["o"] = new ZValue(@"<div class='s1'>
     <div class='avatar'>                    
         <a href='asdf'>asdf</a><br />
         <strong>0</strong>
@@ -622,12 +637,12 @@ Parameter name: arrayIndex",
         [Test]
         public void ImplicitValueConversions()
         {
-            JObject moss = new JObject();
-            moss["FirstName"] = new JValue("Maurice");
-            moss["LastName"] = new JValue("Moss");
-            moss["BirthDate"] = new JValue(new DateTime(1977, 12, 30));
-            moss["Department"] = new JValue("IT");
-            moss["JobTitle"] = new JValue("Support");
+            ZObject moss = new ZObject();
+            moss["FirstName"] = new ZValue("Maurice");
+            moss["LastName"] = new ZValue("Moss");
+            moss["BirthDate"] = new ZValue(new DateTime(1977, 12, 30));
+            moss["Department"] = new ZValue("IT");
+            moss["JobTitle"] = new ZValue("Support");
 
             Console.WriteLine(moss.ToString());
             //{
@@ -639,7 +654,7 @@ Parameter name: arrayIndex",
             //}
 
 
-            JObject jen = new JObject();
+            ZObject jen = new ZObject();
             jen["FirstName"] = "Jen";
             jen["LastName"] = "Barber";
             jen["BirthDate"] = new DateTime(1978, 3, 15);
@@ -657,17 +672,17 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void ReplaceJPropertyWithJPropertyWithSameName()
+        public void ReplaceZPropertyWithZPropertyWithSameName()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
 
-            JObject o = new JObject(p1, p2);
+            ZObject o = new ZObject(p1, p2);
             IList l = o;
             Assert.AreEqual(p1, l[0]);
             Assert.AreEqual(p2, l[1]);
 
-            JProperty p3 = new JProperty("Test1", "III");
+            ZProperty p3 = new ZProperty("Test1", "III");
 
             p1.Replace(p3);
             Assert.AreEqual(null, p1.Parent);
@@ -679,7 +694,7 @@ Parameter name: arrayIndex",
             Assert.AreEqual(2, l.Count);
             Assert.AreEqual(2, o.Properties().Count());
 
-            JProperty p4 = new JProperty("Test4", "IV");
+            ZProperty p4 = new ZProperty("Test4", "IV");
 
             p2.Replace(p4);
             Assert.AreEqual(null, p2.Parent);
@@ -698,17 +713,17 @@ Parameter name: arrayIndex",
             int changingCount = 0;
             int changedCount = 0;
 
-            JObject o = new JObject();
+            ZObject o = new ZObject();
             o.PropertyChanging += (sender, args) =>
             {
-                JObject s = (JObject)sender;
-                changing = (s[args.PropertyName] != null) ? ((JValue)s[args.PropertyName]).Value : null;
+                ZObject s = (ZObject)sender;
+                changing = (s[args.PropertyName] != null) ? ((ZValue)s[args.PropertyName]).Value : null;
                 changingCount++;
             };
             o.PropertyChanged += (sender, args) =>
             {
-                JObject s = (JObject)sender;
-                changed = (s[args.PropertyName] != null) ? ((JValue)s[args.PropertyName]).Value : null;
+                ZObject s = (ZObject)sender;
+                changed = (s[args.PropertyName] != null) ? ((ZValue)s[args.PropertyName]).Value : null;
                 changedCount++;
             };
 
@@ -740,7 +755,7 @@ Parameter name: arrayIndex",
             o["NullValue"] = null;
             Assert.AreEqual(null, changing);
             Assert.AreEqual(null, changed);
-            Assert.AreEqual(JValue.CreateNull(), o["NullValue"]);
+            Assert.AreEqual(ZValue.CreateNull(), o["NullValue"]);
             Assert.AreEqual(4, changingCount);
             Assert.AreEqual(4, changedCount);
 
@@ -756,11 +771,11 @@ Parameter name: arrayIndex",
             object changed = null;
             int changedCount = 0;
 
-            JObject o = new JObject();
+            ZObject o = new ZObject();
             o.PropertyChanged += (sender, args) =>
             {
-                JObject s = (JObject)sender;
-                changed = (s[args.PropertyName] != null) ? ((JValue)s[args.PropertyName]).Value : null;
+                ZObject s = (ZObject)sender;
+                changed = (s[args.PropertyName] != null) ? ((ZValue)s[args.PropertyName]).Value : null;
                 changedCount++;
             };
 
@@ -784,38 +799,42 @@ Parameter name: arrayIndex",
 
             o["NullValue"] = null;
             Assert.AreEqual(null, changed);
-            Assert.AreEqual(JValue.CreateNull(), o["NullValue"]);
+            Assert.AreEqual(ZValue.CreateNull(), o["NullValue"]);
             Assert.AreEqual(4, changedCount);
 
             o["NullValue"] = null;
             Assert.AreEqual(4, changedCount);
         }
+#endif
+
 
         [Test]
         public void IListContains()
         {
-            JProperty p = new JProperty("Test", 1);
-            IList l = new JObject(p);
+            ZProperty p = new ZProperty("Test", 1);
+            IList l = new ZObject(p);
 
             Assert.IsTrue(l.Contains(p));
-            Assert.IsFalse(l.Contains(new JProperty("Test", 1)));
+            Assert.IsFalse(l.Contains(new ZProperty("Test", 1)));
         }
+
 
         [Test]
         public void IListIndexOf()
         {
-            JProperty p = new JProperty("Test", 1);
-            IList l = new JObject(p);
+            ZProperty p = new ZProperty("Test", 1);
+            IList l = new ZObject(p);
 
             Assert.AreEqual(0, l.IndexOf(p));
-            Assert.AreEqual(-1, l.IndexOf(new JProperty("Test", 1)));
+            Assert.AreEqual(-1, l.IndexOf(new ZProperty("Test", 1)));
         }
+
 
         [Test]
         public void IListClear()
         {
-            JProperty p = new JProperty("Test", 1);
-            IList l = new JObject(p);
+            ZProperty p = new ZProperty("Test", 1);
+            IList l = new ZObject(p);
 
             Assert.AreEqual(1, l.Count);
 
@@ -824,12 +843,13 @@ Parameter name: arrayIndex",
             Assert.AreEqual(0, l.Count);
         }
 
+
         [Test]
         public void IListCopyTo()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
             object[] a = new object[l.Count];
 
@@ -842,11 +862,11 @@ Parameter name: arrayIndex",
         [Test]
         public void IListAdd()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             l.Add(p3);
 
@@ -854,61 +874,66 @@ Parameter name: arrayIndex",
             Assert.AreEqual(p3, l[2]);
         }
 
+
         [Test]
         public void IListAddBadToken()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                "Can not add Newtonsoft.Json.Linq.JValue to Newtonsoft.Json.Linq.JObject.",
+                "Can not add ZValue to ZObject.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList l = new ZObject(p1, p2);
 
-                    l.Add(new JValue("Bad!"));
+                    l.Add(new ZValue("Bad!"));
                 });
         }
+
 
         [Test]
         public void IListAddBadValue()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                "Argument is not a JToken.",
+                "Argument is not a ZToken.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList l = new ZObject(p1, p2);
 
                     l.Add("Bad!");
                 });
         }
 
+
         [Test]
         public void IListAddPropertyWithExistingName()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                "Can not add property Test2 to Newtonsoft.Json.Linq.JObject. Property with the same name already exists on object.",
+                "Can not add property Test2 to ZObject. Property with the same name already exists on object.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList l = new ZObject(p1, p2);
 
-                    JProperty p3 = new JProperty("Test2", "II");
+                    ZProperty p3 = new ZProperty("Test2", "II");
 
                     l.Add(p3);
                 });
         }
 
+
+#if false
         [Test]
         public void IListRemove()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             // won't do anything
             l.Remove(p3);
@@ -928,9 +953,9 @@ Parameter name: arrayIndex",
         [Test]
         public void IListRemoveAt()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
             // won't do anything
             l.RemoveAt(0);
@@ -941,15 +966,17 @@ Parameter name: arrayIndex",
             l.Remove(p2);
             Assert.AreEqual(0, l.Count);
         }
+#endif
+
 
         [Test]
         public void IListInsert()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             l.Insert(1, p3);
             Assert.AreEqual(l, p3.Parent);
@@ -959,28 +986,31 @@ Parameter name: arrayIndex",
             Assert.AreEqual(p2, l[2]);
         }
 
+
         [Test]
         public void IListIsReadOnly()
         {
-            IList l = new JObject();
+            IList l = new ZObject();
             Assert.IsFalse(l.IsReadOnly);
         }
 
         [Test]
         public void IListIsFixedSize()
         {
-            IList l = new JObject();
+            IList l = new ZObject();
             Assert.IsFalse(l.IsFixedSize);
         }
 
+
+#if false
         [Test]
         public void IListSetItem()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             l[0] = p3;
 
@@ -992,14 +1022,14 @@ Parameter name: arrayIndex",
         public void IListSetItemAlreadyExists()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                "Can not add property Test3 to Newtonsoft.Json.Linq.JObject. Property with the same name already exists on object.",
+                "Can not add property Test3 to Newtonsoft.Json.Linq.ZObject. Property with the same name already exists on object.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList l = new ZObject(p1, p2);
 
-                    JProperty p3 = new JProperty("Test3", "III");
+                    ZProperty p3 = new ZProperty("Test3", "III");
 
                     l[0] = p3;
                     l[1] = p3;
@@ -1010,23 +1040,25 @@ Parameter name: arrayIndex",
         public void IListSetItemInvalid()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                @"Can not add Newtonsoft.Json.Linq.JValue to Newtonsoft.Json.Linq.JObject.",
+                @"Can not add Newtonsoft.Json.Linq.ZValue to Newtonsoft.Json.Linq.ZObject.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList l = new ZObject(p1, p2);
 
-                    l[0] = new JValue(true);
+                    l[0] = new ZValue(true);
                 });
         }
+#endif
+
 
         [Test]
         public void IListSyncRoot()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
             Assert.IsNotNull(l.SyncRoot);
         }
@@ -1034,38 +1066,40 @@ Parameter name: arrayIndex",
         [Test]
         public void IListIsSynchronized()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList l = new ZObject(p1, p2);
 
             Assert.IsFalse(l.IsSynchronized);
         }
 
+
+#if false
         [Test]
-        public void GenericListJTokenContains()
+        public void GenericListZTokenContains()
         {
-            JProperty p = new JProperty("Test", 1);
-            IList<JToken> l = new JObject(p);
+            ZProperty p = new ZProperty("Test", 1);
+            IList<ZToken> l = new ZObject(p);
 
             Assert.IsTrue(l.Contains(p));
-            Assert.IsFalse(l.Contains(new JProperty("Test", 1)));
+            Assert.IsFalse(l.Contains(new ZProperty("Test", 1)));
         }
 
         [Test]
-        public void GenericListJTokenIndexOf()
+        public void GenericListZTokenIndexOf()
         {
-            JProperty p = new JProperty("Test", 1);
-            IList<JToken> l = new JObject(p);
+            ZProperty p = new ZProperty("Test", 1);
+            IList<ZToken> l = new ZObject(p);
 
             Assert.AreEqual(0, l.IndexOf(p));
-            Assert.AreEqual(-1, l.IndexOf(new JProperty("Test", 1)));
+            Assert.AreEqual(-1, l.IndexOf(new ZProperty("Test", 1)));
         }
 
         [Test]
-        public void GenericListJTokenClear()
+        public void GenericListZTokenClear()
         {
-            JProperty p = new JProperty("Test", 1);
-            IList<JToken> l = new JObject(p);
+            ZProperty p = new ZProperty("Test", 1);
+            IList<ZToken> l = new ZObject(p);
 
             Assert.AreEqual(1, l.Count);
 
@@ -1075,13 +1109,13 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void GenericListJTokenCopyTo()
+        public void GenericListZTokenCopyTo()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList<JToken> l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList<ZToken> l = new ZObject(p1, p2);
 
-            JToken[] a = new JToken[l.Count];
+            ZToken[] a = new ZToken[l.Count];
 
             l.CopyTo(a, 0);
 
@@ -1090,13 +1124,13 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void GenericListJTokenAdd()
+        public void GenericListZTokenAdd()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList<JToken> l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList<ZToken> l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             l.Add(p3);
 
@@ -1105,58 +1139,58 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void GenericListJTokenAddBadToken()
+        public void GenericListZTokenAddBadToken()
         {
-            ExceptionAssert.Throws<ArgumentException>("Can not add Newtonsoft.Json.Linq.JValue to Newtonsoft.Json.Linq.JObject.",
+            ExceptionAssert.Throws<ArgumentException>("Can not add Newtonsoft.Json.Linq.ZValue to Newtonsoft.Json.Linq.ZObject.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList<JToken> l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList<ZToken> l = new ZObject(p1, p2);
 
-                    l.Add(new JValue("Bad!"));
+                    l.Add(new ZValue("Bad!"));
                 });
         }
 
         [Test]
-        public void GenericListJTokenAddBadValue()
+        public void GenericListZTokenAddBadValue()
         {
-            ExceptionAssert.Throws<ArgumentException>("Can not add Newtonsoft.Json.Linq.JValue to Newtonsoft.Json.Linq.JObject.",
+            ExceptionAssert.Throws<ArgumentException>("Can not add Newtonsoft.Json.Linq.ZValue to Newtonsoft.Json.Linq.ZObject.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList<JToken> l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList<ZToken> l = new ZObject(p1, p2);
 
-                    // string is implicitly converted to JValue
+                    // string is implicitly converted to ZValue
                     l.Add("Bad!");
                 });
         }
 
         [Test]
-        public void GenericListJTokenAddPropertyWithExistingName()
+        public void GenericListZTokenAddPropertyWithExistingName()
         {
-            ExceptionAssert.Throws<ArgumentException>("Can not add property Test2 to Newtonsoft.Json.Linq.JObject. Property with the same name already exists on object.",
+            ExceptionAssert.Throws<ArgumentException>("Can not add property Test2 to Newtonsoft.Json.Linq.ZObject. Property with the same name already exists on object.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList<JToken> l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList<ZToken> l = new ZObject(p1, p2);
 
-                    JProperty p3 = new JProperty("Test2", "II");
+                    ZProperty p3 = new ZProperty("Test2", "II");
 
                     l.Add(p3);
                 });
         }
 
         [Test]
-        public void GenericListJTokenRemove()
+        public void GenericListZTokenRemove()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList<JToken> l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList<ZToken> l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             // won't do anything
             Assert.IsFalse(l.Remove(p3));
@@ -1174,11 +1208,11 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void GenericListJTokenRemoveAt()
+        public void GenericListZTokenRemoveAt()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList<JToken> l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList<ZToken> l = new ZObject(p1, p2);
 
             // won't do anything
             l.RemoveAt(0);
@@ -1191,13 +1225,13 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void GenericListJTokenInsert()
+        public void GenericListZTokenInsert()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList<JToken> l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList<ZToken> l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             l.Insert(1, p3);
             Assert.AreEqual(l, p3.Parent);
@@ -1208,20 +1242,20 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void GenericListJTokenIsReadOnly()
+        public void GenericListZTokenIsReadOnly()
         {
-            IList<JToken> l = new JObject();
+            IList<ZToken> l = new ZObject();
             Assert.IsFalse(l.IsReadOnly);
         }
 
         [Test]
-        public void GenericListJTokenSetItem()
+        public void GenericListZTokenSetItem()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            IList<JToken> l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            IList<ZToken> l = new ZObject(p1, p2);
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             l[0] = p3;
 
@@ -1230,16 +1264,16 @@ Parameter name: arrayIndex",
         }
 
         [Test]
-        public void GenericListJTokenSetItemAlreadyExists()
+        public void GenericListZTokenSetItemAlreadyExists()
         {
-            ExceptionAssert.Throws<ArgumentException>("Can not add property Test3 to Newtonsoft.Json.Linq.JObject. Property with the same name already exists on object.",
+            ExceptionAssert.Throws<ArgumentException>("Can not add property Test3 to Newtonsoft.Json.Linq.ZObject. Property with the same name already exists on object.",
                 () =>
                 {
-                    JProperty p1 = new JProperty("Test1", 1);
-                    JProperty p2 = new JProperty("Test2", "Two");
-                    IList<JToken> l = new JObject(p1, p2);
+                    ZProperty p1 = new ZProperty("Test1", 1);
+                    ZProperty p2 = new ZProperty("Test2", "Two");
+                    IList<ZToken> l = new ZObject(p1, p2);
 
-                    JProperty p3 = new JProperty("Test3", "III");
+                    ZProperty p3 = new ZProperty("Test3", "III");
 
                     l[0] = p3;
                     l[1] = p3;
@@ -1250,63 +1284,63 @@ Parameter name: arrayIndex",
         [Test]
         public void IBindingListSortDirection()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(ListSortDirection.Ascending, l.SortDirection);
         }
 
         [Test]
         public void IBindingListSortProperty()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(null, l.SortProperty);
         }
 
         [Test]
         public void IBindingListSupportsChangeNotification()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(true, l.SupportsChangeNotification);
         }
 
         [Test]
         public void IBindingListSupportsSearching()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(false, l.SupportsSearching);
         }
 
         [Test]
         public void IBindingListSupportsSorting()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(false, l.SupportsSorting);
         }
 
         [Test]
         public void IBindingListAllowEdit()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(true, l.AllowEdit);
         }
 
         [Test]
         public void IBindingListAllowNew()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(true, l.AllowNew);
         }
 
         [Test]
         public void IBindingListAllowRemove()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(true, l.AllowRemove);
         }
 
         [Test]
         public void IBindingListAddIndex()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             // do nothing
             l.AddIndex(null);
         }
@@ -1318,7 +1352,7 @@ Parameter name: arrayIndex",
                 "Specified method is not supported.",
                 () =>
                 {
-                    IBindingList l = new JObject();
+                    IBindingList l = new ZObject();
                     l.ApplySort(null, ListSortDirection.Ascending);
                 });
         }
@@ -1330,7 +1364,7 @@ Parameter name: arrayIndex",
                 "Specified method is not supported.",
                 () =>
                 {
-                    IBindingList l = new JObject();
+                    IBindingList l = new ZObject();
                     l.RemoveSort();
                 });
         }
@@ -1338,7 +1372,7 @@ Parameter name: arrayIndex",
         [Test]
         public void IBindingListRemoveIndex()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             // do nothing
             l.RemoveIndex(null);
         }
@@ -1350,7 +1384,7 @@ Parameter name: arrayIndex",
                 "Specified method is not supported.",
                 () =>
                 {
-                    IBindingList l = new JObject();
+                    IBindingList l = new ZObject();
                     l.Find(null, null);
                 });
         }
@@ -1358,7 +1392,7 @@ Parameter name: arrayIndex",
         [Test]
         public void IBindingListIsSorted()
         {
-            IBindingList l = new JObject();
+            IBindingList l = new ZObject();
             Assert.AreEqual(false, l.IsSorted);
         }
 
@@ -1366,10 +1400,10 @@ Parameter name: arrayIndex",
         public void IBindingListAddNew()
         {
             ExceptionAssert.Throws<JsonException>(
-                "Could not determine new value to add to 'Newtonsoft.Json.Linq.JObject'.",
+                "Could not determine new value to add to 'Newtonsoft.Json.Linq.ZObject'.",
                 () =>
                 {
-                    IBindingList l = new JObject();
+                    IBindingList l = new ZObject();
                     l.AddNew();
                 });
         }
@@ -1377,14 +1411,14 @@ Parameter name: arrayIndex",
         [Test]
         public void IBindingListAddNewWithEvent()
         {
-            JObject o = new JObject();
-            o._addingNew += (s, e) => e.NewObject = new JProperty("Property!");
+            ZObject o = new ZObject();
+            o._addingNew += (s, e) => e.NewObject = new ZProperty("Property!");
 
             IBindingList l = o;
             object newObject = l.AddNew();
             Assert.IsNotNull(newObject);
 
-            JProperty p = (JProperty)newObject;
+            ZProperty p = (ZProperty)newObject;
             Assert.AreEqual("Property!", p.Name);
             Assert.AreEqual(o, p.Parent);
         }
@@ -1392,9 +1426,9 @@ Parameter name: arrayIndex",
         [Test]
         public void ITypedListGetListName()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            ITypedList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            ITypedList l = new ZObject(p1, p2);
 
             Assert.AreEqual(string.Empty, l.GetListName(null));
         }
@@ -1402,9 +1436,9 @@ Parameter name: arrayIndex",
         [Test]
         public void ITypedListGetItemProperties()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            ITypedList l = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            ITypedList l = new ZObject(p1, p2);
 
             PropertyDescriptorCollection propertyDescriptors = l.GetItemProperties(null);
             Assert.IsNull(propertyDescriptors);
@@ -1413,9 +1447,9 @@ Parameter name: arrayIndex",
         [Test]
         public void ListChanged()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            JObject o = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            ZObject o = new ZObject(p1, p2);
 
             ListChangedType? changedType = null;
             int? index = null;
@@ -1426,21 +1460,21 @@ Parameter name: arrayIndex",
                 index = a.NewIndex;
             };
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             o.Add(p3);
             Assert.AreEqual(changedType, ListChangedType.ItemAdded);
             Assert.AreEqual(index, 2);
-            Assert.AreEqual(p3, ((IList<JToken>)o)[index.Value]);
+            Assert.AreEqual(p3, ((IList<ZToken>)o)[index.Value]);
 
-            JProperty p4 = new JProperty("Test4", "IV");
+            ZProperty p4 = new ZProperty("Test4", "IV");
 
-            ((IList<JToken>)o)[index.Value] = p4;
+            ((IList<ZToken>)o)[index.Value] = p4;
             Assert.AreEqual(changedType, ListChangedType.ItemChanged);
             Assert.AreEqual(index, 2);
-            Assert.AreEqual(p4, ((IList<JToken>)o)[index.Value]);
-            Assert.IsFalse(((IList<JToken>)o).Contains(p3));
-            Assert.IsTrue(((IList<JToken>)o).Contains(p4));
+            Assert.AreEqual(p4, ((IList<ZToken>)o)[index.Value]);
+            Assert.IsFalse(((IList<ZToken>)o).Contains(p3));
+            Assert.IsTrue(((IList<ZToken>)o).Contains(p4));
 
             o["Test1"] = 2;
             Assert.AreEqual(changedType, ListChangedType.ItemChanged);
@@ -1453,9 +1487,9 @@ Parameter name: arrayIndex",
         [Test]
         public void CollectionChanged()
         {
-            JProperty p1 = new JProperty("Test1", 1);
-            JProperty p2 = new JProperty("Test2", "Two");
-            JObject o = new JObject(p1, p2);
+            ZProperty p1 = new ZProperty("Test1", 1);
+            ZProperty p2 = new ZProperty("Test2", "Two");
+            ZObject o = new ZObject(p1, p2);
 
             NotifyCollectionChangedAction? changedType = null;
             int? index = null;
@@ -1466,21 +1500,21 @@ Parameter name: arrayIndex",
                 index = a.NewStartingIndex;
             };
 
-            JProperty p3 = new JProperty("Test3", "III");
+            ZProperty p3 = new ZProperty("Test3", "III");
 
             o.Add(p3);
             Assert.AreEqual(changedType, NotifyCollectionChangedAction.Add);
             Assert.AreEqual(index, 2);
-            Assert.AreEqual(p3, ((IList<JToken>)o)[index.Value]);
+            Assert.AreEqual(p3, ((IList<ZToken>)o)[index.Value]);
 
-            JProperty p4 = new JProperty("Test4", "IV");
+            ZProperty p4 = new ZProperty("Test4", "IV");
 
-            ((IList<JToken>)o)[index.Value] = p4;
+            ((IList<ZToken>)o)[index.Value] = p4;
             Assert.AreEqual(changedType, NotifyCollectionChangedAction.Replace);
             Assert.AreEqual(index, 2);
-            Assert.AreEqual(p4, ((IList<JToken>)o)[index.Value]);
-            Assert.IsFalse(((IList<JToken>)o).Contains(p3));
-            Assert.IsTrue(((IList<JToken>)o).Contains(p4));
+            Assert.AreEqual(p4, ((IList<ZToken>)o)[index.Value]);
+            Assert.IsFalse(((IList<ZToken>)o).Contains(p3));
+            Assert.IsTrue(((IList<ZToken>)o).Contains(p4));
 
             o["Test1"] = 2;
             Assert.AreEqual(changedType, NotifyCollectionChangedAction.Replace);
@@ -1537,7 +1571,7 @@ Parameter name: arrayIndex",
   } ]
 }";
 
-            JObject o = JObject.Parse(json);
+            ZObject o = ZObject.Parse(json);
 
             string searchAddress = (string)o["Placemark"][0]["AddressDetails"]["Country"]["AdministrativeArea"]["SubAdministrativeArea"]["Locality"]["Thoroughfare"]["ThoroughfareName"];
             Assert.AreEqual("435 N Mulford Rd", searchAddress);
@@ -1546,11 +1580,11 @@ Parameter name: arrayIndex",
         [Test]
         public void SetValueWithInvalidPropertyName()
         {
-            ExceptionAssert.Throws<ArgumentException>("Set JObject values with invalid key value: 0. Object property name expected.",
+            ExceptionAssert.Throws<ArgumentException>("Set ZObject values with invalid key value: 0. Object property name expected.",
                 () =>
                 {
-                    JObject o = new JObject();
-                    o[0] = new JValue(3);
+                    ZObject o = new ZObject();
+                    o[0] = new ZValue(3);
                 });
         }
 
@@ -1559,8 +1593,8 @@ Parameter name: arrayIndex",
         {
             object key = "TestKey";
 
-            JObject o = new JObject();
-            o[key] = new JValue(3);
+            ZObject o = new ZObject();
+            o[key] = new ZValue(3);
 
             Assert.AreEqual(3, (int)o[key]);
         }
@@ -1573,7 +1607,7 @@ Parameter name: arrayIndex",
         ""Name"": ""Name2""
       }";
 
-            JObject o = JObject.Parse(json);
+            ZObject o = ZObject.Parse(json);
             string value = (string)o["Name"];
 
             Assert.AreEqual("Name2", value);
@@ -1584,11 +1618,11 @@ Parameter name: arrayIndex",
         public void WriteObjectNullDBNullValue()
         {
             DBNull dbNull = DBNull.Value;
-            JValue v = new JValue(dbNull);
+            ZValue v = new ZValue(dbNull);
             Assert.AreEqual(DBNull.Value, v.Value);
-            Assert.AreEqual(JTokenType.Null, v.Type);
+            Assert.AreEqual(ZTokenType.Null, v.Type);
 
-            JObject o = new JObject();
+            ZObject o = new ZObject();
             o["title"] = v;
 
             string output = o.ToString();
@@ -1611,7 +1645,7 @@ Parameter name: arrayIndex",
   ""responseStatus"": 200
 }";
 
-                    JObject o = JObject.Parse(json);
+                    ZObject o = ZObject.Parse(json);
 
                     string name = (string)o["responseData"];
                 });
@@ -1629,7 +1663,7 @@ Parameter name: arrayIndex",
   ""responseStatus"": 200
 }";
 
-                    JObject o = JObject.Parse(json);
+                    ZObject o = ZObject.Parse(json);
 
                     string name = (string)o.Property("responseData");
                 });
@@ -1638,8 +1672,8 @@ Parameter name: arrayIndex",
         [Test]
         public void ParseIncomplete()
         {
-            ExceptionAssert.Throws<Exception>("Unexpected end of content while loading JObject. Path 'foo', line 1, position 6.",
-                () => { JObject.Parse("{ foo:"); });
+            ExceptionAssert.Throws<Exception>("Unexpected end of content while loading ZObject. Path 'foo', line 1, position 6.",
+                () => { ZObject.Parse("{ foo:"); });
         }
 
         [Test]
@@ -1663,7 +1697,7 @@ Parameter name: arrayIndex",
             reader.Read();
             reader.Read();
 
-            JObject o = (JObject)JToken.ReadFrom(reader);
+            ZObject o = (ZObject)ZToken.ReadFrom(reader);
             Assert.IsNotNull(o);
             Assert.AreEqual(@"{
   ""code"": 0,
@@ -1674,7 +1708,7 @@ Parameter name: arrayIndex",
         [Test]
         public void LoadFromNestedObjectIncomplete()
         {
-            ExceptionAssert.Throws<JsonReaderException>("Unexpected end of content while loading JObject. Path 'short.error.code', line 6, position 15.",
+            ExceptionAssert.Throws<JsonReaderException>("Unexpected end of content while loading ZObject. Path 'short.error.code', line 6, position 15.",
                 () =>
                 {
                     string jsonText = @"{
@@ -1691,7 +1725,7 @@ Parameter name: arrayIndex",
                     reader.Read();
                     reader.Read();
 
-                    JToken.ReadFrom(reader);
+                    ZToken.ReadFrom(reader);
                 });
         }
 
@@ -1699,7 +1733,7 @@ Parameter name: arrayIndex",
         [Test]
         public void GetProperties()
         {
-            JObject o = JObject.Parse("{'prop1':12,'prop2':'hi!','prop3':null,'prop4':[1,2,3]}");
+            ZObject o = ZObject.Parse("{'prop1':12,'prop2':'hi!','prop3':null,'prop4':[1,2,3]}");
 
             ICustomTypeDescriptor descriptor = o;
 
@@ -1709,28 +1743,28 @@ Parameter name: arrayIndex",
             PropertyDescriptor prop1 = properties[0];
             Assert.AreEqual("prop1", prop1.Name);
             Assert.AreEqual(typeof(object), prop1.PropertyType);
-            Assert.AreEqual(typeof(JObject), prop1.ComponentType);
+            Assert.AreEqual(typeof(ZObject), prop1.ComponentType);
             Assert.AreEqual(false, prop1.CanResetValue(o));
             Assert.AreEqual(false, prop1.ShouldSerializeValue(o));
 
             PropertyDescriptor prop2 = properties[1];
             Assert.AreEqual("prop2", prop2.Name);
             Assert.AreEqual(typeof(object), prop2.PropertyType);
-            Assert.AreEqual(typeof(JObject), prop2.ComponentType);
+            Assert.AreEqual(typeof(ZObject), prop2.ComponentType);
             Assert.AreEqual(false, prop2.CanResetValue(o));
             Assert.AreEqual(false, prop2.ShouldSerializeValue(o));
 
             PropertyDescriptor prop3 = properties[2];
             Assert.AreEqual("prop3", prop3.Name);
             Assert.AreEqual(typeof(object), prop3.PropertyType);
-            Assert.AreEqual(typeof(JObject), prop3.ComponentType);
+            Assert.AreEqual(typeof(ZObject), prop3.ComponentType);
             Assert.AreEqual(false, prop3.CanResetValue(o));
             Assert.AreEqual(false, prop3.ShouldSerializeValue(o));
 
             PropertyDescriptor prop4 = properties[3];
             Assert.AreEqual("prop4", prop4.Name);
             Assert.AreEqual(typeof(object), prop4.PropertyType);
-            Assert.AreEqual(typeof(JObject), prop4.ComponentType);
+            Assert.AreEqual(typeof(ZObject), prop4.ComponentType);
             Assert.AreEqual(false, prop4.CanResetValue(o));
             Assert.AreEqual(false, prop4.ShouldSerializeValue(o));
         }
@@ -1739,14 +1773,14 @@ Parameter name: arrayIndex",
         [Test]
         public void ParseEmptyObjectWithComment()
         {
-            JObject o = JObject.Parse("{ /* A Comment */ }");
+            ZObject o = ZObject.Parse("{ /* A Comment */ }");
             Assert.AreEqual(0, o.Count);
         }
 
         [Test]
         public void FromObjectTimeSpan()
         {
-            JValue v = (JValue)JToken.FromObject(TimeSpan.FromDays(1));
+            ZValue v = (ZValue)ZToken.FromObject(TimeSpan.FromDays(1));
             Assert.AreEqual(v.Value, TimeSpan.FromDays(1));
 
             Assert.AreEqual("1.00:00:00", v.ToString());
@@ -1755,7 +1789,7 @@ Parameter name: arrayIndex",
         [Test]
         public void FromObjectUri()
         {
-            JValue v = (JValue)JToken.FromObject(new Uri("http://www.stuff.co.nz"));
+            ZValue v = (ZValue)ZToken.FromObject(new Uri("http://www.stuff.co.nz"));
             Assert.AreEqual(v.Value, new Uri("http://www.stuff.co.nz"));
 
             Assert.AreEqual("http://www.stuff.co.nz/", v.ToString());
@@ -1764,7 +1798,7 @@ Parameter name: arrayIndex",
         [Test]
         public void FromObjectGuid()
         {
-            JValue v = (JValue)JToken.FromObject(new Guid("9065ACF3-C820-467D-BE50-8D4664BEAF35"));
+            ZValue v = (ZValue)ZToken.FromObject(new Guid("9065ACF3-C820-467D-BE50-8D4664BEAF35"));
             Assert.AreEqual(v.Value, new Guid("9065ACF3-C820-467D-BE50-8D4664BEAF35"));
 
             Assert.AreEqual("9065acf3-c820-467d-be50-8d4664beaf35", v.ToString());
@@ -1787,54 +1821,54 @@ Parameter name: arrayIndex",
 ]
 }, 987987";
 
-                    JObject o = JObject.Parse(json);
+                    ZObject o = ZObject.Parse(json);
                 });
         }
 
         [Test]
         public void DeepEqualsIgnoreOrder()
         {
-            JObject o1 = new JObject(
-                new JProperty("null", null),
-                new JProperty("integer", 1),
-                new JProperty("string", "string!"),
-                new JProperty("decimal", 0.5m),
-                new JProperty("array", new JArray(1, 2)));
+            ZObject o1 = new ZObject(
+                new ZProperty("null", null),
+                new ZProperty("integer", 1),
+                new ZProperty("string", "string!"),
+                new ZProperty("decimal", 0.5m),
+                new ZProperty("array", new JArray(1, 2)));
 
             Assert.IsTrue(o1.DeepEquals(o1));
 
-            JObject o2 = new JObject(
-                new JProperty("null", null),
-                new JProperty("string", "string!"),
-                new JProperty("decimal", 0.5m),
-                new JProperty("integer", 1),
-                new JProperty("array", new JArray(1, 2)));
+            ZObject o2 = new ZObject(
+                new ZProperty("null", null),
+                new ZProperty("string", "string!"),
+                new ZProperty("decimal", 0.5m),
+                new ZProperty("integer", 1),
+                new ZProperty("array", new JArray(1, 2)));
 
             Assert.IsTrue(o1.DeepEquals(o2));
 
-            JObject o3 = new JObject(
-                new JProperty("null", null),
-                new JProperty("string", "string!"),
-                new JProperty("decimal", 0.5m),
-                new JProperty("integer", 2),
-                new JProperty("array", new JArray(1, 2)));
+            ZObject o3 = new ZObject(
+                new ZProperty("null", null),
+                new ZProperty("string", "string!"),
+                new ZProperty("decimal", 0.5m),
+                new ZProperty("integer", 2),
+                new ZProperty("array", new JArray(1, 2)));
 
             Assert.IsFalse(o1.DeepEquals(o3));
 
-            JObject o4 = new JObject(
-                new JProperty("null", null),
-                new JProperty("string", "string!"),
-                new JProperty("decimal", 0.5m),
-                new JProperty("integer", 1),
-                new JProperty("array", new JArray(2, 1)));
+            ZObject o4 = new ZObject(
+                new ZProperty("null", null),
+                new ZProperty("string", "string!"),
+                new ZProperty("decimal", 0.5m),
+                new ZProperty("integer", 1),
+                new ZProperty("array", new JArray(2, 1)));
 
             Assert.IsFalse(o1.DeepEquals(o4));
 
-            JObject o5 = new JObject(
-                new JProperty("null", null),
-                new JProperty("string", "string!"),
-                new JProperty("decimal", 0.5m),
-                new JProperty("integer", 1));
+            ZObject o5 = new ZObject(
+                new ZProperty("null", null),
+                new ZProperty("string", "string!"),
+                new ZProperty("decimal", 0.5m),
+                new ZProperty("integer", 1));
 
             Assert.IsFalse(o1.DeepEquals(o5));
 
@@ -1844,41 +1878,41 @@ Parameter name: arrayIndex",
         [Test]
         public void ToListOnEmptyObject()
         {
-            JObject o = JObject.Parse(@"{}");
-            IList<JToken> l1 = o.ToList<JToken>();
+            ZObject o = ZObject.Parse(@"{}");
+            IList<ZToken> l1 = o.ToList<ZToken>();
             Assert.AreEqual(0, l1.Count);
 
-            IList<KeyValuePair<string, JToken>> l2 = o.ToList<KeyValuePair<string, JToken>>();
+            IList<KeyValuePair<string, ZToken>> l2 = o.ToList<KeyValuePair<string, ZToken>>();
             Assert.AreEqual(0, l2.Count);
 
-            o = JObject.Parse(@"{'hi':null}");
+            o = ZObject.Parse(@"{'hi':null}");
 
-            l1 = o.ToList<JToken>();
+            l1 = o.ToList<ZToken>();
             Assert.AreEqual(1, l1.Count);
 
-            l2 = o.ToList<KeyValuePair<string, JToken>>();
+            l2 = o.ToList<KeyValuePair<string, ZToken>>();
             Assert.AreEqual(1, l2.Count);
         }
 
         [Test]
         public void EmptyObjectDeepEquals()
         {
-            Assert.IsTrue(JToken.DeepEquals(new JObject(), new JObject()));
+            Assert.IsTrue(ZToken.DeepEquals(new ZObject(), new ZObject()));
 
-            JObject a = new JObject();
-            JObject b = new JObject();
+            ZObject a = new ZObject();
+            ZObject b = new ZObject();
 
             b.Add("hi", "bye");
             b.Remove("hi");
 
-            Assert.IsTrue(JToken.DeepEquals(a, b));
-            Assert.IsTrue(JToken.DeepEquals(b, a));
+            Assert.IsTrue(ZToken.DeepEquals(a, b));
+            Assert.IsTrue(ZToken.DeepEquals(b, a));
         }
 
         [Test]
         public void GetValueBlogExample()
         {
-            JObject o = JObject.Parse(@"{
+            ZObject o = ZObject.Parse(@"{
         'name': 'Lower',
         'NAME': 'Upper'
       }");
@@ -1896,7 +1930,7 @@ Parameter name: arrayIndex",
         [Test]
         public void GetValue()
         {
-            JObject a = new JObject();
+            ZObject a = new ZObject();
             a["Name"] = "Name!";
             a["name"] = "name!";
             a["title"] = "Title!";
@@ -1909,7 +1943,7 @@ Parameter name: arrayIndex",
             Assert.AreEqual(null, a.GetValue(null, StringComparison.Ordinal));
             Assert.AreEqual(null, a.GetValue(null));
 
-            JToken v;
+            ZToken v;
             Assert.IsFalse(a.TryGetValue("NAME", StringComparison.Ordinal, out v));
             Assert.AreEqual(null, v);
 
@@ -1929,14 +1963,14 @@ Parameter name: arrayIndex",
         {
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
-                var token = JToken.FromObject(value, new JsonSerializer
+                var token = ZToken.FromObject(value, new JsonSerializer
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
-                if (token.Type == JTokenType.Object)
+                if (token.Type == ZTokenType.Object)
                 {
-                    var o = (JObject)token;
-                    o.AddFirst(new JProperty("foo", "bar"));
+                    var o = (ZObject)token;
+                    o.AddFirst(new ZProperty("foo", "bar"));
                     o.WriteTo(writer);
                 }
                 else

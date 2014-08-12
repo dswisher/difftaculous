@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable DoNotCallOverridableMethodsInConstructor
+
 
 namespace Difftaculous.ZModel
 {
@@ -106,7 +108,7 @@ namespace Difftaculous.ZModel
 
             if (o.Type != TokenType.Property)
             {
-                throw new ArgumentException(string.Format("Can not add {0} to {1}.", o.GetType(), GetType()));
+                throw new ArgumentException(string.Format("Can not add {0} to {1}.", o.GetType().Name, GetType().Name));
             }
 
             ZProperty newProperty = (ZProperty)o;
@@ -123,7 +125,7 @@ namespace Difftaculous.ZModel
 
             if (_properties.TryGetValue(newProperty.Name, out existing))
             {
-                throw new ArgumentException(string.Format("Can not add property {0} to {1}. Property with the same name already exists on object.", newProperty.Name, GetType()));
+                throw new ArgumentException(string.Format("Can not add property {0} to {1}. Property with the same name already exists on object.", newProperty.Name, GetType().Name));
             }
         }
 
@@ -599,8 +601,10 @@ namespace Difftaculous.ZModel
         /// </returns>
         public IEnumerator<KeyValuePair<string, ZToken>> GetEnumerator()
         {
-            foreach (ZProperty property in _properties)
+            foreach (var zToken in _properties)
             {
+                var property = (ZProperty) zToken;
+
                 yield return new KeyValuePair<string, ZToken>(property.Name, property.Value);
             }
         }

@@ -3,11 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+
+// ReSharper disable DoNotCallOverridableMethodsInConstructor
 
 
 namespace Difftaculous.ZModel
 {
-    internal abstract class ZContainer : ZToken, IList<ZToken> // , ITypedList, IBindingList, INotifyCollectionChanged, IList, INotifyCollectionChanged
+    internal abstract class ZContainer : ZToken, IList<ZToken>, IList // , ITypedList, IBindingList, INotifyCollectionChanged, INotifyCollectionChanged
     {
 
 #if false
@@ -55,8 +58,9 @@ namespace Difftaculous.ZModel
         protected abstract IList<ZToken> ChildrenTokens { get; }
 
 
-#if false
         private object _syncRoot;
+
+#if false
 #if !(PORTABLE40)
         private bool _busy;
 #endif
@@ -870,8 +874,6 @@ namespace Difftaculous.ZModel
         #endregion
 
 
-
-#if false
         private ZToken EnsureValue(object value)
         {
             if (value == null)
@@ -883,7 +885,9 @@ namespace Difftaculous.ZModel
             throw new ArgumentException("Argument is not a ZToken.");
         }
 
+
         #region IList Members
+
         int IList.Add(object value)
         {
             Add(EnsureValue(value));
@@ -936,16 +940,15 @@ namespace Difftaculous.ZModel
             set { SetItem(index, EnsureValue(value)); }
         }
         #endregion
-#endif
 
 
         #region ICollection Members
-#if false
+
         void ICollection.CopyTo(Array array, int index)
         {
             CopyItemsTo(array, index);
         }
-#endif
+
 
 
         /// <summary>
@@ -958,7 +961,6 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
         bool ICollection.IsSynchronized
         {
             get { return false; }
@@ -974,7 +976,7 @@ namespace Difftaculous.ZModel
                 return _syncRoot;
             }
         }
-#endif
+
         #endregion
 
 
