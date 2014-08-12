@@ -1,4 +1,0 @@
-﻿
-- ArrayDiffHint is confusing - not at all clear what should be specified for the path/key
-
-- Improve build process so versions are kept in sync
