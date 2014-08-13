@@ -184,6 +184,7 @@ namespace Difftaculous.ZModel
         /// Gets a <see cref="ZProperty"/> the specified name.
         /// </summary>
         /// <param name="name">The property name.</param>
+        /// <param name="caseSensitive">True (default) if properties should be compared in a case-sensitive manner.</param>
         /// <returns>A <see cref="ZProperty"/> with the specified name or null.</returns>
         public ZProperty Property(string name, bool caseSensitive = true)
         {

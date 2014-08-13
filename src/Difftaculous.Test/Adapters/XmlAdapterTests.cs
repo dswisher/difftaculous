@@ -56,6 +56,19 @@ namespace Difftaculous.Test.Adapters
 
 
 
+        [Test, Ignore("Get this working!")]
+        public void ArrayWithComplexTypes()
+        {
+            const string xml = "<team><player><name>Walt</name></player><player><name>Fred</name></player></team>";
+            var walt = new ZObject(new ZProperty("name", "Walt"));
+            var fred = new ZObject(new ZProperty("name", "Fred"));
+            var expected = new ZArray(walt, fred);
+
+            RunTest(expected, xml);
+        }
+
+
+
         private void RunTest(ZToken expected, string xml)
         {
             ZToken actual = new XmlAdapter(xml).Content;
