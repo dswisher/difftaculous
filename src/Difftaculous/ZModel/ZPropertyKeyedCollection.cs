@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 
 namespace Difftaculous.ZModel
@@ -159,7 +160,7 @@ namespace Difftaculous.ZModel
 #endif
 
 
-        public bool TryGetValue(string key, out ZToken value)
+        public bool TryGetValue(string key, out ZToken value, bool caseSensitive = true)
         {
             if (_dictionary == null)
             {
@@ -167,7 +168,22 @@ namespace Difftaculous.ZModel
                 return false;
             }
 
-            return _dictionary.TryGetValue(key, out value);
+            if (caseSensitive)
+            {
+                return _dictionary.TryGetValue(key, out value);
+            }
+
+            // TODO - figure out a better way to do this!
+
+            string realKey = _dictionary.Keys.FirstOrDefault(x => x.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+
+            if (realKey == null)
+            {
+                value = null;
+                return false;
+            }
+
+            return _dictionary.TryGetValue(realKey, out value);
         }
 
 

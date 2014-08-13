@@ -20,7 +20,8 @@ namespace Difftaculous.Paths
                 {
                     if (Name != null)
                     {
-                        ZToken v = o[Name];
+                        ZProperty p = o.Property(Name, false);
+                        ZToken v = (p == null) ? null : p.Value;
 
                         if (v != null)
                         {

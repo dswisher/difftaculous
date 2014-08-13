@@ -15,6 +15,27 @@ namespace Difftaculous.Test.Paths
     [TestFixture]
     public class DiffPathExecuteTests
     {
+
+        [Test]
+        public void FieldFilterIsCaseInsensitiveByDefault()
+        {
+            ZObject o = new ZObject(new ZProperty("blah", 1));
+
+            var t = o.SelectToken(DiffPath.FromJsonPath("Blah"));
+            t.ShouldNotBe(null);
+            t.Type.ShouldBe(TokenType.Integer);
+            ((int)t).ShouldBe(1);
+        }
+
+
+        // TODO - add case-insensitive tests (and code) for other filters!
+        // TODO - add case-sensitive flag and tests to go with it!
+
+
+        // -----------------------------------------------------------------
+
+
+
         [Test]
         public void SelectTokenAfterEmptyContainer()
         {

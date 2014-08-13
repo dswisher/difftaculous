@@ -77,7 +77,7 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "name");
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath.Equals("name", StringComparison.InvariantCultureIgnoreCase));
         }
 
 
@@ -150,7 +150,7 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "thing.name");
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath.Equals("thing.name", StringComparison.InvariantCultureIgnoreCase));
         }
 
 

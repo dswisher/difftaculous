@@ -185,7 +185,7 @@ namespace Difftaculous.ZModel
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <returns>A <see cref="ZProperty"/> with the specified name or null.</returns>
-        public ZProperty Property(string name)
+        public ZProperty Property(string name, bool caseSensitive = true)
         {
             if (name == null)
             {
@@ -193,7 +193,7 @@ namespace Difftaculous.ZModel
             }
 
             ZToken property;
-            _properties.TryGetValue(name, out property);
+            _properties.TryGetValue(name, out property, caseSensitive);
             return (ZProperty)property;
         }
 
