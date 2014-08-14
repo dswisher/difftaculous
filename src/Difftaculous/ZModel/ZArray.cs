@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 
+// ReSharper disable DoNotCallOverridableMethodsInConstructor
+
 
 namespace Difftaculous.ZModel
 {

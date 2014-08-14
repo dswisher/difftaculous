@@ -270,8 +270,8 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b, settings);
 
             result.AreSame.ShouldBe(false);
-            // TODO - need both paths in this annotation
-            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "[1].age");
+            // TODO - need both paths in this annotation...maybe?
+            result.Annotations.ShouldContain(x => x.Path.AsJsonPath.Equals("[1].age", StringComparison.InvariantCultureIgnoreCase));
         }
 
 

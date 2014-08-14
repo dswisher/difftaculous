@@ -233,8 +233,20 @@ namespace Difftaculous
 
         private IDiffResult KeyedArrayDiff(ZArray arrayA, ZArray arrayB, string keyName)
         {
-            var dictA = arrayA.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
-            var dictB = arrayB.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
+            // This only works on arrays that contain objects (they're the only things
+            // that have properties we can use as keys).  If we have non-objects, we have
+            // a difference (or perhaps an error, or ??).
+            if (arrayA.Any(x => x.Type != TokenType.Object) || arrayB.Any(x => x.Type != TokenType.Object))
+            {
+                throw new NotImplementedException("Key-array diff for non-objects is not implemented.");
+            }
+
+            var dictA = arrayA.ToDictionary(x => (string)((ZValue)(((ZObject)x).Property(keyName, false)).Value));
+            var dictB = arrayB.ToDictionary(x => (string)((ZValue)(((ZObject)x).Property(keyName, false)).Value));
+
+            // TODO - use x.Property() instead of x[] and use case-insensitive form?
+            // var dictA = arrayA.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
+            // var dictB = arrayB.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
 
             var join = dictA.FullOuterJoin(dictB, x => x.Key, x => x.Key, (a, b, k) => new { Key = k, A = a, B = b });
 
