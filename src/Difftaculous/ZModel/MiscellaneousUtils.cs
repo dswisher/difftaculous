@@ -42,8 +42,6 @@ namespace Difftaculous.ZModel
         }
 
 
-
-#if false
         public static string ToString(object value)
         {
             if (value == null)
@@ -52,6 +50,8 @@ namespace Difftaculous.ZModel
             return (value is string) ? @"""" + value.ToString() + @"""" : value.ToString();
         }
 
+
+#if false
         public static int ByteArrayCompare(byte[] a1, byte[] a2)
         {
             int lengthCompare = a1.Length.CompareTo(a2.Length);

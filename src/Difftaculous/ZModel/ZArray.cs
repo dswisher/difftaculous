@@ -203,8 +203,7 @@ namespace Difftaculous.ZModel
 
                 if (!(key is int))
                 {
-                    throw new NotImplementedException();
-                    //throw new ArgumentException("Set ZArray values with invalid key value: {0}. Array position index expected.".FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                    throw new ArgumentException(string.Format("Set ZArray values with invalid key value: {0}. Array position index expected.", MiscellaneousUtils.ToString(key)));
                 }
 
                 SetItem((int)key, value);

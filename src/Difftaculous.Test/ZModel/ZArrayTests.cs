@@ -1,4 +1,7 @@
 ﻿
+using System;
+using Difftaculous.Test.Helpers;
+using Difftaculous.ZModel;
 using NUnit.Framework;
 
 namespace Difftaculous.Test.ZModel
@@ -11,12 +14,12 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void RemoveSpecificAndRemoveSelf()
         {
-            JObject o = new JObject
+            ZObject o = new ZObject
             {
-                { "results", new JArray(1, 2, 3, 4) }
+                { "results", new ZArray(1, 2, 3, 4) }
             };
 
-            JArray a = (JArray)o["results"];
+            ZArray a = (ZArray)o["results"];
 
             var last = a.Last();
 
@@ -31,7 +34,7 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void Clear()
         {
-            JArray a = new JArray { 1 };
+            ZArray a = new ZArray { 1 };
             Assert.AreEqual(1, a.Count);
 
             a.Clear();
@@ -41,37 +44,41 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void AddToSelf()
         {
-            JArray a = new JArray();
+            ZArray a = new ZArray();
             a.Add(a);
 
             Assert.IsFalse(ReferenceEquals(a[0], a));
         }
+#endif
+
 
         [Test]
         public void Contains()
         {
-            JValue v = new JValue(1);
+            ZValue v = new ZValue(1);
 
-            JArray a = new JArray { v };
+            ZArray a = new ZArray { v };
 
-            Assert.AreEqual(false, a.Contains(new JValue(2)));
-            Assert.AreEqual(false, a.Contains(new JValue(1)));
+            Assert.AreEqual(false, a.Contains(new ZValue(2)));
+            Assert.AreEqual(false, a.Contains(new ZValue(1)));
             Assert.AreEqual(false, a.Contains(null));
             Assert.AreEqual(true, a.Contains(v));
         }
 
+
+#if false
         [Test]
         public void GenericCollectionCopyTo()
         {
-            JArray j = new JArray();
-            j.Add(new JValue(1));
-            j.Add(new JValue(2));
-            j.Add(new JValue(3));
+            ZArray j = new ZArray();
+            j.Add(new ZValue(1));
+            j.Add(new ZValue(2));
+            j.Add(new ZValue(3));
             Assert.AreEqual(3, j.Count);
 
-            JToken[] a = new JToken[5];
+            ZToken[] a = new ZToken[5];
 
-            ((ICollection<JToken>)j).CopyTo(a, 1);
+            ((ICollection<ZToken>)j).CopyTo(a, 1);
 
             Assert.AreEqual(null, a[0]);
 
@@ -87,58 +94,58 @@ namespace Difftaculous.Test.ZModel
         [Test]
         public void GenericCollectionCopyToNullArrayShouldThrow()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             ExceptionAssert.Throws<ArgumentNullException>(
                 @"Value cannot be null.
 Parameter name: array",
-                () => { ((ICollection<JToken>)j).CopyTo(null, 0); });
+                () => { ((ICollection<ZToken>)j).CopyTo(null, 0); });
         }
 
         [Test]
         public void GenericCollectionCopyToNegativeArrayIndexShouldThrow()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             ExceptionAssert.Throws<ArgumentOutOfRangeException>(
                 @"arrayIndex is less than 0.
 Parameter name: arrayIndex",
-                () => { ((ICollection<JToken>)j).CopyTo(new JToken[1], -1); });
+                () => { ((ICollection<ZToken>)j).CopyTo(new ZToken[1], -1); });
         }
 
         [Test]
         public void GenericCollectionCopyToArrayIndexEqualGreaterToArrayLengthShouldThrow()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             ExceptionAssert.Throws<ArgumentException>(
                 @"arrayIndex is equal to or greater than the length of array.",
-                () => { ((ICollection<JToken>)j).CopyTo(new JToken[1], 1); });
+                () => { ((ICollection<ZToken>)j).CopyTo(new ZToken[1], 1); });
         }
 
         [Test]
         public void GenericCollectionCopyToInsufficientArrayCapacity()
         {
-            JArray j = new JArray();
-            j.Add(new JValue(1));
-            j.Add(new JValue(2));
-            j.Add(new JValue(3));
+            ZArray j = new ZArray();
+            j.Add(new ZValue(1));
+            j.Add(new ZValue(2));
+            j.Add(new ZValue(3));
 
             ExceptionAssert.Throws<ArgumentException>(
-                @"The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.",
-                () => { ((ICollection<JToken>)j).CopyTo(new JToken[3], 1); });
+                @"The number of elements in the source ZObject is greater than the available space from arrayIndex to the end of the destination array.",
+                () => { ((ICollection<ZToken>)j).CopyTo(new ZToken[3], 1); });
         }
 
         [Test]
         public void Remove()
         {
-            JValue v = new JValue(1);
-            JArray j = new JArray();
+            ZValue v = new ZValue(1);
+            ZArray j = new ZArray();
             j.Add(v);
 
             Assert.AreEqual(1, j.Count);
 
-            Assert.AreEqual(false, j.Remove(new JValue(1)));
+            Assert.AreEqual(false, j.Remove(new ZValue(1)));
             Assert.AreEqual(false, j.Remove(null));
             Assert.AreEqual(true, j.Remove(v));
             Assert.AreEqual(false, j.Remove(v));
@@ -149,11 +156,11 @@ Parameter name: arrayIndex",
         [Test]
         public void IndexOf()
         {
-            JValue v1 = new JValue(1);
-            JValue v2 = new JValue(1);
-            JValue v3 = new JValue(1);
+            ZValue v1 = new ZValue(1);
+            ZValue v2 = new ZValue(1);
+            ZValue v3 = new ZValue(1);
 
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             j.Add(v1);
             Assert.AreEqual(0, j.IndexOf(v1));
@@ -176,11 +183,11 @@ Parameter name: arrayIndex",
         [Test]
         public void RemoveAt()
         {
-            JValue v1 = new JValue(1);
-            JValue v2 = new JValue(1);
-            JValue v3 = new JValue(1);
+            ZValue v1 = new ZValue(1);
+            ZValue v2 = new ZValue(1);
+            ZValue v3 = new ZValue(1);
 
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             j.Add(v1);
             j.Add(v2);
@@ -200,7 +207,7 @@ Parameter name: arrayIndex",
         [Test]
         public void RemoveAtOutOfRangeIndexShouldError()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             ExceptionAssert.Throws<ArgumentOutOfRangeException>(
                 @"Index is equal to or greater than Count.
@@ -211,23 +218,25 @@ Parameter name: index",
         [Test]
         public void RemoveAtNegativeIndexShouldError()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             ExceptionAssert.Throws<ArgumentOutOfRangeException>(
                 @"Index is less than 0.
 Parameter name: index",
                 () => { j.RemoveAt(-1); });
         }
+#endif
+
 
         [Test]
         public void Insert()
         {
-            JValue v1 = new JValue(1);
-            JValue v2 = new JValue(2);
-            JValue v3 = new JValue(3);
-            JValue v4 = new JValue(4);
+            ZValue v1 = new ZValue(1);
+            ZValue v2 = new ZValue(2);
+            ZValue v3 = new ZValue(3);
+            ZValue v4 = new ZValue(4);
 
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             j.Add(v1);
             j.Add(v2);
@@ -240,14 +249,15 @@ Parameter name: index",
             Assert.AreEqual(3, j.IndexOf(v3));
         }
 
+
         [Test]
         public void AddFirstAddedTokenShouldBeFirst()
         {
-            JValue v1 = new JValue(1);
-            JValue v2 = new JValue(2);
-            JValue v3 = new JValue(3);
+            ZValue v1 = new ZValue(1);
+            ZValue v2 = new ZValue(2);
+            ZValue v3 = new ZValue(3);
 
-            JArray j = new JArray();
+            ZArray j = new ZArray();
             Assert.AreEqual(null, j.First);
             Assert.AreEqual(null, j.Last);
 
@@ -264,13 +274,14 @@ Parameter name: index",
             Assert.AreEqual(v1, j.Last);
         }
 
+
         [Test]
         public void InsertShouldInsertAtZeroIndex()
         {
-            JValue v1 = new JValue(1);
-            JValue v2 = new JValue(2);
+            ZValue v1 = new ZValue(1);
+            ZValue v2 = new ZValue(2);
 
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             j.Insert(0, v1);
             Assert.AreEqual(0, j.IndexOf(v1));
@@ -280,46 +291,50 @@ Parameter name: index",
             Assert.AreEqual(0, j.IndexOf(v2));
         }
 
+
         [Test]
         public void InsertNull()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
             j.Insert(0, null);
 
-            Assert.AreEqual(null, ((JValue)j[0]).Value);
+            Assert.AreEqual(null, ((ZValue)j[0]).Value);
         }
+
 
         [Test]
         public void InsertNegativeIndexShouldThrow()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             ExceptionAssert.Throws<ArgumentOutOfRangeException>(
                 @"Index was out of range. Must be non-negative and less than the size of the collection.
 Parameter name: index",
-                () => { j.Insert(-1, new JValue(1)); });
+                () => j.Insert(-1, new ZValue(1)));
         }
+
 
         [Test]
         public void InsertOutOfRangeIndexShouldThrow()
         {
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             ExceptionAssert.Throws<ArgumentOutOfRangeException>(
                 @"Index must be within the bounds of the List.
 Parameter name: index",
-                () => { j.Insert(2, new JValue(1)); });
+                () => j.Insert(2, new ZValue(1)));
         }
+
 
         [Test]
         public void Item()
         {
-            JValue v1 = new JValue(1);
-            JValue v2 = new JValue(2);
-            JValue v3 = new JValue(3);
-            JValue v4 = new JValue(4);
+            ZValue v1 = new ZValue(1);
+            ZValue v2 = new ZValue(2);
+            ZValue v3 = new ZValue(3);
+            ZValue v4 = new ZValue(4);
 
-            JArray j = new JArray();
+            ZArray j = new ZArray();
 
             j.Add(v1);
             j.Add(v2);
@@ -333,14 +348,16 @@ Parameter name: index",
             Assert.AreEqual(1, j.IndexOf(v4));
         }
 
+
+#if false
         [Test]
         public void Parse_ShouldThrowOnUnexpectedToken()
         {
             string json = @"{""prop"":""value""}";
 
             ExceptionAssert.Throws<JsonReaderException>(
-                "Error reading JArray from JsonReader. Current JsonReader item is not an array: StartObject. Path '', line 1, position 1.",
-                () => { JArray.Parse(json); });
+                "Error reading ZArray from JsonReader. Current JsonReader item is not an array: StartObject. Path '', line 1, position 1.",
+                () => { ZArray.Parse(json); });
         }
 
         public class ListItemFields
@@ -361,16 +378,16 @@ Parameter name: index",
                 new ListItemFields { ListItemText = "Third", ListItemValue = 3 }
             };
 
-            JObject optionValues =
-                new JObject(
+            ZObject optionValues =
+                new ZObject(
                     new JProperty("options",
-                        new JArray(
-                            new JObject(
+                        new ZArray(
+                            new ZObject(
                                 new JProperty("text", itemZeroText),
                                 new JProperty("value", "0")),
                             from r in t
                             orderby r.ListItemValue
-                            select new JObject(
+                            select new ZObject(
                                 new JProperty("text", r.ListItemText),
                                 new JProperty("value", r.ListItemValue.ToString())))));
 
@@ -397,14 +414,16 @@ Parameter name: index",
   ]
 }", result);
         }
+#endif
+
 
         [Test]
         public void Iterate()
         {
-            JArray a = new JArray(1, 2, 3, 4, 5);
+            ZArray a = new ZArray(1, 2, 3, 4, 5);
 
             int i = 1;
-            foreach (JToken token in a)
+            foreach (ZToken token in a)
             {
                 Assert.AreEqual(i, (int)token);
                 i++;
@@ -412,13 +431,14 @@ Parameter name: index",
         }
 
 
+#if false
 #if !(NETFX_CORE || PORTABLE || PORTABLE40)
         [Test]
         public void ITypedListGetItemProperties()
         {
             JProperty p1 = new JProperty("Test1", 1);
             JProperty p2 = new JProperty("Test2", "Two");
-            ITypedList a = new JArray(new JObject(p1, p2));
+            ITypedList a = new ZArray(new ZObject(p1, p2));
 
             PropertyDescriptorCollection propertyDescriptors = a.GetItemProperties(null);
             Assert.IsNotNull(propertyDescriptors);
@@ -427,11 +447,13 @@ Parameter name: index",
             Assert.AreEqual("Test2", propertyDescriptors[1].Name);
         }
 #endif
+#endif
 
-        [Test]
+
+        [Test, Ignore("Needs CloneToken")]
         public void AddArrayToSelf()
         {
-            JArray a = new JArray(1, 2);
+            ZArray a = new ZArray(1, 2);
             a.Add(a);
 
             Assert.AreEqual(3, a.Count);
@@ -440,33 +462,37 @@ Parameter name: index",
             Assert.AreNotSame(a, a[2]);
         }
 
+
         [Test]
         public void SetValueWithInvalidIndex()
         {
             ExceptionAssert.Throws<ArgumentException>(
-                @"Set JArray values with invalid key value: ""badvalue"". Array position index expected.",
+                @"Set ZArray values with invalid key value: ""badvalue"". Array position index expected.",
                 () =>
                 {
-                    JArray a = new JArray();
-                    a["badvalue"] = new JValue(3);
+                    ZArray a = new ZArray();
+                    a["badvalue"] = new ZValue(3);
                 });
         }
+
 
         [Test]
         public void SetValue()
         {
             object key = 0;
 
-            JArray a = new JArray((object)null);
-            a[key] = new JValue(3);
+            ZArray a = new ZArray((object)null);
+            a[key] = new ZValue(3);
 
             Assert.AreEqual(3, (int)a[key]);
         }
 
+
+#if false
         [Test]
         public void ReplaceAll()
         {
-            JArray a = new JArray(new[] { 1, 2, 3 });
+            ZArray a = new ZArray(new[] { 1, 2, 3 });
             Assert.AreEqual(3, a.Count);
             Assert.AreEqual(1, (int)a[0]);
             Assert.AreEqual(2, (int)a[1]);
@@ -481,14 +507,16 @@ Parameter name: index",
         public void ParseIncomplete()
         {
             ExceptionAssert.Throws<JsonReaderException>(
-                "Unexpected end of content while loading JArray. Path '[0]', line 1, position 2.",
-                () => { JArray.Parse("[1"); });
+                "Unexpected end of content while loading ZArray. Path '[0]', line 1, position 2.",
+                () => { ZArray.Parse("[1"); });
         }
+#endif
+
 
         [Test]
         public void InsertAddEnd()
         {
-            JArray array = new JArray();
+            ZArray array = new ZArray();
             array.Insert(0, 123);
             array.Insert(1, 456);
 
@@ -497,6 +525,8 @@ Parameter name: index",
             Assert.AreEqual(456, (int)array[1]);
         }
 
+
+#if false
         [Test]
         public void ParseAdditionalContent()
         {
@@ -508,7 +538,7 @@ Parameter name: index",
 
             ExceptionAssert.Throws<JsonReaderException>(
                 "Additional text encountered after finished reading JSON content: ,. Path '', line 5, position 2.",
-                () => { JArray.Parse(json); });
+                () => { ZArray.Parse(json); });
         }
 
         [Test]
@@ -516,13 +546,13 @@ Parameter name: index",
         {
             string json = @"{""decks"":[]}";
 
-            JArray decks = (JArray)JObject.Parse(json)["decks"];
-            IList<JToken> l = decks.ToList();
+            ZArray decks = (ZArray)ZObject.Parse(json)["decks"];
+            IList<ZToken> l = decks.ToList();
             Assert.AreEqual(0, l.Count);
 
             json = @"{""decks"":[1]}";
 
-            decks = (JArray)JObject.Parse(json)["decks"];
+            decks = (ZArray)ZObject.Parse(json)["decks"];
             l = decks.ToList();
             Assert.AreEqual(1, l.Count);
         }

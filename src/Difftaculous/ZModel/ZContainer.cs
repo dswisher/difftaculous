@@ -430,8 +430,6 @@ namespace Difftaculous.ZModel
 
         internal virtual void SetItem(int index, ZToken item)
         {
-            throw new NotImplementedException();
-#if false
             if (index < 0)
                 throw new ArgumentOutOfRangeException("index", "Index is less than 0.");
             if (index >= ChildrenTokens.Count)
@@ -442,7 +440,7 @@ namespace Difftaculous.ZModel
             if (IsTokenUnchanged(existing, item))
                 return;
 
-            CheckReentrancy();
+            // CheckReentrancy();
 
             item = EnsureParentToken(item, false);
 
@@ -467,6 +465,7 @@ namespace Difftaculous.ZModel
             existing.Previous = null;
             existing.Next = null;
 
+#if false
 #if !(NETFX_CORE || PORTABLE || PORTABLE40)
             if (_listChanged != null)
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
@@ -546,14 +545,13 @@ namespace Difftaculous.ZModel
         }
 
 
-#if false
         internal static bool IsTokenUnchanged(ZToken currentValue, ZToken newValue)
         {
-            JValue v1 = currentValue as JValue;
+            ZValue v1 = currentValue as ZValue;
             if (v1 != null)
             {
                 // null will get turned into a JValue of type null
-                if (v1.Type == ZTokenType.Null && newValue == null)
+                if (v1.Type == TokenType.Null && newValue == null)
                     return true;
 
                 return v1.Equals(newValue);
@@ -561,8 +559,6 @@ namespace Difftaculous.ZModel
 
             return false;
         }
-#endif
-
 
 
         internal virtual void ValidateToken(ZToken o, ZToken existing)
