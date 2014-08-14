@@ -3,17 +3,14 @@ using System;
 using Difftaculous.Adapters;
 using Difftaculous.Results;
 using Difftaculous.ZModel;
-using NUnit.Framework;
 
 
 namespace Difftaculous.Test
 {
     public class XmlDiffTests : AbstractDiffTests
     {
-        protected override IDiffResult DoCompare(object a, object b, DiffSettings settings)
+        protected override IDiffResult DoCompare(object a, object b, DiffSettings settings = null)
         {
-            Assert.Ignore("TBD");
-
             var xmlA = AsXml(a);
             var xmlB = AsXml(b);
 

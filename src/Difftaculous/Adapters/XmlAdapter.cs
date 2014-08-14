@@ -71,7 +71,7 @@ namespace Difftaculous.Adapters
                 }
                 else
                 {
-                    throw new NotImplementedException("Complex types within arrays are not yet handled.");
+                    array.Add(Adapt(child));
                 }
             }
 
