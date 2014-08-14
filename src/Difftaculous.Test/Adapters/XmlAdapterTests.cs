@@ -56,7 +56,7 @@ namespace Difftaculous.Test.Adapters
 
 
 
-        [Test, Ignore("Get this working!")]
+        [Test]
         public void ArrayWithComplexTypes()
         {
             const string xml = "<team><player><name>Walt</name></player><player><name>Fred</name></player></team>";
