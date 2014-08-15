@@ -6,22 +6,17 @@ namespace Difftaculous.Results
     /// <summary>
     /// A description of a difference between two items.
     /// </summary>
-    public class DiffAnnotation
+    public class DiffAnnotation : AbstractDiffAnnotation
     {
+        private readonly string _message;
+
         internal DiffAnnotation(DiffPath path, string message)
+            : base(path)
         {
-            Path = path;
-            Message = message;
+            _message = message;
         }
 
-        /// <summary>
-        /// The path where the difference was detected.
-        /// </summary>
-        public DiffPath Path { get; private set; }
 
-        /// <summary>
-        /// A description of the difference.
-        /// </summary>
-        public string Message { get; private set; }
+        public override string Message { get { return _message; } }
     }
 }

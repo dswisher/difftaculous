@@ -28,7 +28,7 @@ namespace Difftaculous.Results
             Annotations = new[] { annotation };
         }
 
-        public IEnumerable<DiffAnnotation> Annotations { get; private set; }
+        public IEnumerable<AbstractDiffAnnotation> Annotations { get; private set; }
         public bool AreSame { get; private set; }
 
 

@@ -66,6 +66,7 @@
     <Compile Include="Paths\ScanFilter.cs" />
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
+    <Compile Include="Results\AbstractDiffAnnotation.cs" />
     <Compile Include="ZModel\CollectionUtils.cs" />
     <Compile Include="ZModel\ConvertUtils.cs" />
     <Compile Include="ZModel\Extensions.cs" />

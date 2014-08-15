@@ -17,7 +17,7 @@ namespace Difftaculous.Results
         /// <summary>
         /// Details of any differences that were found.
         /// </summary>
-        IEnumerable<DiffAnnotation> Annotations { get; }
+        IEnumerable<AbstractDiffAnnotation> Annotations { get; }
 
         /// <summary>
         /// Merge two difference results together
