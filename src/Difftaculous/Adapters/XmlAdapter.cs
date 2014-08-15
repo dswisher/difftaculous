@@ -49,7 +49,7 @@ namespace Difftaculous.Adapters
                 return AdaptArray(node);
             }
 
-            // TODO - arrays and other cases
+            // TODO - other cases?
 
             throw new NotImplementedException("Boom");
         }
@@ -104,19 +104,26 @@ namespace Difftaculous.Adapters
                         }
                     }
                 }
-                else if (child is XmlAttribute)
-                {
-                    name = child.Name;
-
-                    if (counts.ContainsKey(name))
-                    {
-                        throw new NotImplementedException("Attributes are not yet handled!");
-                    }
-                }
 
                 if ((name != null) && counts.ContainsKey(name))
                 {
                     counts.Remove(name);
+                }
+            }
+
+            if (node.Attributes != null)
+            {
+                foreach (XmlAttribute attr in node.Attributes)
+                {
+                    string name = attr.Name;
+
+                    if (counts.ContainsKey(name))
+                    {
+                        // TODO - how to know what type to use for the property?
+                        obj.Add(name, new ZValue(attr.Value));
+
+                        counts.Remove(name);
+                    }
                 }
             }
 
@@ -154,6 +161,23 @@ namespace Difftaculous.Adapters
                 else
                 {
                     counts.Add(name, 1);
+                }
+            }
+
+            if (node.Attributes != null)
+            {
+                foreach (XmlAttribute attr in node.Attributes)
+                {
+                    string name = attr.Name;
+
+                    if (counts.ContainsKey(name))
+                    {
+                        counts[name] += 1;
+                    }
+                    else
+                    {
+                        counts.Add(name, 1);
+                    }
                 }
             }
 

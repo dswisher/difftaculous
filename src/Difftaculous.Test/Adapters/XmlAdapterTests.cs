@@ -24,7 +24,7 @@ namespace Difftaculous.Test.Adapters
 
 
         [Test]
-        public void OneProp()
+        public void OneProperty()
         {
             const string xml = "<thing><name>Fred</name></thing>";
             var expected = new ZObject(new ZProperty("name", "Fred"));
@@ -35,7 +35,18 @@ namespace Difftaculous.Test.Adapters
 
 
         [Test]
-        public void TwoProps()
+        public void OnePropertyAsAttribute()
+        {
+            const string xml = "<thing name=\"Fred\"></thing>";
+            var expected = new ZObject(new ZProperty("name", "Fred"));
+
+            RunTest(expected, xml);
+        }
+
+
+
+        [Test]
+        public void TwoProperties()
         {
             const string xml = "<thing><name>Fred</name><age>44</age></thing>";
             var expected = new ZObject(new ZProperty("name", "Fred"), new ZProperty("age", 44));
