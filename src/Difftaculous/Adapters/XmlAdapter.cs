@@ -170,6 +170,12 @@ namespace Difftaculous.Adapters
                 {
                     string name = attr.Name;
 
+                    // TODO!  HACK!  Need to figure out a better way to handle this
+                    if (name.StartsWith("xmlns"))
+                    {
+                        continue;
+                    }
+
                     if (counts.ContainsKey(name))
                     {
                         counts[name] += 1;
