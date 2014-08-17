@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,12 +21,19 @@ namespace Difftaculous.Results
         }
 
 
-        // TODO - need to replace message with a structure of some sort
-        public DiffResult(DiffPath path, string message)
-        {
-            var annotation = new DiffAnnotation(path, message);
 
+        public DiffResult(AbstractDiffAnnotation annotation)
+        {
             Annotations = new[] { annotation };
+        }
+
+
+
+        // TODO - need to replace message with a structure of some sort
+        [Obsolete]
+        public DiffResult(DiffPath path, string message)
+            : this(new DiffAnnotation(path, message))
+        {
         }
 
         public IEnumerable<AbstractDiffAnnotation> Annotations { get; private set; }

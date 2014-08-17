@@ -85,7 +85,7 @@ namespace Difftaculous
 
             if (typeA != typeB)
             {
-                return new DiffResult(tokenA.Path, "types are not consistent");
+                return new DiffResult(new InconsistentTypesAnnotation(tokenA.Path, typeA, typeB));
             }
 
             if (tokenA is ZObject)
@@ -118,13 +118,13 @@ namespace Difftaculous
             {
                 if (pair.PropA == null)
                 {
-                    result = result.Merge(new DiffResult(objA.Path, "Property " + pair.Name + " is missing."));
+                    result = result.Merge(new DiffResult(new MissingPropertyAnnotation(objA.Path, pair.Name)));
                     continue;
                 }
 
                 if (pair.PropB == null)
                 {
-                    result = result.Merge(new DiffResult(objB.Path, "Property " + pair.Name + " is missing."));
+                    result = result.Merge(new DiffResult(new MissingPropertyAnnotation(objB.Path, pair.Name)));
                     continue;
                 }
 

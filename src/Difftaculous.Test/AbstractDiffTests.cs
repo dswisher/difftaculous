@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using Difftaculous.Paths;
 using Difftaculous.Results;
@@ -97,7 +98,16 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            result.Annotations.ShouldContain(x => x.Path.AsJsonPath == "");     // Root path
+            result.Annotations.Count().ShouldBe(2);
+
+            var anno1 = result.Annotations.FirstOrDefault(x => ((MissingPropertyAnnotation)x).PropertyName.Equals("name", StringComparison.InvariantCultureIgnoreCase));
+            var anno2 = result.Annotations.FirstOrDefault(x => ((MissingPropertyAnnotation)x).PropertyName.Equals("address", StringComparison.InvariantCultureIgnoreCase));
+
+            anno1.ShouldNotBe(null);
+            anno1.Path.AsJsonPath.ShouldBe("");
+
+            anno2.ShouldNotBe(null);
+            anno2.Path.AsJsonPath.ShouldBe("");
         }
 
 
