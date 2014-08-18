@@ -103,8 +103,6 @@ namespace Difftaculous
                 return SubDiff((ZArray)tokenA, (ZArray)tokenB);
             }
 
-            // TODO!
-
             throw new NotImplementedException("Type " + typeA.Name + " is not yet handled.");
         }
 
@@ -161,13 +159,10 @@ namespace Difftaculous
             string a = valA.Value.ToString();
             string b = valB.Value.ToString();
 
-            // TODO - this should return something other than Same, because they are NOT
-            // the same.  But, returning something like "WithinTolerance" makes the DiffResult
-            // more complex...
             // TODO - the caveats should be the same on A and B...verify?
             if (valA.Caveats.Any(x => x.IsAcceptable(a, b)))
             {
-                return DiffResult.Same;
+                return new DiffResult(new DifferingValuesAnnotation(valA.Path, a, b, true));
             }
 
             return new DiffResult(new DifferingValuesAnnotation(valA.Path, a, b));

@@ -222,6 +222,15 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b, settings);
 
             result.AreSame.ShouldBe(true);
+            result.Annotations.Count().ShouldBe(1);
+
+            var anno = result.Annotations.First() as DifferingValuesAnnotation;
+
+            anno.ShouldNotBe(null);
+            // TODO - the values should be 100 and 99 - not strings.  Fix that!
+            anno.ValueA.ShouldBe("100");
+            anno.ValueB.ShouldBe("99");
+            anno.Path.AsJsonPath.ShouldBe("score", Case.Insensitive);
         }
 
 

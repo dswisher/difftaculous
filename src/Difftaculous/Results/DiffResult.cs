@@ -1,9 +1,7 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Difftaculous.Paths;
 
 
 namespace Difftaculous.Results
@@ -25,6 +23,7 @@ namespace Difftaculous.Results
         public DiffResult(AbstractDiffAnnotation annotation)
         {
             Annotations = new[] { annotation };
+            AreSame = annotation.AreSame;
         }
 
 

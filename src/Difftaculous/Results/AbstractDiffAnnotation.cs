@@ -26,5 +26,14 @@ namespace Difftaculous.Results
         /// A human-readable explanation of the annotation.
         /// </summary>
         public abstract string Message { get; }
+
+
+        /// <summary>
+        /// An indication of whether this annotation is a difference
+        /// </summary>
+        /// <remarks>
+        /// If not a difference, it is probably a variance
+        /// </remarks>
+        public virtual bool AreSame { get { return false; } }
     }
 }
