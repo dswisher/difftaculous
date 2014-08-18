@@ -256,15 +256,11 @@ namespace Difftaculous
             {
                 if (row.A.Key == null)
                 {
-                    // TODO - need better annotation for this difference!
-                    //_logger.Info("    ...key {0} not found in {1} {2} list...", row.Key, _hostHolder.OldHost.Name, name);
-                    result = result.Merge(new DiffResult(arrayA.Path, "key not found in first list"));
+                    result = result.Merge(new DiffResult(new MissingKeyAnnotation(arrayA.Path, true)));
                 }
                 else if (row.B.Key == null)
                 {
-                    // TODO - need better annotation for this difference!
-                    //_logger.Info("    ...key {0} not found in {1} {2} list...", row.Key, _hostHolder.NewHost.Name, name);
-                    result = result.Merge(new DiffResult(arrayA.Path, "key not found in second list"));
+                    result = result.Merge(new DiffResult(new MissingKeyAnnotation(arrayA.Path, false)));
                 }
                 else
                 {
