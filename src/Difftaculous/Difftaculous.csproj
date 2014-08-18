@@ -67,6 +67,7 @@
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="Results\AbstractDiffAnnotation.cs" />
+    <Compile Include="Results\DifferingValuesAnnotation.cs" />
     <Compile Include="Results\InconsistentTypesAnnotation.cs" />
     <Compile Include="Results\MissingKeyAnnotation.cs" />
     <Compile Include="Results\MissingPropertyAnnotation.cs" />

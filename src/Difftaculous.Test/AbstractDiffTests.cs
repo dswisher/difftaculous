@@ -10,6 +10,8 @@ using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Shouldly;
 
+// ReSharper disable PossibleNullReferenceException
+
 
 namespace Difftaculous.Test
 {
@@ -78,7 +80,14 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            result.Annotations.ShouldContain(x => x.Path.AsJsonPath.Equals("name", StringComparison.InvariantCultureIgnoreCase));
+            result.Annotations.Count().ShouldBe(1);
+
+            var anno = result.Annotations.First() as DifferingValuesAnnotation;
+
+            anno.ShouldNotBe(null);
+            anno.Path.AsJsonPath.ShouldBe("name", Case.Insensitive);
+            anno.ValueA.ShouldBe("One");
+            anno.ValueB.ShouldBe("Two");
         }
 
 

@@ -149,7 +149,7 @@ namespace Difftaculous
 
                 // TODO - what about null caveats?
 
-                return new DiffResult(valA.Path, string.Format("values differ: '{0}' vs. '{1}'", valA.Value, valB.Value));
+                return new DiffResult(new DifferingValuesAnnotation(valA.Path, valA.Value, valB.Value));
             }
 
             // If things are equal, we're done...
@@ -170,7 +170,7 @@ namespace Difftaculous
                 return DiffResult.Same;
             }
 
-            return new DiffResult(valA.Path, string.Format("values differ: '{0}' vs. '{1}'", a, b));
+            return new DiffResult(new DifferingValuesAnnotation(valA.Path, a, b));
         }
 
 
