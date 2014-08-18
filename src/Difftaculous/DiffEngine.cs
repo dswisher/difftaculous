@@ -213,8 +213,7 @@ namespace Difftaculous
             // Limited, simplistic, but easiest to implement.
             if (arrayA.Count != arrayB.Count)
             {
-                // TODO - annotate result
-                return new DiffResult(arrayA.Path, "array item counts differ");
+                return new DiffResult(new DifferingArrayCountAnnotation(arrayA.Path, arrayA.Count, arrayB.Count));
             }
 
             for (int i = 0; i < arrayA.Count; i++)

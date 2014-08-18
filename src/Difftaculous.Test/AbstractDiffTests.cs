@@ -258,6 +258,28 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
+            // TODO - verify annotation(s)
+        }
+
+
+
+        [Test]
+        public void IndexedArrayNeedsSameCount()
+        {
+            var a = new[] { 1, 3, 5, 7 };
+            var b = new[] { 1, 2, 3 };
+
+            var result = DoCompare(a, b);
+
+            result.AreSame.ShouldBe(false);
+            result.Annotations.Count().ShouldBe(1);
+
+            var anno = result.Annotations.First() as DifferingArrayCountAnnotation;
+
+            anno.ShouldNotBe(null);
+            anno.Path.AsJsonPath.ShouldBe("");
+            anno.CountA.ShouldBe(4);
+            anno.CountB.ShouldBe(3);
         }
 
 

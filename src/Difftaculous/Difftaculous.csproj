@@ -67,6 +67,7 @@
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="Results\AbstractDiffAnnotation.cs" />
+    <Compile Include="Results\DifferingArrayCountAnnotation.cs" />
     <Compile Include="Results\DifferingValuesAnnotation.cs" />
     <Compile Include="Results\InconsistentTypesAnnotation.cs" />
     <Compile Include="Results\MissingKeyAnnotation.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Hints\ArrayDiffHint.cs" />
     <Compile Include="Hints\IHint.cs" />
     <Compile Include="Misc\Extensions.cs" />
-    <Compile Include="Results\DiffAnnotation.cs" />
     <Compile Include="DiffEngine.cs" />
     <Compile Include="Results\IDiffResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

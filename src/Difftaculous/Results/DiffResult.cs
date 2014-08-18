@@ -17,7 +17,7 @@ namespace Difftaculous.Results
 
         private DiffResult()
         {
-            Annotations = Enumerable.Empty<DiffAnnotation>();
+            Annotations = Enumerable.Empty<AbstractDiffAnnotation>();
         }
 
 
@@ -28,13 +28,6 @@ namespace Difftaculous.Results
         }
 
 
-
-        // TODO - need to replace message with a structure of some sort
-        [Obsolete]
-        public DiffResult(DiffPath path, string message)
-            : this(new DiffAnnotation(path, message))
-        {
-        }
 
         public IEnumerable<AbstractDiffAnnotation> Annotations { get; private set; }
         public bool AreSame { get; private set; }
