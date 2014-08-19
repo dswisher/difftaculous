@@ -8,7 +8,6 @@ namespace Difftaculous.Results
     /// </summary>
     public interface IDiffResult
     {
-        // TODO - should this just be a count of differences?
         /// <summary>
         /// True if the objects are the same, false if not.
         /// </summary>

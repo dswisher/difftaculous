@@ -23,6 +23,9 @@ namespace Difftaculous.Results
         }
 
 
+        /// <summary>
+        /// A human-readable explanation of the annotation.
+        /// </summary>
         public override string Message
         {
             get { return string.Format("key not found in {0} list", _first ? "first" : "second"); }

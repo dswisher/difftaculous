@@ -27,6 +27,9 @@ namespace Difftaculous.Results
         public string PropertyName { get; private set; }
 
 
+        /// <summary>
+        /// A human-readable explanation of the annotation.
+        /// </summary>
         public override string Message
         {
             get { return string.Format("Property '{0}' is missing.", PropertyName); }

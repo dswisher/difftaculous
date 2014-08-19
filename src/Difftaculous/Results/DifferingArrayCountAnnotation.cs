@@ -35,6 +35,9 @@ namespace Difftaculous.Results
         public int CountB { get; private set; }
 
 
+        /// <summary>
+        /// A human-readable explanation of the annotation.
+        /// </summary>
         public override string Message
         {
             get { return string.Format("array item counts differ: {0} vs. {1}", CountA, CountB); }

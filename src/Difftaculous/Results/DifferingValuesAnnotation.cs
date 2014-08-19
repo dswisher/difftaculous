@@ -25,6 +25,9 @@ namespace Difftaculous.Results
         }
 
 
+        /// <summary>
+        /// An indication of whether this annotation is a difference
+        /// </summary>
         public override bool AreSame
         {
             get { return WithinTolerance; }
@@ -49,6 +52,9 @@ namespace Difftaculous.Results
         public bool WithinTolerance { get; set; }
 
 
+        /// <summary>
+        /// A human-readable explanation of the annotation.
+        /// </summary>
         public override string Message
         {
             get { return string.Format("values differ: '{0}' vs. '{1}'", ValueA, ValueB); }

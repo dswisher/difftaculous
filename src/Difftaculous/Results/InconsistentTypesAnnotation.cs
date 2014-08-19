@@ -27,6 +27,9 @@ namespace Difftaculous.Results
         }
 
 
+        /// <summary>
+        /// A human-readable explanation of the annotation.
+        /// </summary>
         public override string Message
         {
             get { return string.Format("Mismatched types: {0} vs. {1}.", _typeA.Name, _typeB.Name); }
