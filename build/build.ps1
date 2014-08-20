@@ -6,7 +6,7 @@ properties {
     $artifactsDir = "$baseDir\artifacts\"
     $srcDir = "$baseDir\Src"
     $majorVersion = "0.1"
-    $majorMinorVersion = "$majorVersion.3"
+    $majorMinorVersion = "$majorVersion.4"
     $version = GetVersion $majorMinorVersion
 }
 
@@ -48,14 +48,11 @@ Task Test -Depends Build {
 }
 
 
-# TODO - this should depend on Test!
-Task Package -Depends Build {
+Task Package -Depends Test {
     $fileName = $artifactsDir + "difftaculous.nuspec"
 
     Write-Host -ForegroundColor Green "Creating nuspec file..."
     Write-NuSpec $fileName $majorMinorVersion
-
-    # TODO - use the nuspec file to create the package
 
     Write-Host -ForegroundColor Green "Creating nuget package..."
     # exec { ..\Tools\NuGet\NuGet.exe pack $workingDir\NuGet\Newtonsoft.Json.nuspec -Symbols }
