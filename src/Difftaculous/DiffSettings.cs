@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using Difftaculous.Caveats;
 using Difftaculous.Hints;
@@ -12,16 +13,10 @@ namespace Difftaculous
     /// </summary>
     public class DiffSettings
     {
+        private readonly List<IHint> _hints = new List<IHint>();
+        private readonly List<ICaveat> _caveats = new List<ICaveat>();
 
-        /// <summary>
-        /// Define settings for an array
-        /// </summary>
-        /// <param name="path">The path that defines the array</param>
-        /// <returns>A settings object</returns>
-        public static DiffSettings Array(DiffPath path)
-        {
-            return new DiffSettings(path);
-        }
+        private DiffPath _currentPath;
 
 
         /// <summary>
@@ -29,27 +24,27 @@ namespace Difftaculous
         /// </summary>
         /// <param name="path">The path that defines the item</param>
         /// <returns>A settings object</returns>
-        public static DiffSettings Item(DiffPath path)
-        {
-            return new DiffSettings(path);
-        }
-
-
-        private readonly List<IHint> _hints = new List<IHint>();
-        private readonly List<ICaveat> _caveats = new 
-            List<ICaveat>();
-
-        private DiffPath _currentPath;
-
-        internal DiffSettings()
-        {
-        }
-
-
-        internal DiffSettings(DiffPath path)
+        public DiffSettings Item(DiffPath path)
         {
             _currentPath = path;
+
+            return this;
         }
+
+
+
+        /// <summary>
+        /// Define settings for an array
+        /// </summary>
+        /// <param name="path">The path that defines the array</param>
+        /// <returns>A settings object</returns>
+        public DiffSettings Array(DiffPath path)
+        {
+            _currentPath = path;
+
+            return this;
+        }
+
 
 
         /// <summary>
@@ -59,6 +54,11 @@ namespace Difftaculous
         /// <returns>The settings</returns>
         public DiffSettings KeyedBy(string name)
         {
+            if (_currentPath == null)
+            {
+                throw new InvalidOperationException("Path must be set before calling this");
+            }
+
             _hints.Add(new ArrayDiffHint(_currentPath, name));
 
             return this;
@@ -72,6 +72,11 @@ namespace Difftaculous
         /// <returns>The settings</returns>
         public DiffSettings CanVaryBy(double amount)
         {
+            if (_currentPath == null)
+            {
+                throw new InvalidOperationException("Path must be set before calling this");
+            }
+
             _caveats.Add(new VarianceCaveat(_currentPath, amount));
 
             return this;

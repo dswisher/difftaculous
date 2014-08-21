@@ -217,7 +217,7 @@ namespace Difftaculous.Test
             var a = new ScoreClass { Score = 100 };
             var b = new ScoreClass { Score = 99 };
 
-            var settings = DiffSettings.Item(DiffPath.FromJsonPath("$.score")).CanVaryBy(2);
+            var settings = new DiffSettings().Item(DiffPath.FromJsonPath("$.score")).CanVaryBy(2);
 
             var result = DoCompare(a, b, settings);
 
@@ -241,7 +241,7 @@ namespace Difftaculous.Test
             var a = new ScoreClass { Score = 100 };
             var b = new ScoreClass { Score = 110 };
 
-            var settings = DiffSettings.Item(DiffPath.FromJsonPath("$.score")).CanVaryBy(2);
+            var settings = new DiffSettings().Item(DiffPath.FromJsonPath("$.score")).CanVaryBy(2);
 
             var result = DoCompare(a, b, settings);
 
@@ -300,7 +300,7 @@ namespace Difftaculous.Test
             var b = new[] { new Person { Name = "Barney", Age = 23 }, new Person { Name = "Fred", Age = 44 } };
 
 
-            var settings = DiffSettings.Array(DiffPath.FromJsonPath("$")).KeyedBy("name");
+            var settings = new DiffSettings().Array(DiffPath.FromJsonPath("$")).KeyedBy("name");
 
             var result = DoCompare(a, b, settings);
 
@@ -315,7 +315,7 @@ namespace Difftaculous.Test
             var a = new[] { new Person { Name = "Fred", Age = 44 }, new Person { Name = "Barney", Age = 23 } };
             var b = new[] { new Person { Name = "Barney", Age = 33 }, new Person { Name = "Fred", Age = 44 } };
 
-            var settings = DiffSettings.Array(DiffPath.FromJsonPath("$")).KeyedBy("name");
+            var settings = new DiffSettings().Array(DiffPath.FromJsonPath("$")).KeyedBy("name");
 
             var result = DoCompare(a, b, settings);
 
