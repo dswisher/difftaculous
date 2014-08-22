@@ -6,7 +6,7 @@ properties {
     $artifactsDir = "$baseDir\artifacts\"
     $srcDir = "$baseDir\Src"
     $majorVersion = "0.1"
-    $majorMinorVersion = "$majorVersion.4"
+    $majorMinorVersion = "$majorVersion.5"
     $version = GetVersion $majorMinorVersion
 }
 

@@ -9,5 +9,5 @@ using System.Reflection;
 [assembly: AssemblyProduct("Difftaculous")]
 
 [assembly: AssemblyVersionAttribute("0.1.0.0")]
-[assembly: AssemblyFileVersionAttribute("0.1.4.819")]
+[assembly: AssemblyFileVersionAttribute("0.1.5.821")]
 
