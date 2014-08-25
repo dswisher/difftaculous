@@ -595,8 +595,8 @@ namespace Difftaculous.ZModel
             //#endif
             //            else if (value is byte[])
             //                return TokenType.Bytes;
-            //            else if (value is bool)
-            //                return TokenType.Boolean;
+            else if (value is bool)
+                return TokenType.Boolean;
             //            else if (value is Guid)
             //                return TokenType.Guid;
             //            else if (value is Uri)
