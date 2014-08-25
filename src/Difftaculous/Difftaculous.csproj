@@ -103,9 +103,6 @@
     <Compile Include="ZModel\WriteExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Difftaculous.nuspec">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
