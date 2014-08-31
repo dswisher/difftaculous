@@ -34,12 +34,7 @@ namespace Difftaculous.Results
     {
         private readonly bool _first;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="path">The path of the difference</param>
-        /// <param name="first">True if the key is missing from the first list, false if from the second</param>
-        public MissingKeyAnnotation(DiffPath path, bool first)
+        internal MissingKeyAnnotation(DiffPath path, bool first)
             : base(path)
         {
             _first = first;

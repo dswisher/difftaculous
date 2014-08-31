@@ -51,8 +51,7 @@ namespace Difftaculous.Test.ArrayDiff
 
             list.ShouldBe(new List<ElementGroup>
             {
-                ElementGroup.Delete(0, 3),
-                ElementGroup.Insert(0, 3)
+                ElementGroup.Replace(0, 3, 0, 3)
             });
         }
 
@@ -80,8 +79,7 @@ namespace Difftaculous.Test.ArrayDiff
             list.ShouldBe(new List<ElementGroup>
             {
                 ElementGroup.Equal(0, 2, 0, 2),
-                ElementGroup.Delete(3, 5),
-                ElementGroup.Insert(3, 5)
+                ElementGroup.Replace(3, 5, 3, 5)
             });
         }
 
@@ -94,8 +92,7 @@ namespace Difftaculous.Test.ArrayDiff
 
             list.ShouldBe(new List<ElementGroup>
             {
-                ElementGroup.Delete(0, 2),
-                ElementGroup.Insert(0, 2),
+                ElementGroup.Replace(0, 2, 0, 2),
                 ElementGroup.Equal(3, 5, 3, 5)
             });
         }
@@ -110,8 +107,7 @@ namespace Difftaculous.Test.ArrayDiff
             list.ShouldBe(new List<ElementGroup>
             {
                 ElementGroup.Equal(0, 2, 0, 2),
-                ElementGroup.Delete(3, 5),
-                ElementGroup.Insert(3, 5),
+                ElementGroup.Replace(3, 5, 3, 5),
                 ElementGroup.Equal(6, 8, 6, 8),
             });
         }
@@ -125,11 +121,9 @@ namespace Difftaculous.Test.ArrayDiff
 
             list.ShouldBe(new List<ElementGroup>
             {
-                ElementGroup.Delete(0, 2),
-                ElementGroup.Insert(0, 2),
+                ElementGroup.Replace(0, 2, 0, 2),
                 ElementGroup.Equal(3, 5, 3, 5),
-                ElementGroup.Delete(6, 8),
-                ElementGroup.Insert(6, 8)
+                ElementGroup.Replace(6, 8, 6, 8)
             });
         }
 

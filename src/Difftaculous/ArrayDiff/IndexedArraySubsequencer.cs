@@ -54,7 +54,7 @@ namespace Difftaculous.ArrayDiff
                 }
             }
 
-            return list;
+            return ElementGroupPostProcessor.PostProcess(list);
         }
     }
 }

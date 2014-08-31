@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Diagnostics;
 
 
 namespace Difftaculous.ArrayDiff
@@ -22,9 +23,12 @@ namespace Difftaculous.ArrayDiff
         /// <summary>
         /// Delete the elements from A
         /// </summary>
-        Delete
+        Delete,
 
-        // TODO - replace?
+        /// <summary>
+        /// A combination of a delete and insert of the same size
+        /// </summary>
+        Replace
     };
 
 
@@ -67,6 +71,38 @@ namespace Difftaculous.ArrayDiff
                 EndB = endB
             };
         }
+
+
+
+        public static ElementGroup Replace(int startA, int endA, int startB, int endB)
+        {
+            return new ElementGroup
+            {
+                Operation = Operation.Replace,
+                StartA = startA,
+                EndA = endA,
+                StartB = startB,
+                EndB = endB
+            };
+        }
+
+
+
+        public static ElementGroup Replace(ElementGroup delete, ElementGroup insert)
+        {
+            if (delete.Operation != Operation.Delete)
+            {
+                throw new ArgumentException("The delete element group must be a delete", "delete");
+            }
+
+            if (insert.Operation != Operation.Insert)
+            {
+                throw new ArgumentException("The insert element group must be an insert", "insert");
+            }
+
+            return Replace(delete.StartA, delete.EndA, insert.StartB, insert.EndB);
+        }
+
 
 
         private ElementGroup()
@@ -123,6 +159,13 @@ namespace Difftaculous.ArrayDiff
 
                 case Operation.Insert:
                     return string.Format("I({0}..{1})", StartB, EndB);
+
+                case Operation.Replace:
+                    if ((StartA == StartB) && (EndA == EndB))
+                    {
+                        return string.Format("R({0}..{1})", StartA, EndA);
+                    }
+                    return string.Format("R({0}..{1},{2}..{3})", StartA, EndA, StartB, EndB);
 
                 default:
                     throw new NotImplementedException("ToString() for operation " + Operation + " is not yet implemented.");

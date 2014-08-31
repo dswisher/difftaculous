@@ -32,12 +32,7 @@ namespace Difftaculous.Results
     /// </summary>
     public class MissingPropertyAnnotation : AbstractDiffAnnotation
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="path">The path</param>
-        /// <param name="propertyName">The name of the property that is missing</param>
-        public MissingPropertyAnnotation(DiffPath path, string propertyName)
+        internal MissingPropertyAnnotation(DiffPath path, string propertyName)
             : base(path)
         {
             PropertyName = propertyName;

@@ -23,8 +23,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Difftaculous.Adapters;
+using Difftaculous.ArrayDiff;
 using Difftaculous.Hints;
 using Difftaculous.Misc;
 using Difftaculous.Results;
@@ -225,28 +227,52 @@ namespace Difftaculous
 
         private IDiffResult IndexedArrayDiff(ZArray arrayA, ZArray arrayB)
         {
-            // TODO - replace this with code that uses IndexedArraySubsequencer
+            IArraySubsequencer subsequencer = new IndexedArraySubsequencer();
 
+            var groups = subsequencer.ComputeSubsequences(arrayA, arrayB);
+
+            return ArrayResult(arrayA, arrayB, groups);
+        }
+
+
+
+        private IDiffResult ArrayResult(ZArray arrayA, ZArray arrayB, IEnumerable<ElementGroup> groups)
+        {
             IDiffResult result = DiffResult.Same;
 
-            // This implements simple indexed array diff: compare item 1 to item 1, then item 2 to item 2, etc.
-            // Limited, simplistic, but easiest to implement.
-            if (arrayA.Count != arrayB.Count)
+            foreach (var group in groups)
             {
-                return new DiffResult(new DifferingArrayCountAnnotation(arrayA.Path, arrayA.Count, arrayB.Count));
-            }
+                switch (group.Operation)
+                {
+                    case Operation.Replace:
+                        result = result.Merge(new DiffResult(new ArrayItemsReplacedAnnotation(arrayA.Path, group)));
+                        for (int i = group.StartA, j = group.StartB; i <= group.EndA && j <= group.EndB; i += 1, j += 1)
+                        {
+                            var itemA = arrayA[i];
+                            var itemB = arrayB[j];
 
-            for (int i = 0; i < arrayA.Count; i++)
-            {
-                var itemA = arrayA[i];
-                var itemB = arrayB[i];
+                            result = result.Merge(Diff(itemA, itemB));
+                        }
+                        break;
 
-                result = result.Merge(Diff(itemA, itemB));
+                    case Operation.Equal:
+                        break;
+
+                    case Operation.Delete:
+                        result = result.Merge(new DiffResult(new ArrayItemsDeletedAnnotation(arrayA.Path, group)));
+                        break;
+
+                    case Operation.Insert:
+                        result = result.Merge(new DiffResult(new ArrayItemsInsertedAnnotation(arrayA.Path, group)));
+                        break;
+
+                    default:
+                        throw new NotImplementedException("ElementGroup operation " + group.Operation + " not yet implemented.");
+                }
             }
 
             return result;
         }
-
 
 
 

@@ -51,6 +51,7 @@
     <Compile Include="Adapters\AbstractAdapter.cs" />
     <Compile Include="Adapters\ObjectAdapter.cs" />
     <Compile Include="ArrayDiff\ElementGroup.cs" />
+    <Compile Include="ArrayDiff\ElementGroupPostProcessor.cs" />
     <Compile Include="ArrayDiff\IArraySubsequencer.cs" />
     <Compile Include="ArrayDiff\IndexedArraySubsequencer.cs" />
     <Compile Include="DiffSettings.cs" />
@@ -70,7 +71,9 @@
     <Compile Include="Adapters\JsonAdapter.cs" />
     <Compile Include="Adapters\XmlAdapter.cs" />
     <Compile Include="Results\AbstractDiffAnnotation.cs" />
-    <Compile Include="Results\DifferingArrayCountAnnotation.cs" />
+    <Compile Include="Results\ArrayItemsDeletedAnnotation.cs" />
+    <Compile Include="Results\ArrayItemsInsertedAnnotation.cs" />
+    <Compile Include="Results\ArrayItemsReplacedAnnotation.cs" />
     <Compile Include="Results\DifferingValuesAnnotation.cs" />
     <Compile Include="Results\InconsistentTypesAnnotation.cs" />
     <Compile Include="Results\MissingKeyAnnotation.cs" />

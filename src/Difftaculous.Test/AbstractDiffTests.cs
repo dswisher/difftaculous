@@ -304,14 +304,22 @@ namespace Difftaculous.Test
             var result = DoCompare(a, b);
 
             result.AreSame.ShouldBe(false);
-            result.Annotations.Count().ShouldBe(1);
+            result.Annotations.Count().ShouldBe(2);
 
-            var anno = result.Annotations.First() as DifferingArrayCountAnnotation;
+            var removedAnno = result.Annotations.First() as ArrayItemsDeletedAnnotation;
+            var addedAnno = result.Annotations.Last() as ArrayItemsInsertedAnnotation;
 
-            anno.ShouldNotBe(null);
-            anno.Path.AsJsonPath.ShouldBe("");
-            anno.CountA.ShouldBe(4);
-            anno.CountB.ShouldBe(3);
+            removedAnno.ShouldNotBe(null);
+            addedAnno.ShouldNotBe(null);
+
+            removedAnno.Path.AsJsonPath.ShouldBe("");
+            addedAnno.Path.AsJsonPath.ShouldBe("");
+
+            removedAnno.Start.ShouldBe(0);
+            removedAnno.End.ShouldBe(3);
+
+            addedAnno.Start.ShouldBe(0);
+            addedAnno.End.ShouldBe(2);
         }
 
 

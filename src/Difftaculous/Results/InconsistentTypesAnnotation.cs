@@ -36,13 +36,8 @@ namespace Difftaculous.Results
         private readonly Type _typeA;
         private readonly Type _typeB;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="path">The path where the types differ</param>
-        /// <param name="typeA">The first type</param>
-        /// <param name="typeB">The second type</param>
-        public InconsistentTypesAnnotation(DiffPath path, Type typeA, Type typeB)
+
+        internal InconsistentTypesAnnotation(DiffPath path, Type typeA, Type typeB)
             : base(path)
         {
             _typeA = typeA;
