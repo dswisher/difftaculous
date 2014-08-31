@@ -37,8 +37,6 @@ namespace Difftaculous.Test.Paths
         [TestCase("[1].fred")]
         [TestCase("[*]")]
         [TestCase("fred[1]")]
-        [TestCase("[*]")]
-        [TestCase("*")]
         [TestCase("*.*")]
         public void FromJsonAndBack(string jsonPath)
         {

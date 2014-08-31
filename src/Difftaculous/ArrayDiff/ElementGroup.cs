@@ -1,6 +1,28 @@
-﻿
+﻿#region License
+//The MIT License (MIT)
+
+//Copyright (c) 2014 Doug Swisher
+
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files (the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions:
+
+//The above copyright notice and this permission notice shall be included in
+//all copies or substantial portions of the Software.
+
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//THE SOFTWARE.
+#endregion
+
 using System;
-using System.Diagnostics;
 
 
 namespace Difftaculous.ArrayDiff
@@ -58,6 +80,7 @@ namespace Difftaculous.ArrayDiff
                 EndB = end
             };
         }
+
 
 
         public static ElementGroup Equal(int startA, int endA, int startB, int endB)
@@ -148,11 +171,7 @@ namespace Difftaculous.ArrayDiff
             switch (Operation)
             {
                 case Operation.Equal:
-                    if ((StartA == StartB) && (EndA == EndB))
-                    {
-                        return string.Format("E({0}..{1})", StartA, EndA);
-                    }
-                    return string.Format("E({0}..{1},{2}..{3})", StartA, EndA, StartB, EndB);
+                    return FormatPair("E");
 
                 case Operation.Delete:
                     return string.Format("D({0}..{1})", StartA, EndA);
@@ -161,15 +180,28 @@ namespace Difftaculous.ArrayDiff
                     return string.Format("I({0}..{1})", StartB, EndB);
 
                 case Operation.Replace:
-                    if ((StartA == StartB) && (EndA == EndB))
-                    {
-                        return string.Format("R({0}..{1})", StartA, EndA);
-                    }
-                    return string.Format("R({0}..{1},{2}..{3})", StartA, EndA, StartB, EndB);
+                    return FormatPair("R");
 
                 default:
                     throw new NotImplementedException("ToString() for operation " + Operation + " is not yet implemented.");
             }
+        }
+
+
+
+        private string FormatPair(string prefix)
+        {
+            if ((StartA == EndA) && (StartB == EndB))
+            {
+                return string.Format("{0}({1},{2})", prefix, StartA, StartB);
+            }
+
+            if ((StartA == StartB) && (EndA == EndB))
+            {
+                return string.Format("{0}({1}..{2})", prefix, StartA, EndA);
+            }
+
+            return string.Format("{0}({1}..{2},{3}..{4})", prefix, StartA, EndA, StartB, EndB);
         }
 
 

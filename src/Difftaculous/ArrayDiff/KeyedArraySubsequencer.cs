@@ -1,4 +1,27 @@
-﻿
+﻿#region License
+//The MIT License (MIT)
+
+//Copyright (c) 2014 Doug Swisher
+
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files (the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions:
+
+//The above copyright notice and this permission notice shall be included in
+//all copies or substantial portions of the Software.
+
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//THE SOFTWARE.
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,35 +57,59 @@ namespace Difftaculous.ArrayDiff
             var dictB = MakeDict(arrayB);
 
             var join = dictA.FullOuterJoin(dictB, x => x.Key, x => x.Key, (a, b, k) => new { Key = k, A = a, B = b })
-                .OrderBy(x => x.A.Value.Index);
+                .OrderBy(x => (x.A.Value != null) ? x.A.Value.Index : int.MaxValue);
 
             List<ElementGroup> list = new List<ElementGroup>();
 
             foreach (var row in join)
             {
-                int aIndex = row.A.Value.Index;
-                int bIndex = row.B.Value.Index;
-
                 if (row.A.Key == null)
                 {
-                    // TODO - delete
-                    throw new NotImplementedException();
+                    int bIndex = row.B.Value.Index;
+                    var prev = (list.Count >= 1) ? list[list.Count - 1] : null;
+
+                    if ((prev != null)
+                        && (prev.Operation == Operation.Insert)
+                        && (prev.EndB == bIndex - 1))
+                    {
+                        prev.Extend(1);
+                    }
+                    else
+                    {
+                        list.Add(ElementGroup.Insert(bIndex, bIndex));
+                    }
                 }
                 else if (row.B.Key == null)
                 {
-                    // TODO - insert
-                    throw new NotImplementedException();
+                    int aIndex = row.A.Value.Index;
+                    var prev = (list.Count >= 1) ? list[list.Count - 1] : null;
+
+                    if ((prev != null)
+                        && (prev.Operation == Operation.Delete)
+                        && (prev.EndA == aIndex - 1))
+                    {
+                        prev.Extend(1);
+                    }
+                    else
+                    {
+                        list.Add(ElementGroup.Delete(aIndex, aIndex));
+                    }
                 }
                 else
                 {
-                    if (row.A.Value.Token.Equals(row.B.Value.Token))
-                    {
-                        var prev = (list.Count >= 1) ? list[list.Count - 1] : null;
+                    int aIndex = row.A.Value.Index;
+                    int bIndex = row.B.Value.Index;
+                    var prev = (list.Count >= 1) ? list[list.Count - 1] : null;
 
+                    var a = row.A.Value.Token;
+                    var b = row.B.Value.Token;
+
+                    if (a.DeepEquals(b))
+                    {
                         if ((prev != null)
                             && (prev.Operation == Operation.Equal)
                             && (prev.EndA == aIndex - 1)
-                            && (prev.EndA == bIndex - 1))
+                            && (prev.EndB == bIndex - 1))
                         {
                             prev.Extend(1);
                         }
@@ -73,13 +120,28 @@ namespace Difftaculous.ArrayDiff
                     }
                     else
                     {
-                        // TODO - keys match, values are different
-                        throw new NotImplementedException();
+                        var prevPrev = (list.Count >= 2) ? list[list.Count - 2] : null;
+
+                        if ((prev != null)
+                            && (prevPrev != null)
+                            && (prevPrev.Operation == Operation.Delete)
+                            && (prev.Operation == Operation.Insert)
+                            && (prevPrev.EndA == aIndex - 1)
+                            && (prev.EndB == bIndex - 1))
+                        {
+                            prev.Extend(1);
+                            prevPrev.Extend(1);
+                        }
+                        else
+                        {
+                            list.Add(ElementGroup.Delete(aIndex, aIndex));
+                            list.Add(ElementGroup.Insert(bIndex, bIndex));
+                        }
                     }
                 }
             }
 
-            return list;
+            return ElementGroupPostProcessor.PostProcess(list);
         }
 
 
