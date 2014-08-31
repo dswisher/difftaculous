@@ -54,6 +54,7 @@
     <Compile Include="ArrayDiff\ElementGroupPostProcessor.cs" />
     <Compile Include="ArrayDiff\IArraySubsequencer.cs" />
     <Compile Include="ArrayDiff\IndexedArraySubsequencer.cs" />
+    <Compile Include="ArrayDiff\KeyedArraySubsequencer.cs" />
     <Compile Include="DiffSettings.cs" />
     <Compile Include="Paths\ArrayIndexFilter.cs" />
     <Compile Include="Paths\ArrayMultipleIndexFilter.cs" />

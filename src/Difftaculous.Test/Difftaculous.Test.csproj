@@ -55,6 +55,7 @@
     <Compile Include="AbstractDiffTests.cs" />
     <Compile Include="Adapters\XmlAdapterTests.cs" />
     <Compile Include="ArrayDiff\IndexedArraySubsequencerTests.cs" />
+    <Compile Include="ArrayDiff\KeyedArraySubsequencerTests.cs" />
     <Compile Include="Helpers\ExceptionAssert.cs" />
     <Compile Include="JsonDiffTests.cs" />
     <Compile Include="ObjectDiffTests.cs" />

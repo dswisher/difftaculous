@@ -13,6 +13,7 @@ namespace Difftaculous.ArrayDiff
 
             if (arrayA.Count != arrayB.Count)
             {
+                // TODO - this should go through all the items and diff, then put an Insert on the end
                 list.Add(ElementGroup.Delete(0, arrayA.Count - 1));
                 list.Add(ElementGroup.Insert(0, arrayB.Count - 1));
             }
