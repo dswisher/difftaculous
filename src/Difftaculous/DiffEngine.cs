@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Difftaculous.Adapters;
 using Difftaculous.ArrayDiff;
@@ -210,35 +209,32 @@ namespace Difftaculous
                 keyName = arrayHint.KeyName;
             }
 
+            IArraySubsequencer subsequencer;
+
             switch (strategy)
             {
                 case ArrayDiffHint.DiffStrategy.Keyed:
-                    return KeyedArrayDiff(arrayA, arrayB, keyName);
+                    subsequencer = new KeyedArraySubsequencer(keyName);
+                    break;
 
                 case ArrayDiffHint.DiffStrategy.Indexed:
-                    return IndexedArrayDiff(arrayA, arrayB);
+                    subsequencer = new IndexedArraySubsequencer();
+                    break;
 
                 default:
                     throw new NotImplementedException("Array diff strategy '" + strategy + "' is not yet implemented.");
             }
+
+            return ArrayResult(arrayA, arrayB, subsequencer);
         }
 
 
 
-        private IDiffResult IndexedArrayDiff(ZArray arrayA, ZArray arrayB)
-        {
-            IArraySubsequencer subsequencer = new IndexedArraySubsequencer();
-
-            var groups = subsequencer.ComputeSubsequences(arrayA, arrayB);
-
-            return ArrayResult(arrayA, arrayB, groups);
-        }
-
-
-
-        private IDiffResult ArrayResult(ZArray arrayA, ZArray arrayB, IEnumerable<ElementGroup> groups)
+        private IDiffResult ArrayResult(ZArray arrayA, ZArray arrayB, IArraySubsequencer subsequencer)
         {
             IDiffResult result = DiffResult.Same;
+
+            var groups = subsequencer.ComputeSubsequences(arrayA, arrayB);
 
             foreach (var group in groups)
             {
@@ -268,47 +264,6 @@ namespace Difftaculous
 
                     default:
                         throw new NotImplementedException("ElementGroup operation " + group.Operation + " not yet implemented.");
-                }
-            }
-
-            return result;
-        }
-
-
-
-        private IDiffResult KeyedArrayDiff(ZArray arrayA, ZArray arrayB, string keyName)
-        {
-            // This only works on arrays that contain objects (they're the only things
-            // that have properties we can use as keys).  If we have non-objects, we have
-            // a difference (or perhaps an error, or ??).
-            if (arrayA.Any(x => x.Type != TokenType.Object) || arrayB.Any(x => x.Type != TokenType.Object))
-            {
-                throw new NotImplementedException("Keyed-array diff for non-objects is not implemented.");
-            }
-
-            var dictA = arrayA.ToDictionary(x => (string)((ZValue)(((ZObject)x).Property(keyName, false)).Value));
-            var dictB = arrayB.ToDictionary(x => (string)((ZValue)(((ZObject)x).Property(keyName, false)).Value));
-
-            var join = dictA.FullOuterJoin(dictB, x => x.Key, x => x.Key, (a, b, k) => new { Key = k, A = a, B = b });
-
-            IDiffResult result = DiffResult.Same;
-
-            foreach (var row in join)
-            {
-                if (row.A.Key == null)
-                {
-                    result = result.Merge(new DiffResult(new MissingKeyAnnotation(arrayA.Path, true)));
-                }
-                else if (row.B.Key == null)
-                {
-                    result = result.Merge(new DiffResult(new MissingKeyAnnotation(arrayA.Path, false)));
-                }
-                else
-                {
-                    var objA = row.A.Value;
-                    var objB = row.B.Value;
-
-                    result = result.Merge(Diff(objA, objB));
                 }
             }
 
