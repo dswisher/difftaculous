@@ -225,6 +225,8 @@ namespace Difftaculous
 
         private IDiffResult IndexedArrayDiff(ZArray arrayA, ZArray arrayB)
         {
+            // TODO - replace this with code that uses IndexedArraySubsequencer
+
             IDiffResult result = DiffResult.Same;
 
             // This implements simple indexed array diff: compare item 1 to item 1, then item 2 to item 2, etc.
@@ -255,15 +257,11 @@ namespace Difftaculous
             // a difference (or perhaps an error, or ??).
             if (arrayA.Any(x => x.Type != TokenType.Object) || arrayB.Any(x => x.Type != TokenType.Object))
             {
-                throw new NotImplementedException("Key-array diff for non-objects is not implemented.");
+                throw new NotImplementedException("Keyed-array diff for non-objects is not implemented.");
             }
 
             var dictA = arrayA.ToDictionary(x => (string)((ZValue)(((ZObject)x).Property(keyName, false)).Value));
             var dictB = arrayB.ToDictionary(x => (string)((ZValue)(((ZObject)x).Property(keyName, false)).Value));
-
-            // TODO - use x.Property() instead of x[] and use case-insensitive form?
-            // var dictA = arrayA.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
-            // var dictB = arrayB.ToDictionary(x => (string)(((ZValue)x[keyName]).Value));
 
             var join = dictA.FullOuterJoin(dictB, x => x.Key, x => x.Key, (a, b, k) => new { Key = k, A = a, B = b });
 
