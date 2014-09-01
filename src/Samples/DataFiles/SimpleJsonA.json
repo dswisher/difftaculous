@@ -1,0 +1,13 @@
+﻿{
+    "father": {
+        "firstName": "Fred",
+        "lastName": "Flintstone",
+        "age": 28
+    },
+    "mother": {
+        "firstName": "Wilma",
+        "lastName": "Flintstone",
+        "age": 26
+    },
+    "firstName": "Bam-Bam"
+}
