@@ -1,12 +1,34 @@
-﻿using System;
+﻿#region License
+//The MIT License (MIT)
+
+//Copyright (c) 2014 Doug Swisher
+
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files (the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions:
+
+//The above copyright notice and this permission notice shall be included in
+//all copies or substantial portions of the Software.
+
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//THE SOFTWARE.
+#endregion
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Difftaculous.ArrayDiff;
 using Difftaculous.ZModel;
 using NUnit.Framework;
 using Shouldly;
+
 
 namespace Difftaculous.Test.ArrayDiff
 {
@@ -34,7 +56,7 @@ namespace Difftaculous.Test.ArrayDiff
 
 
 
-        [Test, Ignore("Finish this!")]
+        [Test]
         public void SameArrays()
         {
             var list = _arraySubsequencer.ComputeSubsequences(StringToArray("abc"), StringToArray("abc"));
@@ -47,7 +69,7 @@ namespace Difftaculous.Test.ArrayDiff
 
 
 
-        [Test, Ignore("Finish this!")]
+        [Test]
         public void SimpleInsertion()
         {
             var list = _arraySubsequencer.ComputeSubsequences(StringToArray("abc"), StringToArray("ab123c"));
@@ -62,43 +84,65 @@ namespace Difftaculous.Test.ArrayDiff
 
 
 
-#if false
-            diffs = new List<Diff> { new Diff(Operation.EQUAL, "ab"), new Diff(Operation.INSERT, "123"), new Diff(Operation.EQUAL, "c") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("abc", "ab123c", false), "diff_main: Simple insertion.");
+        [Test]
+        public void SimpleDeletion()
+        {
+            var list = _arraySubsequencer.ComputeSubsequences(StringToArray("a123bc"), StringToArray("abc"));
 
-            diffs = new List<Diff> { new Diff(Operation.EQUAL, "a"), new Diff(Operation.DELETE, "123"), new Diff(Operation.EQUAL, "bc") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("a123bc", "abc", false), "diff_main: Simple deletion.");
+            list.ShouldBe(new List<ElementGroup>
+            {
+                ElementGroup.Equal(0, 0, 0, 0),
+                ElementGroup.Delete(1, 3),
+                ElementGroup.Equal(4, 5, 1, 2)
+            });
+        }
 
-            diffs = new List<Diff> { new Diff(Operation.EQUAL, "a"), new Diff(Operation.INSERT, "123"), new Diff(Operation.EQUAL, "b"), new Diff(Operation.INSERT, "456"), new Diff(Operation.EQUAL, "c") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("abc", "a123b456c", false), "diff_main: Two insertions.");
 
-            diffs = new List<Diff> { new Diff(Operation.EQUAL, "a"), new Diff(Operation.DELETE, "123"), new Diff(Operation.EQUAL, "b"), new Diff(Operation.DELETE, "456"), new Diff(Operation.EQUAL, "c") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("a123b456c", "abc", false), "diff_main: Two deletions.");
 
-            // Perform a real diff.
-            // Switch off the timeout.
-            dmp.Diff_Timeout = 0;
-            diffs = new List<Diff> { new Diff(Operation.DELETE, "a"), new Diff(Operation.INSERT, "b") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("a", "b", false), "diff_main: Simple case #1.");
+        [Test]
+        public void TwoInsertions()
+        {
+            var list = _arraySubsequencer.ComputeSubsequences(StringToArray("abc"), StringToArray("a123b456c"));
 
-            diffs = new List<Diff> { new Diff(Operation.DELETE, "Apple"), new Diff(Operation.INSERT, "Banana"), new Diff(Operation.EQUAL, "s are a"), new Diff(Operation.INSERT, "lso"), new Diff(Operation.EQUAL, " fruit.") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("Apples are a fruit.", "Bananas are also fruit.", false), "diff_main: Simple case #2.");
+            list.ShouldBe(new List<ElementGroup>
+            {
+                ElementGroup.Equal(0, 0, 0, 0),
+                ElementGroup.Insert(1, 3),
+                ElementGroup.Equal(1, 1, 4, 4),
+                ElementGroup.Insert(5, 7),
+                ElementGroup.Equal(2, 2, 8, 8)
+            });
+        }
 
-            diffs = new List<Diff> { new Diff(Operation.DELETE, "a"), new Diff(Operation.INSERT, "\u0680"), new Diff(Operation.EQUAL, "x"), new Diff(Operation.DELETE, "\t"), new Diff(Operation.INSERT, new string(new char[] { (char)0 })) };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("ax\t", "\u0680x" + (char)0, false), "diff_main: Simple case #3.");
 
-            diffs = new List<Diff> { new Diff(Operation.DELETE, "1"), new Diff(Operation.EQUAL, "a"), new Diff(Operation.DELETE, "y"), new Diff(Operation.EQUAL, "b"), new Diff(Operation.DELETE, "2"), new Diff(Operation.INSERT, "xab") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("1ayb2", "abxab", false), "diff_main: Overlap #1.");
 
-            diffs = new List<Diff> { new Diff(Operation.INSERT, "xaxcx"), new Diff(Operation.EQUAL, "abc"), new Diff(Operation.DELETE, "y") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("abcy", "xaxcxabc", false), "diff_main: Overlap #2.");
+        [Test]
+        public void TwoDeletion()
+        {
+            var list = _arraySubsequencer.ComputeSubsequences(StringToArray("a123b456c"), StringToArray("abc"));
 
-            diffs = new List<Diff> { new Diff(Operation.DELETE, "ABCD"), new Diff(Operation.EQUAL, "a"), new Diff(Operation.DELETE, "="), new Diff(Operation.INSERT, "-"), new Diff(Operation.EQUAL, "bcd"), new Diff(Operation.DELETE, "="), new Diff(Operation.INSERT, "-"), new Diff(Operation.EQUAL, "efghijklmnopqrs"), new Diff(Operation.DELETE, "EFGHIJKLMNOefg") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("ABCDa=bcd=efghijklmnopqrsEFGHIJKLMNOefg", "a-bcd-efghijklmnopqrs", false), "diff_main: Overlap #3.");
+            list.ShouldBe(new List<ElementGroup>
+            {
+                ElementGroup.Equal(0, 0, 0, 0),
+                ElementGroup.Delete(1, 3),
+                ElementGroup.Equal(4, 4, 1, 1),
+                ElementGroup.Delete(5, 7),
+                ElementGroup.Equal(8, 8, 2, 2)
+            });
+        }
 
-            diffs = new List<Diff> { new Diff(Operation.INSERT, " "), new Diff(Operation.EQUAL, "a"), new Diff(Operation.INSERT, "nd"), new Diff(Operation.EQUAL, " [[Pennsylvania]]"), new Diff(Operation.DELETE, " and [[New") };
-            CollectionAssert.AreEqual(diffs, dmp.diff_main("a [[Pennsylvania]] and [[New", " and [[Pennsylvania]]", false), "diff_main: Large equality.");
-#endif
+
+
+        [Test]
+        public void Replace()
+        {
+            var list = _arraySubsequencer.ComputeSubsequences(StringToArray("ab"), StringToArray("cd"));
+
+            list.ShouldBe(new List<ElementGroup>
+            {
+                ElementGroup.Replace(0, 1, 0, 1)
+            });
+        }
 
 
 
