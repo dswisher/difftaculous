@@ -42,6 +42,9 @@ namespace Difftaculous.Results
         public int EndB { get; private set; }
 
 
+        /// <summary>
+        /// A human-readable explanation of the annotation.
+        /// </summary>
         public override string Message
         {
             get
