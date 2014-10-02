@@ -47,7 +47,30 @@ namespace Difftaculous.ArrayDiff
                     var itemA = arrayA[i];
                     var itemB = arrayB[i];
 
-                    if (itemA.DeepEquals(itemB))
+                    // TODO - this code has gotten out of hand!  Rewrite it!  For the moment, I just want to see a couple of unit tests work...
+
+                    // Are they equal?
+                    bool equal = itemA.DeepEquals(itemB);
+
+                    // If not, are there any caveats that make it acceptable?
+                    bool acceptable = false;
+                    if (!equal && (itemA is ZValue) && (itemB is ZValue))
+                    {
+                        string a = ((ZValue) itemA).Value.ToString();
+                        string b = ((ZValue) itemA).Value.ToString();
+
+                        foreach (var c in itemA.Caveats)
+                        {
+                            acceptable = c.IsAcceptable(a, b);
+                            if (acceptable)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    // Handle each case...
+                    if (equal || acceptable)    // TODO - handle these separately and return a new ElementGroup.Acceptable thingy?
                     {
                         // Match - can we just extend a prior match?
                         if ((list.Count >= 1) && (list[list.Count - 1].Operation == Operation.Equal))
@@ -61,6 +84,8 @@ namespace Difftaculous.ArrayDiff
                     }
                     else
                     {
+                        // Not a match - are there any caveats?
+
                         // Not a match - can we extend a prior delete/insert pair?
                         if ((list.Count >= 2)
                             && (list[list.Count - 2].Operation == Operation.Delete)
