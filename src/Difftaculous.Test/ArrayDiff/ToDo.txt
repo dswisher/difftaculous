@@ -1,0 +1,39 @@
+﻿
+Unit Tests To Add
+-----------------
+
+--> Given the following two arrays, add hint to ignore the extra member and verify AreSame = true.
+
+    "MarketSessions": [
+    {
+        "Kind": "Closed",
+        "Start": 1415726100000,
+        "End": 1415779200000
+    },
+    {
+        "Kind": "Trading",
+        "Start": 1415779200000,
+        "End": 1415812500000
+    }
+    ]
+
+    "MarketSessions": [
+    {
+        "Kind": "Closed",
+        "Start": 1415726100000,
+        "End": 1415779200000
+    },
+    {
+        "Kind": "Trading",
+        "Start": 1415779200000,
+        "End": 1415812500000
+    },
+    {
+        "Kind": "Closed",
+        "Start": 1415812500000,
+        "End": 1415865600000
+    }
+    ]
+
+
+--> 
