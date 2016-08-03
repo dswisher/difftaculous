@@ -1,6 +1,5 @@
 #![Difftaculous](doc/difftaculous.png)
 
-- [Homepage](http://difftaculous.net/)
 - [License](LICENSE.md)
 
 # Summary #
